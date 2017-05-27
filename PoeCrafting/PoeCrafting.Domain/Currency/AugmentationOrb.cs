@@ -13,7 +13,8 @@ namespace PoeCrafting.Domain.Currency
     {
         private IRandom Random { get; set; }
 
-        public string Name => "Augmentation";
+        public string Name => "Orb of Augmentation";
+        public double Value { get; set; }
 
         public AugmentationOrb(IRandom random)
         {

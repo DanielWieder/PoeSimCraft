@@ -17,6 +17,7 @@ namespace PoeCrafting.Domain.Crafting
         // X Insert
 
         List<ICraftingStep> Children { get; }
+        bool HasChildren { get; }
         bool HasWarning { get; }
         bool HasError { get; }
         bool IsCompleted { get; }

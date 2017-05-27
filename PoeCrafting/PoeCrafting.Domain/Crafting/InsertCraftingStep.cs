@@ -18,6 +18,7 @@ namespace PoeCrafting.Domain.Crafting
         public bool HasError => false;
         public bool IsCompleted => false;
         public string Name => "Insert";
+        public bool HasChildren => false;
 
         public InsertCraftingStep(CurrencyFactory factory)
         {

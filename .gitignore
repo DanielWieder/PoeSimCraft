@@ -1,0 +1,13 @@
+PoeCrafting/packages/*
+PoeCrafting/PoeCrafting/bin/*
+PoeCrafting/PoeCrafting/obj/*
+PoeCrafting/PoeCrafting.Data/bin/*
+PoeCrafting/PoeCrafting.Data/obj/*
+PoeCrafting/PoeCrafting.Domain/bin/*
+PoeCrafting/PoeCrafting.Domain/obj/*
+PoeCrafting/PoeCrafting.Entities/bin/*
+PoeCrafting/PoeCrafting.Entities/obj/*
+PoeCrafting/PoeCrafting.Test/bin/*
+PoeCrafting/PoeCrafting.Test/obj/*
+PoeSimCraftImporter/PoeSimCraftImporter/bin/*
+PoeSimCraftImporter/PoeSimCraftImporter/obj/*

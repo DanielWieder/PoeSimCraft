@@ -21,6 +21,7 @@ namespace PoeCrafting.UI
             Bind<CraftingTestbedModel>().ToSelf().InTransientScope();
 
             Bind<IRandom>().To<PoeRandom>().InSingletonScope();
+            Bind<IFetchCurrencyValues>().To<FetchCurrencyValues>().InTransientScope();
             Bind<IFetchAffixesByItemName>().To<FetchAffixesByItemName>().InTransientScope();
             Bind<IFetchArmourByItemName>().To<FetchArmourByItemName>().InTransientScope();
             Bind<IFetchAccessoriesByItemName>().To<FetchAccessoriesByItemName>().InTransientScope();

@@ -20,5 +20,7 @@ namespace PoeCrafting.Entities.Currency
         bool IsError(ItemStatus status);
 
         ItemStatus GetNextStatus(ItemStatus status);
+
+        double Value { get; set; }
     }
 }

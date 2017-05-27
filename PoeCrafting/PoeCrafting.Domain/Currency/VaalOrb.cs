@@ -15,7 +15,8 @@ namespace PoeCrafting.Domain.Currency
         private IRandom Random { get; set; }
         private ICurrency Chaos { get; set; }
 
-        public string Name => "Vaal";
+        public string Name => "Vaal Orb";
+        public double Value { get; set; }
 
         public VaalOrb(IRandom random)
         {

@@ -12,12 +12,21 @@ namespace PoeCrafting.Domain.Crafting
     {
         private readonly ICurrency _currency;
         private ItemStatus _status = new ItemStatus();
+        private CraftTracker tracker = new CraftTracker();
 
         public List<ICraftingStep> Children => new List<ICraftingStep>();
         public bool HasWarning => _currency.IsWarning(_status);
         public bool HasError => _currency.IsError(_status);
         public bool IsCompleted => false;
         public string Name => _currency.Name;
+        public bool HasChildren => false;
+
+        public int TimesUsedCount => tracker.SuccessfulUsesCount;
+
+        public int ItemsUsedOnCount => tracker.ItemsUsedOnCount;
+
+        public double CurrencyUsed => tracker.SuccessfulUsesCount * _currency.Value;
+        
 
         public CurrencyCraftingStep(ICurrency currency)
         {
@@ -32,7 +41,10 @@ namespace PoeCrafting.Domain.Crafting
 
         public Equipment Craft(Equipment equipment)
         {
-            _currency.Execute(equipment);
+            bool success = _currency.Execute(equipment);
+
+            tracker.TrackCraft(equipment, success);
+
             return equipment;
         }
     }

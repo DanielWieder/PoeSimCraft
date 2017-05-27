@@ -13,7 +13,8 @@ namespace PoeCrafting.Domain.Currency
     {
         private IRandom Random { get; set; }
 
-        public string Name => "Blessed";
+        public string Name => "Blessed Orb";
+        public double Value { get; set; }
 
         public BlessedOrb(IRandom random)
         {

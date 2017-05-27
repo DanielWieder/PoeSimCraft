@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PetaPoco, Version=5.1.251.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PetaPoco.Core.Compiled.5.1.251\lib\net45\PetaPoco.dll</HintPath>
       <Private>True</Private>
@@ -45,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FetchCurrencyValues.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="FetchAffixesByItemName.cs" />
     <Compile Include="FetchWeaponsByItemName.cs" />
@@ -54,7 +59,6 @@
     <Compile Include="FetchSubtypes.cs" />
     <Compile Include="FetchTypeByItemName.cs" />
     <Compile Include="IQueryObject.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Random.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,11 +68,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

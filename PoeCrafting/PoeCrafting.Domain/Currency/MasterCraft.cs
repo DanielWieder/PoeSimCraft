@@ -18,6 +18,7 @@ namespace PoeCrafting.Domain.Currency
         private IRandom Random { get; set; }
 
         public string Name => "Master Craft - ";
+        public double Value { get; set; }
 
         public MasterCraft(IRandom random)
         {

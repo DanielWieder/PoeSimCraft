@@ -14,6 +14,7 @@ namespace PoeCrafting.Domain.Crafting
         public bool HasError => false;
         public bool IsCompleted => true;
         public string Name => "End";
+        public bool HasChildren => false;
 
         public ItemStatus UpdateStatus(ItemStatus status)
         {

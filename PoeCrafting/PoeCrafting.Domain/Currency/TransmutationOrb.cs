@@ -15,7 +15,8 @@ namespace PoeCrafting.Domain.Currency
         private IRandom Random { get; set; }
         private ICurrency Alteration { get; set; }
 
-        public string Name => "Transmuation";
+        public string Name => "Orb of Transmutation";
+        public double Value { get; set; }
 
         public TransmutationOrb(IRandom random)
         {
