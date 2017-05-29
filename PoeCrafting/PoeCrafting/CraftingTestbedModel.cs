@@ -3,7 +3,7 @@ using PoeCrafting.Domain;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Domain.Currency;
 using PoeCrafting.Entities;
-using PoeCrafting.Entities.Currency;
+using PoeCrafting.Domain.Currency;
 
 namespace PoeCrafting.UI.Pages
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
-using PoeCrafting.Entities.Currency;
+using PoeCrafting.Domain.Currency;
 
 namespace PoeCrafting.Domain.Currency
 {
@@ -47,25 +47,40 @@ namespace PoeCrafting.Domain.Currency
 
         public bool IsWarning(ItemStatus status)
         {
-            return false;
+            return !IsError(status) && status.Rarity != EquipmentRarity.Magic;
         }
 
         public bool IsError(ItemStatus status)
         {
-            return status.Rarity != EquipmentRarity.Magic || status.IsCorrupted;
+            return (status.Rarity & EquipmentRarity.Magic) != EquipmentRarity.Magic || status.IsCorrupted;
         }
 
         public ItemStatus GetNextStatus(ItemStatus status)
         {
             if (IsError(status))
+            {
                 return status;
+            }
+            if (IsWarning(status))
+            {
+                status.MinPrefixes = Math.Min(0, status.MinPrefixes);
+                status.MinSuffixes = Math.Min(0, status.MinSuffixes);
+                status.MinAffixes = Math.Min(2, status.MinAffixes);
 
-            status.MinPrefixes = 0;
-            status.MinSuffixes = 0;
-            status.MaxPrefixes = 1;
-            status.MaxSuffixes = 1;
-            status.MinAffixes = 1;
-            status.MaxAffixes = 2;
+                status.MaxPrefixes = Math.Max(1, status.MaxPrefixes);
+                status.MaxSuffixes = Math.Max(1, status.MaxSuffixes);
+                status.MaxAffixes = Math.Max(2, status.MaxAffixes);
+            }
+            else
+            {
+                status.MinPrefixes = 0;
+                status.MinSuffixes = 0;
+                status.MinAffixes = 1;
+
+                status.MaxPrefixes = 1;
+                status.MaxSuffixes = 1;
+                status.MaxAffixes = 2;
+            }
 
             return status;
         }

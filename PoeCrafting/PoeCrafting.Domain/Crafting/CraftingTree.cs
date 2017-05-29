@@ -10,7 +10,7 @@ namespace PoeCrafting.Domain.Crafting
 {
     public class CraftingTree
     {
-        private CurrencyFactory factory;
+        private readonly CurrencyFactory _factory;
 
         public InsertCraftingStep BeforeSelected;
         public InsertCraftingStep AfterSelected;
@@ -18,13 +18,172 @@ namespace PoeCrafting.Domain.Crafting
 
         public List<ICraftingStep> CraftingSteps;
 
-        public void OnSelection(ICraftingStep selected)
+        public CraftingTree(CurrencyFactory factory)
+        {
+            _factory = factory;
+
+            CraftingSteps = new List<ICraftingStep>();
+
+            var start = new StartCraftingStep();
+            CraftingSteps.Add(start);
+
+            Select(start);
+        }
+
+        public void UpdateStatus()
+        {
+            IterateSteps((craftingStep, x, y) => craftingStep.ClearStatus(), CraftingSteps);
+
+            var first = CraftingSteps.First();
+            var nextSteps = CraftingSteps.ToList();
+            nextSteps.RemoveAt(0);
+            first.NavigateTree(new ItemStatus(), nextSteps, (step, item) => step.UpdateStatus(item));
+        }
+
+        public Equipment Craft(Equipment equipment)
+        {
+            RemoveSelected();
+
+            var first = CraftingSteps.First();
+            var nextSteps = CraftingSteps.ToList();
+            nextSteps.RemoveAt(0);
+            first.NavigateTree(equipment, nextSteps, (step, item) => step.Craft(item));
+            return equipment;
+        }
+
+        public void Select(ICraftingStep selected)
         {
             if (selected.GetType() == typeof(InsertCraftingStep))
             {
                 return;
             }
 
+            RemoveSelected();
+
+            int selectedIndex = -1;
+            IList<ICraftingStep> selectedList = null;
+
+            IList<ICraftingStep> beforeList = null;
+            int beforeIndex = -1;
+
+            IList<ICraftingStep> afterList = null;
+            int afterIndex = -1;
+
+            Action<ICraftingStep, int, IList<ICraftingStep>> action = (current, index, list) =>
+            {
+                if (selectedIndex != -1)
+                {
+                    afterList = list;
+                    afterIndex = index;
+                    return;
+                }
+
+                if (current == selected)
+                {
+                    selectedIndex = index;
+                    selectedList = list;
+                }
+
+                if (selectedIndex == -1)
+                {
+                    beforeList = list;
+                    beforeIndex = index;
+                }
+            };
+
+            IterateSteps(action, CraftingSteps);
+
+            if (beforeList != null)
+            {
+                var beforeSelected = new InsertCraftingStep(_factory);
+                BeforeSelected = beforeSelected;
+                beforeList.Insert(beforeIndex + 1, beforeSelected);
+            }
+
+            if (beforeList == afterList)
+            {
+                afterIndex++;
+            }
+
+            if (afterList != null && afterIndex + 1 < afterList.Count)
+            {
+                var afterSelected = new InsertCraftingStep(_factory);
+                AfterSelected = afterSelected;
+                afterList.Insert(afterIndex + 1, afterSelected);
+            }
+            else
+            {
+                var afterSelected = new InsertCraftingStep(_factory);
+                selectedList.Add(afterSelected);
+                AfterSelected = afterSelected;
+            }
+
+            if (selected.HasChildren && !selected.Children.Any())
+            {
+                var insideSelected = new InsertCraftingStep(_factory);
+                InsideSelected = insideSelected;
+                selected.Children.Add(insideSelected);
+            }
+        }
+
+        public double GetCurrencySpent()
+        {
+            var allNodes = CraftingSteps.Map(x => true, x => x.Children);
+            return allNodes.OfType<CurrencyCraftingStep>().Sum(x => x.CurrencyUsed);
+        }
+
+        public void Replace(InsertCraftingStep selected, string name)
+        {
+            int selectedIndex = -1;
+            IList<ICraftingStep> selectedList = null;
+
+            Action<ICraftingStep, int, IList<ICraftingStep>> action = (current, index, list) =>
+            {
+                if (current == selected)
+                {
+                    selectedIndex = index;
+                    selectedList = list;
+                }
+            };
+
+            IterateSteps(action, CraftingSteps);
+
+            if (selectedList != null && selectedIndex != -1)
+            {
+                ICraftingStep craftingStep = null;
+
+                switch (name)
+                {
+                    case "End":
+                        craftingStep = new EndCraftingStep();
+                        break;
+                    case "If":
+                        craftingStep = new IfCraftingStep();
+                        break;
+                    case "While":
+                        craftingStep = new WhileCraftingStep();
+                        break;
+                    case "Start":
+                        craftingStep = new StartCraftingStep();
+                        break;
+                }
+
+                if (craftingStep == null && _factory.Currency.Any(x => x.Name == name))
+                {
+                    var currency = _factory.GetCurrencyByName(name);
+                    craftingStep = new CurrencyCraftingStep(currency);
+                }
+
+                selectedList.RemoveAt(selectedIndex);
+                selectedList.Insert(selectedIndex, craftingStep);
+
+                Select(craftingStep);
+            }
+
+        }
+
+        private void RemoveSelected()
+        {
             if (BeforeSelected != null)
             {
                 Remove(BeforeSelected, CraftingSteps);
@@ -37,79 +196,6 @@ namespace PoeCrafting.Domain.Crafting
             {
                 Remove(InsideSelected, CraftingSteps);
             }
-
-            bool located = false;
-            IList<ICraftingStep> beforeList = null;
-            int beforeIndex = -1;
-
-            IList<ICraftingStep> afterList = null;
-            int afterIndex = -1;
-
-            Action<ICraftingStep, int, IList<ICraftingStep>> action = (current, index, list) =>
-            {
-                if (located)
-                {
-                    afterList = list;
-                    afterIndex = index;
-                    return;
-                }
-
-                if (current == selected)
-                {
-                    located = true;
-                }
-
-                if (!located)
-                {
-                    beforeList = list;
-                    beforeIndex = index;
-                }
-            };
-
-            IterateSteps(action, CraftingSteps);
-
-            if (beforeList != null)
-            {
-                var beforeSelected = new InsertCraftingStep(factory);
-                BeforeSelected = beforeSelected;
-                beforeList.Insert(beforeIndex, beforeSelected);
-            }
-
-            if (beforeList == afterList)
-            {
-                afterIndex++;
-            }
-
-            if (afterList != null)
-            {
-                var afterSelected = new InsertCraftingStep(factory);
-                AfterSelected = afterSelected;
-                afterList.Insert(afterIndex, afterSelected);
-            }
-
-            if (selected.HasChildren && !selected.Children.Any())
-            {
-                var insideSelected = new InsertCraftingStep(factory);
-                InsideSelected = insideSelected;
-                selected.Children.Add(insideSelected);
-            }
-        }
-
-        public void Craft(Equipment equipment)
-        {
-            IterateSteps((craftingStep, index, list) => craftingStep.Craft(equipment), CraftingSteps);
-        }
-
-        public void UpdateStatus()
-        {
-            ItemStatus status = new ItemStatus();
-            IterateSteps((craftingStep, index, list) => status = craftingStep.UpdateStatus(status), CraftingSteps);
-        }
-
-        private double CurrencySpent()
-        {
-            var allNodes = CraftingSteps.Map(x => true, x => x.Children);
-            return allNodes.OfType<CurrencyCraftingStep>().Sum(x => x.CurrencyUsed);
         }
 
         private bool Remove(ICraftingStep toRemove, IList<ICraftingStep> craftingSteps)
@@ -121,7 +207,7 @@ namespace PoeCrafting.Domain.Crafting
             }
             foreach (var craftingStep in craftingSteps)
             {
-                var isRemoved = Remove(toRemove, craftingSteps);
+                var isRemoved = Remove(toRemove, craftingStep.Children);
                 if (isRemoved)
                 {
                     return true;

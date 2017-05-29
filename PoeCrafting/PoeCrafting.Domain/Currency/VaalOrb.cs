@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Ninject;
-
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
-using PoeCrafting.Entities.Currency;
 
 namespace PoeCrafting.Domain.Currency
 {
     public class VaalOrb : ICurrency
     {
-        private IRandom Random { get; set; }
-        private ICurrency Chaos { get; set; }
+        private IRandom Random { get; }
+        private ICurrency Chaos { get; }
 
         public string Name => "Vaal Orb";
         public double Value { get; set; }
@@ -61,6 +57,19 @@ namespace PoeCrafting.Domain.Currency
 
         public ItemStatus GetNextStatus(ItemStatus status)
         {
+            if (IsError(status))
+            {
+                return status;
+            }
+
+            status.MinPrefixes = Math.Min(1, status.MinPrefixes);
+            status.MinSuffixes = Math.Min(1, status.MinSuffixes);
+            status.MinAffixes = Math.Min(4, status.MinAffixes);
+            status.MaxPrefixes = 3;
+            status.MaxSuffixes = 3;
+            status.MaxAffixes = 6;
+
+            status.Rarity = status.Rarity |= EquipmentRarity.Rare;
             status.IsCorrupted = true;
             return status;
         }

@@ -7,25 +7,70 @@ using System.Threading.Tasks;
 
 namespace PoeCrafting.Domain.Crafting
 {
-    class IfCraftingStep : ICraftingStep
+    public class IfCraftingStep : ICraftingStep
     {
-        public List<ICraftingStep> Children => new List<ICraftingStep>();
-        public bool HasWarning => false;
-        public bool HasError => false;
-        public bool IsCompleted => false;
+        private bool _initialized = false;
+
+        public List<ICraftingStep> Children { get; } = new List<ICraftingStep>();
+
+        public CraftingStepStatus Status => _initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
         public string Name => "If";
         public bool HasChildren => true;
 
-        public CraftingCondition Condition { get; set; }
+        public ICraftingCondition Condition { get; set; }
+
+        public void ClearStatus()
+        {
+            _initialized = false;
+        }
 
         public ItemStatus UpdateStatus(ItemStatus status)
         {
-            return new ItemStatus();
+
+            if (status.Completed) return status;
+
+            _initialized = true;
+            if (Children.Count > 0)
+            {
+                var first = Children.First();
+                var nextSteps = Children.ToList();
+                nextSteps.RemoveAt(0);
+
+                var nextStatus = (ItemStatus) status.Clone();
+
+                if (nextStatus.Completed)
+                {
+                    return status;
+                }
+
+                nextStatus = first.NavigateTree(nextStatus, nextSteps, (step, item) => step.UpdateStatus(status));
+
+                return ItemStatus.Combine(new List<ItemStatus> {status, nextStatus});
+            }
+            else
+            {
+                return status;
+            }
         }
 
         public Equipment Craft(Equipment equipment)
         {
+            if (equipment.Completed) return equipment;
+
+            if (Children.Count > 0 && Condition.IsValid(equipment))
+            {
+                var first = Children.First();
+                var nextSteps = Children.ToList();
+                nextSteps.RemoveAt(0);
+
+                first.NavigateTree(equipment, nextSteps, (step, item) => step.Craft(item));
+            }
             return equipment;
+        }
+
+        public T NavigateTree<T>(T item, List<ICraftingStep> queue, Func<ICraftingStep, T, T> action) where T : ITreeNavigation
+        {
+            return this.DefaultNavigateTree(item, queue, action);
         }
     }
 }

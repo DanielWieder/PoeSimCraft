@@ -62,7 +62,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="IntegrationTests.cs" />
+    <Compile Include="CraftingTests.cs" />
+    <Compile Include="CurrencyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PoeCrafting.Data\PoeCrafting.Data.csproj">

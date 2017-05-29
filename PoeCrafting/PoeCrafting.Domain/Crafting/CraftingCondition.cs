@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace PoeCrafting.Domain.Crafting
 {
-    public class CraftingCondition
+    public class CraftingCondition : ICraftingCondition
     {
-        public bool MeetsCondition(Equipment item)
+        public bool IsValid(Equipment item)
         {
             return true;
         }
+    }
+
+    public interface ICraftingCondition
+    {
+        bool IsValid(Equipment item);
     }
 }

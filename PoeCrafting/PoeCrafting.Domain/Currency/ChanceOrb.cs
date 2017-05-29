@@ -6,15 +6,15 @@ using Ninject;
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
-using PoeCrafting.Entities.Currency;
+using PoeCrafting.Domain.Currency;
 
 namespace PoeCrafting.Domain.Currency
 {
     public class ChanceOrb : ICurrency
     {
-        private IRandom Random { get; set; }
-        private ICurrency Alchemy { get; set; }
-        private ICurrency Transmutation { get; set; }
+        private IRandom Random { get; }
+        private ICurrency Alchemy { get; }
+        private ICurrency Transmutation { get; }
 
         public string Name => "Orb of Chance";
         public double Value { get; set; }
@@ -48,18 +48,46 @@ namespace PoeCrafting.Domain.Currency
 
         public bool IsWarning(ItemStatus status)
         {
-            return false;
+            return !IsError(status) && (status.Rarity != EquipmentRarity.Normal);
         }
 
         public bool IsError(ItemStatus status)
         {
-            return status.Rarity != EquipmentRarity.Normal || status.IsCorrupted;
+            return (status.Rarity & EquipmentRarity.Normal) != EquipmentRarity.Normal || status.IsCorrupted;
         }
 
         public ItemStatus GetNextStatus(ItemStatus status)
         {
-            // Unable to set the ItemStatus rarity.
-            throw new NotImplementedException();
+            if (IsError(status))
+            {
+                return status;
+            }
+            if (IsWarning(status))
+            {
+                status.MinPrefixes = Math.Min(0, status.MinPrefixes);
+                status.MinSuffixes = Math.Min(0, status.MinSuffixes);
+                status.MinAffixes = Math.Min(1, status.MinAffixes);
+
+                status.MaxPrefixes = Math.Max(3, status.MaxPrefixes);
+                status.MaxSuffixes = Math.Max(3, status.MaxSuffixes);
+                status.MaxAffixes = Math.Max(6, status.MaxAffixes);
+
+                status.Rarity = status.Rarity & ~EquipmentRarity.Normal | EquipmentRarity.Magic | EquipmentRarity.Rare;
+            }
+            else
+            {
+                status.MinPrefixes = 0;
+                status.MinSuffixes = 0;
+                status.MinAffixes = 1;
+
+                status.MaxPrefixes = 3;
+                status.MaxSuffixes = 3;
+                status.MaxAffixes = 6;
+
+                status.Rarity = EquipmentRarity.Magic | EquipmentRarity.Rare;
+            }
+
+            return status;
         }
     }
 }

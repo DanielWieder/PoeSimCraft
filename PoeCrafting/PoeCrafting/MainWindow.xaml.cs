@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using PoeCrafting.Entities.Currency;
+using PoeCrafting.Domain.Currency;
 using PoeCrafting.UI.Pages;
 
 namespace PoeCrafting.UI

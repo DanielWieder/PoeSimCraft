@@ -43,11 +43,13 @@
     <Compile Include="AccessoryEntity.cs" />
     <Compile Include="AffixType.cs" />
     <Compile Include="ArmourEntity.cs" />
+    <Compile Include="CraftingStepStatus.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="EquipmentRarity.cs" />
     <Compile Include="EquipmentType.cs" />
     <Compile Include="ItemBase.cs" />
     <Compile Include="Affix.cs" />
+    <Compile Include="ITreeNavigation.cs" />
     <Compile Include="Stat.cs" />
     <Compile Include="WeaponEntity.cs" />
   </ItemGroup>

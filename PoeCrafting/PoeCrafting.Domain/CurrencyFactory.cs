@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Ninject;
 using PoeCrafting.Domain.Crafting;
-using PoeCrafting.Entities.Currency;
 using PoeCrafting.Data;
+using PoeCrafting.Domain.Currency;
 
 namespace PoeCrafting.Domain
 {
@@ -23,7 +23,7 @@ namespace PoeCrafting.Domain
             [Named("Chaos")] ICurrency chaos,
             [Named("Regal")] ICurrency regal,
         //    [Named("Blessed")] ICurrency blessed,
-        //    [Named("Chance")] ICurrency chance,
+            [Named("Chance")] ICurrency chance,
             [Named("Divine")] ICurrency divine,
             [Named("Exalted")] ICurrency exalted,
         //    [Named("MasterCraft")] ICurrency masterCraft,
@@ -39,11 +39,11 @@ namespace PoeCrafting.Domain
                 alchemy,
                 chaos,
                 regal,
-                //blessed,
-                //chance,
+                // blessed,
+                chance,
                 divine,
                 exalted,
-                //masterCraft,
+                // masterCraft,
                 scouring,
                 vaal
             };

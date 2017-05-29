@@ -5,7 +5,7 @@ using System.Linq;
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
-using PoeCrafting.Entities.Currency;
+using PoeCrafting.Domain.Currency;
 
 namespace PoeCrafting.Domain.Currency
 {
@@ -42,25 +42,41 @@ namespace PoeCrafting.Domain.Currency
 
         public bool IsWarning(ItemStatus status)
         {
-            return status.MaxPrefixes + status.MaxPrefixes == 2;
+            return !IsError(status) && (status.Rarity != EquipmentRarity.Magic ||  status.MaxPrefixes + status.MaxPrefixes == 2);
         }
 
         public bool IsError(ItemStatus status)
         {
-            return status.Rarity != EquipmentRarity.Magic || status.IsCorrupted || status.MinPrefixes + status.MinSuffixes == 2;
+            return (status.Rarity & EquipmentRarity.Magic) != EquipmentRarity.Magic || status.IsCorrupted || status.MinPrefixes + status.MinSuffixes == 2;
         }
 
         public ItemStatus GetNextStatus(ItemStatus status)
         {
             if (IsError(status))
+            {
                 return status;
+            }
 
-            status.MinPrefixes = 1;
-            status.MinSuffixes = 1;
-            status.MaxPrefixes = 1;
-            status.MinSuffixes = 1;
-            status.MinAffixes = 2;
-            status.MaxAffixes = 2;
+            if (status.Rarity != EquipmentRarity.Magic && IsWarning(status))
+            {
+                status.MinPrefixes = Math.Min(1, status.MinPrefixes);
+                status.MinSuffixes = Math.Min(1, status.MinSuffixes);
+                status.MinAffixes = Math.Min(2, status.MinAffixes);
+
+                status.MaxPrefixes = Math.Max(1, status.MaxPrefixes);
+                status.MaxSuffixes = Math.Max(1, status.MaxSuffixes);
+                status.MaxAffixes = Math.Max(2, status.MaxAffixes);
+            }
+            else
+            {
+                status.MinPrefixes = 1;
+                status.MinSuffixes = 1;
+                status.MinAffixes = 2;
+
+                status.MaxPrefixes = 1;
+                status.MaxSuffixes = 1;
+                status.MaxAffixes = 2;
+            }
 
             return status;
         }

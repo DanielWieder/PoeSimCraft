@@ -9,7 +9,6 @@ using Ninject;
 using PoeCrafting.Data;
 using PoeCrafting.Domain;
 using PoeCrafting.Domain.Currency;
-using PoeCrafting.Entities.Currency;
 
 using PoeCrafting.UI;
 
@@ -26,8 +25,9 @@ namespace PoeCrafting.UI
         {
             base.OnStartup(e);
 
-            var kernal = new StandardKernel(new IocConfiguration());
-            var window = kernal.Get<MainWindow>();
+            var kernel = new StandardKernel();
+            kernel.Load("*.dll");
+            var window = kernel.Get<MainWindow>();
             window.Show();
         }
 

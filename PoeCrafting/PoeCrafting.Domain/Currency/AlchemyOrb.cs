@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security;
-using Ninject;
-
-using PoeCrafting.Data;
+﻿using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
-using PoeCrafting.Entities.Currency;
 
 namespace PoeCrafting.Domain.Currency
 {
     public class AlchemyOrb : ICurrency
     {
-        private IRandom Random { get; set; }
-        private ICurrency Chaos { get; set; }
+        private ICurrency Chaos { get; }
 
         public string Name => "Orb of Alchemy";
         public double Value { get; set; }
@@ -22,7 +14,6 @@ namespace PoeCrafting.Domain.Currency
 
         public AlchemyOrb(IRandom random)
         {
-            Random = random;
             Chaos = new ChaosOrb(random);
         }
 
@@ -39,20 +30,28 @@ namespace PoeCrafting.Domain.Currency
 
         public bool IsWarning(ItemStatus status)
         {
-            return false;
+            return !IsError(status) && status.Rarity != EquipmentRarity.Normal;
         }
 
         public bool IsError(ItemStatus status)
         {
-            return status.Rarity != EquipmentRarity.Normal || status.IsCorrupted;
+            return (status.Rarity & EquipmentRarity.Normal) != EquipmentRarity.Normal || status.IsCorrupted;
         }
 
         public ItemStatus GetNextStatus(ItemStatus status)
         {
             if (IsError(status))
+            {
                 return status;
-
-            status.Rarity = EquipmentRarity.Rare;
+            }
+            if (IsWarning(status))
+            {
+                status.Rarity = status.Rarity & ~EquipmentRarity.Normal | EquipmentRarity.Rare;
+            }
+            else
+            {
+                status.Rarity = EquipmentRarity.Rare;
+            }
 
             return Chaos.GetNextStatus(status);
         }

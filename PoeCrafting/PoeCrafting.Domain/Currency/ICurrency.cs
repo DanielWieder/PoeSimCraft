@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PoeCrafting.Domain;
-using PoeCrafting.Domain.Crafting;
+﻿using PoeCrafting.Domain.Crafting;
+using PoeCrafting.Entities;
 
 
-namespace PoeCrafting.Entities.Currency
+namespace PoeCrafting.Domain.Currency
 {
     public interface ICurrency
     {

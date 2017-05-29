@@ -72,6 +72,7 @@
     <Compile Include="Currency\VaalOrb.cs" />
     <Compile Include="EquipmentFactory.cs" />
     <Compile Include="EquipmentFetch.cs" />
+    <Compile Include="IocDomainModule.cs" />
     <Compile Include="StatFactory.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>

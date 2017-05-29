@@ -5,13 +5,13 @@ using System.Linq;
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
-using PoeCrafting.Entities.Currency;
+using PoeCrafting.Domain.Currency;
 
 namespace PoeCrafting.Domain.Currency
 {
     public class DivineOrb : ICurrency
     {
-        private IRandom Random { get; set; }
+        private IRandom Random { get; }
 
         public string Name => "Divine Orb";
         public double Value { get; set; }
@@ -48,7 +48,7 @@ namespace PoeCrafting.Domain.Currency
 
         public bool IsWarning(ItemStatus status)
         {
-            return false;
+            return !IsError(status) && (status.Rarity | EquipmentRarity.Normal) == EquipmentRarity.Normal;
         }
 
         public bool IsError(ItemStatus status)

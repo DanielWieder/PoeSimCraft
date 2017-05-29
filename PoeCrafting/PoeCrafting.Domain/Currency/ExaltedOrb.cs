@@ -5,13 +5,13 @@ using System.Linq;
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
-using PoeCrafting.Entities.Currency;
+using PoeCrafting.Domain.Currency;
 
 namespace PoeCrafting.Domain.Currency
 {
     public class ExaltedOrb : ICurrency
     {
-        private IRandom Random { get; set; }
+        private IRandom Random { get; }
 
         public string Name => "Exalted Orb";
         public double Value { get; set; }
@@ -60,27 +60,42 @@ namespace PoeCrafting.Domain.Currency
 
         public bool IsWarning(ItemStatus status)
         {
-            return status.MaxPrefixes + status.MaxSuffixes == 6;
+            return !IsError(status) && (status.Rarity != EquipmentRarity.Rare || status.MaxPrefixes + status.MaxSuffixes == 6);
         }
 
         public bool IsError(ItemStatus status)
         {
-            return status.Rarity != EquipmentRarity.Rare || status.MinPrefixes + status.MinSuffixes == 6 || status.IsCorrupted;
+            return (status.Rarity & EquipmentRarity.Rare) != EquipmentRarity.Rare || status.MinPrefixes + status.MinSuffixes == 6 || status.IsCorrupted;
         }
 
         public ItemStatus GetNextStatus(ItemStatus status)
         {
             if (IsError(status))
+            {
                 return status;
+            }
+            if (status.Rarity != EquipmentRarity.Rare && IsWarning(status))
+            {
+                status.MinPrefixes = Math.Min(Math.Min(status.MinPrefixes + 1, status.MinAffixes - 3), status.MinPrefixes);
+                status.MinSuffixes = Math.Min(Math.Min(status.MinSuffixes + 1, status.MinAffixes - 3), status.MinSuffixes);
+                status.MinAffixes = Math.Min(Math.Min(status.MinAffixes + 1, 6), status.MinAffixes);
 
-            status.MaxSuffixes = Math.Min(status.MaxSuffixes + 1, 3);
-            status.MaxPrefixes = Math.Min(status.MaxPrefixes + 1, 3);
+                status.MaxPrefixes = Math.Max(Math.Min(status.MaxSuffixes + 1, 3), status.MaxPrefixes);
+                status.MaxSuffixes = Math.Max(Math.Min(status.MaxPrefixes + 1, 3), status.MaxSuffixes);
+                status.MaxAffixes = Math.Max(Math.Min(status.MaxAffixes + 1, 6), status.MaxAffixes);
+            }
+            else
+            {
+                status.MinAffixes = Math.Min(status.MinAffixes + 1, 6);
+                status.MinPrefixes = Math.Max(status.MinPrefixes + 1, status.MinAffixes - 3);
+                status.MinSuffixes = Math.Max(status.MinSuffixes + 1, status.MinAffixes - 3);
 
-            status.MinAffixes = Math.Min(status.MinAffixes + 1, 6);
-            status.MaxAffixes = Math.Min(status.MaxAffixes + 1, 6);
+                status.MaxAffixes = Math.Min(status.MaxAffixes + 1, 6);
+                status.MaxSuffixes = Math.Min(status.MaxSuffixes + 1, 3);
+                status.MaxPrefixes = Math.Min(status.MaxPrefixes + 1, 3);
+            }
 
-            status.MinPrefixes = Math.Min(status.MinPrefixes + 1, status.MinAffixes - 3);
-            status.MinSuffixes = Math.Min(status.MinSuffixes + 1, status.MinAffixes - 3);
+
 
             return status;
         }

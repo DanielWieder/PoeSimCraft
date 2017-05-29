@@ -14,9 +14,7 @@ namespace PoeCrafting.Domain.Crafting
         private readonly  CurrencyFactory _currencyFactory;
 
         public List<ICraftingStep> Children => new List<ICraftingStep>();
-        public bool HasWarning => false;
-        public bool HasError => false;
-        public bool IsCompleted => false;
+        public CraftingStepStatus Status => _status.Initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
         public string Name => "Insert";
         public bool HasChildren => false;
 
@@ -30,26 +28,39 @@ namespace PoeCrafting.Domain.Crafting
             get
             {
                 var currencyList = _currencyFactory.GetValidCurrency(_status).Select(x => x.Name);
+                List<string> options = new List<string>();
 
-                List<string> options = new List<string>
-                {
-                    "End"
-                };
                 options.AddRange(currencyList);
+
+                options.AddRange(new[]{
+                    "If",
+                    "While",
+                    "End"
+                });
 
                 return options;
             }
         }
 
+        public void ClearStatus()
+        {
+            _status = new ItemStatus();
+        }
+
         public ItemStatus UpdateStatus(ItemStatus status)
         {
-            _status = (ItemStatus)_status.Clone();
+            _status = (ItemStatus)status.Clone();
             return status;
         }
 
         public Equipment Craft(Equipment equipment)
         {
-            return equipment;
+            throw new InvalidOperationException("All Insert crafting steps should be removed before an item is crafted");
+        }
+
+        public T NavigateTree<T>(T item, List<ICraftingStep> queue, Func<ICraftingStep, T, T> action) where T : ITreeNavigation
+        {
+            return this.DefaultNavigateTree(item, queue, action);
         }
     }
 }

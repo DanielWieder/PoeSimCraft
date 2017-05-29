@@ -12,7 +12,7 @@ namespace PoeCrafting.Domain
 
         public int SuccessfulUsesCount => successfulUsesCount;
         public int UsesCount => usesCount;
-        public int ItemsSuccessfullyUsedOnCount => itemsUsedOnCount;
+        public int ItemsSuccessfullyUsedOnCount => itemsSuccessfullyUsedOnCount;
         public int ItemsUsedOnCount => itemsUsedOnCount;
 
         public void TrackCraft(Equipment item, bool success)

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using PoeCrafting.Domain.Crafting;
+using PoeCrafting.Entities;
 namespace PoeCrafting.Domain
 {
     public static class Utility
@@ -34,6 +35,27 @@ namespace PoeCrafting.Domain
                 );
             }
             return flattenedList;
+        }
+
+        public static T DefaultNavigateTree<T>(
+            this ICraftingStep craftingStep, 
+            T item, 
+            List<ICraftingStep> queue, 
+            Func<ICraftingStep, T, T> action)
+            where T : ITreeNavigation
+        {
+            if (item.Completed) return item;
+
+            var newT = action(craftingStep, item);
+
+            if (queue.Any())
+            {
+                var nextStep = queue.First();
+                queue.RemoveAt(0);
+
+                return nextStep.NavigateTree(newT, queue, action);
+            }
+            return item;
         }
     }
 }

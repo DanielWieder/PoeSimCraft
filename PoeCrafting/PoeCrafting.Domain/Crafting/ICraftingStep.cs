@@ -9,21 +9,14 @@ namespace PoeCrafting.Domain.Crafting
 {
     public interface ICraftingStep
     {
-        // X Currency
-        // X Start
-        // X Stop
-        // If
-        // While
-        // X Insert
-
         List<ICraftingStep> Children { get; }
+        CraftingStepStatus Status { get; }
         bool HasChildren { get; }
-        bool HasWarning { get; }
-        bool HasError { get; }
-        bool IsCompleted { get; }
         string Name { get; }
 
-        ItemStatus UpdateStatus(ItemStatus status);
+        void ClearStatus();
+        ItemStatus UpdateStatus(ItemStatus current);
         Equipment Craft(Equipment equipment);
+        T NavigateTree<T>(T item, List<ICraftingStep> queue, Func<ICraftingStep, T, T> action) where T : ITreeNavigation;
     }
 }

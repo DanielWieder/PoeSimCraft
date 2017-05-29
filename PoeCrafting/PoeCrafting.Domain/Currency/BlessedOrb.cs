@@ -5,13 +5,13 @@ using System.Linq;
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
-using PoeCrafting.Entities.Currency;
+using PoeCrafting.Domain.Currency;
 
 namespace PoeCrafting.Domain.Currency
 {
     public class BlessedOrb : ICurrency 
     {
-        private IRandom Random { get; set; }
+        private IRandom Random { get; }
 
         public string Name => "Blessed Orb";
         public double Value { get; set; }

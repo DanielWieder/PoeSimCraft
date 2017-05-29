@@ -2,8 +2,10 @@
 
 namespace PoeCrafting.Entities
 {
-    public class Equipment
+    public class Equipment : ITreeNavigation
     {
+        public bool Completed { get; set; } = false;
+
         public ItemBase ItemBase { get; set; }
 
         public List<Affix> PossiblePrefixes { get; set; }
