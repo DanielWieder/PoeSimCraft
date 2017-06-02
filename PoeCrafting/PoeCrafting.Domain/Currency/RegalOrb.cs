@@ -69,6 +69,7 @@ namespace PoeCrafting.Domain.Currency
             else
             {
                 status.Rarity = EquipmentRarity.Rare;
+
                 status.MinAffixes++;
                 status.MaxPrefixes++;
                 status.MaxSuffixes++;

@@ -16,6 +16,7 @@ namespace PoeCrafting.Domain.Crafting
         public CraftingStepStatus Status => _initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
         public string Name => "If";
         public bool HasChildren => true;
+        public List<string> Options => new List<string>();
 
         public ICraftingCondition Condition { get; set; }
 
@@ -26,7 +27,6 @@ namespace PoeCrafting.Domain.Crafting
 
         public ItemStatus UpdateStatus(ItemStatus status)
         {
-
             if (status.Completed) return status;
 
             _initialized = true;
@@ -37,20 +37,17 @@ namespace PoeCrafting.Domain.Crafting
                 nextSteps.RemoveAt(0);
 
                 var nextStatus = (ItemStatus) status.Clone();
+                nextStatus = first.NavigateTree(nextStatus, nextSteps, (step, item) => step.UpdateStatus(nextStatus));
 
                 if (nextStatus.Completed)
                 {
                     return status;
                 }
 
-                nextStatus = first.NavigateTree(nextStatus, nextSteps, (step, item) => step.UpdateStatus(status));
-
                 return ItemStatus.Combine(new List<ItemStatus> {status, nextStatus});
+
             }
-            else
-            {
-                return status;
-            }
+            return status;
         }
 
         public Equipment Craft(Equipment equipment)

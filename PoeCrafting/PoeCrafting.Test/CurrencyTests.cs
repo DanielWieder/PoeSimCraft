@@ -135,6 +135,8 @@ namespace PoeCrafting.Test
 
             ItemStatus status = new ItemStatus();
 
+            status.Initialized = true;
+
             status = trans.GetNextStatus(status);
             Assert.IsTrue(status.Validate());
             Assert.IsTrue(aug.IsWarning(status));

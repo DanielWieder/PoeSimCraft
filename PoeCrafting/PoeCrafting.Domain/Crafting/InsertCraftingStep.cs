@@ -27,16 +27,25 @@ namespace PoeCrafting.Domain.Crafting
         {
             get
             {
-                var currencyList = _currencyFactory.GetValidCurrency(_status).Select(x => x.Name);
+                if (!_status.Initialized || _status.Completed)
+                {
+                    return new List<string>();
+                }
+
+                var currencyList = _currencyFactory.GetValidCurrency(_status).Select(x => x.Name).ToList();
                 List<string> options = new List<string>();
 
                 options.AddRange(currencyList);
 
-                options.AddRange(new[]{
-                    "If",
-                    "While",
-                    "End"
-                });
+                if (!_status.IsCorrupted)
+                {
+                    options.AddRange(new[]{
+                        "If",
+                        "While"
+                    });
+                }
+
+                options.Add("End");
 
                 return options;
             }

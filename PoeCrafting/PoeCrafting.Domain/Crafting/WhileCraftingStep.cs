@@ -14,7 +14,7 @@ namespace PoeCrafting.Domain.Crafting
         public string Name => "While";
         private bool _initialized = false;
         public bool HasChildren => true;
-
+        public List<string> Options => new List<string>();
         public ICraftingCondition Condition { get; set; }
 
         public void ClearStatus()

@@ -28,7 +28,8 @@ namespace PoeCrafting.Domain.Crafting
 
         public bool Validate()
         {
-            return MinPrefixes <= MaxPrefixes &&
+            return Initialized &&
+                   MinPrefixes <= MaxPrefixes &&
                    MinSuffixes <= MaxSuffixes &&
                    MinAffixes <= MaxAffixes &&
                    MinPrefixes <= MinAffixes &&
@@ -42,6 +43,8 @@ namespace PoeCrafting.Domain.Crafting
         {
             return new ItemStatus
             {
+                Rarity = Rarity,
+                Initialized = Initialized,
                 HasImplicit = HasImplicit,
                 IsCorrupted = IsCorrupted,
                 MaxAffixes = MaxAffixes,
@@ -49,14 +52,27 @@ namespace PoeCrafting.Domain.Crafting
                 MaxSuffixes = MaxSuffixes,
                 MinPrefixes = MinPrefixes,
                 MinSuffixes = MinSuffixes,
-                MinAffixes = MinAffixes
+                MinAffixes = MinAffixes,
+                Completed = Completed
             };
         }
 
         public static ItemStatus Combine(List<ItemStatus> status)
         {
+            if (status.Any(x => x.Completed))
+            {
+                throw new InvalidOperationException("Unable to combine completed item statuses. This should have already completed");
+            }
+
+            if (status.Any(x => !x.Initialized))
+            {
+                throw new InvalidOperationException("Unable to combine invalid item statuses. This should not have been reached");
+            }
+
             return new ItemStatus
             {
+                Completed = false,
+                Initialized = true,
                 Rarity = status.Select(x => x.Rarity).Aggregate((x, y) => x | y),
                 HasImplicit = status.Any(x => x.HasImplicit),
                 IsCorrupted = status.Any(x => x.IsCorrupted),
@@ -72,6 +88,8 @@ namespace PoeCrafting.Domain.Crafting
         public bool AreEqual(ItemStatus other)
         {
             return
+                Initialized == other.Initialized &&
+                Completed == other.Completed &&
                 Rarity == other.Rarity && 
                 HasImplicit == other.HasImplicit &&
                 IsCorrupted == other.IsCorrupted &&

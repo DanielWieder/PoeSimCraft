@@ -110,7 +110,6 @@ namespace PoeCrafting.Test
             tree.Replace(tree.AfterSelected, "Regal Orb");
             tree.Replace(tree.AfterSelected, "Chaos Orb");
         
-            tree.UpdateStatus();
             Assert.AreEqual(CraftingStepStatus.Ok, tree.CraftingSteps[4].Status);
         }
 

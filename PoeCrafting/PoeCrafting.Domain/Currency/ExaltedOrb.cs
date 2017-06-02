@@ -76,10 +76,6 @@ namespace PoeCrafting.Domain.Currency
             }
             if (status.Rarity != EquipmentRarity.Rare && IsWarning(status))
             {
-                status.MinPrefixes = Math.Min(Math.Min(status.MinPrefixes + 1, status.MinAffixes - 3), status.MinPrefixes);
-                status.MinSuffixes = Math.Min(Math.Min(status.MinSuffixes + 1, status.MinAffixes - 3), status.MinSuffixes);
-                status.MinAffixes = Math.Min(Math.Min(status.MinAffixes + 1, 6), status.MinAffixes);
-
                 status.MaxPrefixes = Math.Max(Math.Min(status.MaxSuffixes + 1, 3), status.MaxPrefixes);
                 status.MaxSuffixes = Math.Max(Math.Min(status.MaxPrefixes + 1, 3), status.MaxSuffixes);
                 status.MaxAffixes = Math.Max(Math.Min(status.MaxAffixes + 1, 6), status.MaxAffixes);
@@ -87,15 +83,13 @@ namespace PoeCrafting.Domain.Currency
             else
             {
                 status.MinAffixes = Math.Min(status.MinAffixes + 1, 6);
-                status.MinPrefixes = Math.Max(status.MinPrefixes + 1, status.MinAffixes - 3);
-                status.MinSuffixes = Math.Max(status.MinSuffixes + 1, status.MinAffixes - 3);
+                status.MinPrefixes = Math.Max(status.MinPrefixes, status.MinAffixes - 3);
+                status.MinSuffixes = Math.Max(status.MinSuffixes, status.MinAffixes - 3);
 
                 status.MaxAffixes = Math.Min(status.MaxAffixes + 1, 6);
                 status.MaxSuffixes = Math.Min(status.MaxSuffixes + 1, 3);
                 status.MaxPrefixes = Math.Min(status.MaxPrefixes + 1, 3);
             }
-
-
 
             return status;
         }

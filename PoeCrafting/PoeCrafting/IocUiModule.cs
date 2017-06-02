@@ -9,7 +9,9 @@ namespace PoeCrafting.UI
     {
         public override void Load()
         {
-            Bind<MainWindow>().ToSelf().InTransientScope();
+            Bind<SimulationWindow>().ToSelf().InTransientScope();
+            Bind<HomeWindow>().ToSelf().InTransientScope();
+            Bind<TestbedWindow>().ToSelf().InTransientScope();
             Bind<CraftingTestbedModel>().ToSelf().InTransientScope();
         }
     }

@@ -14,6 +14,7 @@ namespace PoeCrafting.Domain.Crafting
         private ItemStatus _status = new ItemStatus();
         private CraftTracker _tracker = new CraftTracker();
 
+        public List<string> Options => new List<string>();
         public List<ICraftingStep> Children => new List<ICraftingStep>();
 
         public CraftingStepStatus Status
@@ -70,7 +71,7 @@ namespace PoeCrafting.Domain.Crafting
                 _status = current.Initialized ? ItemStatus.Combine(new List<ItemStatus> { current, _status }) : current;
             }
 
-            return _currency.GetNextStatus(current);
+            return _currency.GetNextStatus((ItemStatus)current.Clone());
         }
 
         public Equipment Craft(Equipment equipment)

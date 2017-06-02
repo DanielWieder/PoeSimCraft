@@ -36,7 +36,6 @@ namespace PoeCrafting.Domain.Currency
             if (roll == 1)
             {
                 item.Rarity = EquipmentRarity.Rare;
-
                 return Chaos.Execute(item);
             }
 

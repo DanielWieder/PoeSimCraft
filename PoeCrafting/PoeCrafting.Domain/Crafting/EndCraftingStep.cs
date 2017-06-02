@@ -14,6 +14,7 @@ namespace PoeCrafting.Domain.Crafting
 
         public string Name => "End";
         public bool HasChildren => false;
+        public List<string> Options => new List<string>();
 
         private bool _initialized = false;
 

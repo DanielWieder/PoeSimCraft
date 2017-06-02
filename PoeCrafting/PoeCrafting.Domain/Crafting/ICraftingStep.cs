@@ -10,9 +10,11 @@ namespace PoeCrafting.Domain.Crafting
     public interface ICraftingStep
     {
         List<ICraftingStep> Children { get; }
-        CraftingStepStatus Status { get; }
         bool HasChildren { get; }
+
+        CraftingStepStatus Status { get; }
         string Name { get; }
+        List<string> Options { get; }
 
         void ClearStatus();
         ItemStatus UpdateStatus(ItemStatus current);

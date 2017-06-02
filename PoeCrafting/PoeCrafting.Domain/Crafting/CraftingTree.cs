@@ -12,11 +12,12 @@ namespace PoeCrafting.Domain.Crafting
     {
         private readonly CurrencyFactory _factory;
 
-        public InsertCraftingStep BeforeSelected;
-        public InsertCraftingStep AfterSelected;
-        public InsertCraftingStep InsideSelected;
+        public InsertCraftingStep BeforeSelected { get; set; }
+        public InsertCraftingStep AfterSelected { get; set; }
+        public InsertCraftingStep InsideSelected { get; set; }
+        public InsertCraftingStep LastAfterConditional { get; set; }
 
-        public List<ICraftingStep> CraftingSteps;
+        public List<ICraftingStep> CraftingSteps { get; set; }
 
         public CraftingTree(CurrencyFactory factory)
         {
@@ -30,19 +31,9 @@ namespace PoeCrafting.Domain.Crafting
             Select(start);
         }
 
-        public void UpdateStatus()
-        {
-            IterateSteps((craftingStep, x, y) => craftingStep.ClearStatus(), CraftingSteps);
-
-            var first = CraftingSteps.First();
-            var nextSteps = CraftingSteps.ToList();
-            nextSteps.RemoveAt(0);
-            first.NavigateTree(new ItemStatus(), nextSteps, (step, item) => step.UpdateStatus(item));
-        }
-
         public Equipment Craft(Equipment equipment)
         {
-            RemoveSelected();
+            RemoveInsertNodes();
 
             var first = CraftingSteps.First();
             var nextSteps = CraftingSteps.ToList();
@@ -58,64 +49,37 @@ namespace PoeCrafting.Domain.Crafting
                 return;
             }
 
-            RemoveSelected();
+            RemoveInsertNodes();
 
             int selectedIndex = -1;
             IList<ICraftingStep> selectedList = null;
 
-            IList<ICraftingStep> beforeList = null;
-            int beforeIndex = -1;
-
-            IList<ICraftingStep> afterList = null;
-            int afterIndex = -1;
-
             Action<ICraftingStep, int, IList<ICraftingStep>> action = (current, index, list) =>
             {
-                if (selectedIndex != -1)
-                {
-                    afterList = list;
-                    afterIndex = index;
-                    return;
-                }
-
                 if (current == selected)
                 {
                     selectedIndex = index;
                     selectedList = list;
                 }
-
-                if (selectedIndex == -1)
-                {
-                    beforeList = list;
-                    beforeIndex = index;
-                }
             };
 
             IterateSteps(action, CraftingSteps);
 
-            if (beforeList != null)
+            var afterIndex = selectedIndex + 1;
+
+            if (selected != CraftingSteps.First())
             {
                 var beforeSelected = new InsertCraftingStep(_factory);
                 BeforeSelected = beforeSelected;
-                beforeList.Insert(beforeIndex + 1, beforeSelected);
-            }
-
-            if (beforeList == afterList)
-            {
+                selectedList.Insert(selectedIndex, beforeSelected);
                 afterIndex++;
             }
 
-            if (afterList != null && afterIndex + 1 < afterList.Count)
+            if (selected.Name != "End")
             {
                 var afterSelected = new InsertCraftingStep(_factory);
                 AfterSelected = afterSelected;
-                afterList.Insert(afterIndex + 1, afterSelected);
-            }
-            else
-            {
-                var afterSelected = new InsertCraftingStep(_factory);
-                selectedList.Add(afterSelected);
-                AfterSelected = afterSelected;
+                selectedList.Insert(afterIndex, afterSelected);
             }
 
             if (selected.HasChildren && !selected.Children.Any())
@@ -123,6 +87,20 @@ namespace PoeCrafting.Domain.Crafting
                 var insideSelected = new InsertCraftingStep(_factory);
                 InsideSelected = insideSelected;
                 selected.Children.Add(insideSelected);
+            }
+
+            if ( selected == CraftingSteps.Last() && CraftingSteps.Last().HasChildren)
+            {
+                var lastAfterConditional = new InsertCraftingStep(_factory);
+                LastAfterConditional = lastAfterConditional;
+                CraftingSteps.Add(lastAfterConditional);
+            }
+
+            UpdateStatus();
+
+            if (selected.Status == CraftingStepStatus.Unreachable)
+            {
+                RemoveInsertNodes();
             }
         }
 
@@ -132,7 +110,7 @@ namespace PoeCrafting.Domain.Crafting
             return allNodes.OfType<CurrencyCraftingStep>().Sum(x => x.CurrencyUsed);
         }
 
-        public void Replace(InsertCraftingStep selected, string name)
+        public void Replace(ICraftingStep selected, string name)
         {
             int selectedIndex = -1;
             IList<ICraftingStep> selectedList = null;
@@ -179,10 +157,23 @@ namespace PoeCrafting.Domain.Crafting
 
                 Select(craftingStep);
             }
-
+            UpdateStatus();
         }
 
-        private void RemoveSelected()
+        public void Delete(ICraftingStep craftingStep)
+        {
+            if (craftingStep == null || craftingStep == CraftingSteps[0])
+            {
+                return;
+            }
+
+            Remove(craftingStep, CraftingSteps);
+            
+            RemoveInsertNodes();
+            UpdateStatus();
+        }
+
+        private void RemoveInsertNodes()
         {
             if (BeforeSelected != null)
             {
@@ -196,6 +187,20 @@ namespace PoeCrafting.Domain.Crafting
             {
                 Remove(InsideSelected, CraftingSteps);
             }
+            if (LastAfterConditional != null)
+            {
+                Remove(LastAfterConditional, CraftingSteps);
+            }
+        }
+
+        private void UpdateStatus()
+        {
+            IterateSteps((craftingStep, x, y) => craftingStep.ClearStatus(), CraftingSteps);
+
+            var first = CraftingSteps.First();
+            var nextSteps = CraftingSteps.ToList();
+            nextSteps.RemoveAt(0);
+            first.NavigateTree(new ItemStatus(), nextSteps, (step, item) => step.UpdateStatus(item));
         }
 
         private bool Remove(ICraftingStep toRemove, IList<ICraftingStep> craftingSteps)
