@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PoeCrafting.Domain.Condition;
 using PoeCrafting.Entities;
 
 namespace PoeCrafting.Domain.Crafting
 {
     public class StartCraftingStep : ICraftingStep
     {
-        public List<ICraftingStep> Children => new List<ICraftingStep>();
-        public CraftingStepStatus Status => _initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
-
-        public string Name => "Start";
-        public bool HasChildren => false;
-        public List<string> Options => new List<string>();
-
         private bool _initialized = false;
+
+        public CraftingStepStatus Status => _initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
+        public string Name => "Start";
+
+        public List<ICraftingStep> Children => null;
+        public List<string> Options => null;
+        public CraftingCondition Condition => null;
 
         public void ClearStatus()
         {

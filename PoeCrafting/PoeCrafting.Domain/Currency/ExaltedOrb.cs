@@ -38,22 +38,7 @@ namespace PoeCrafting.Domain.Currency
                 return false;
             }
 
-            if (item.Suffixes.Count >= 3)
-            {
-                item.Prefixes.Add(StatFactory.Get(Random, item.PossiblePrefixes, item.Prefixes, item.ItemLevel));
-            }
-            else if (item.Prefixes.Count >= 3)
-            {
-                item.Suffixes.Add(StatFactory.Get(Random, item.PossiblePrefixes, item.Suffixes, item.ItemLevel));
-            }
-            else if (Random.Next(2) == 0)
-            {
-                item.Prefixes.Add(StatFactory.Get(Random, item.PossiblePrefixes, item.Prefixes, item.ItemLevel));
-            }
-            else
-            {
-                item.Suffixes.Add(StatFactory.Get(Random, item.PossiblePrefixes, item.Suffixes, item.ItemLevel));
-            }
+            StatFactory.AddExplicit(Random, item);
 
             return true;
         }

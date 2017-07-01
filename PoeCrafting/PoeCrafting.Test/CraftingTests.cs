@@ -9,6 +9,7 @@ using Ninject;
 using Ninject.Modules;
 using PoeCrafting.Data;
 using PoeCrafting.Domain;
+using PoeCrafting.Domain.Condition;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
 using PoeCrafting.UI;
@@ -79,7 +80,7 @@ namespace PoeCrafting.Test
         {
             var equipment = CreateRegalia();
 
-            Mock<ICraftingCondition> mockCraftingCondition = new Mock<ICraftingCondition>();
+            Mock<ICraftingSubcondition> mockCraftingCondition = new Mock<ICraftingSubcondition>();
             mockCraftingCondition
                 .Setup(x => x.IsValid(It.IsAny<Equipment>()))
                 .Returns<Equipment>(x => x.Prefixes.Count + x.Suffixes.Count != 6);
@@ -90,8 +91,8 @@ namespace PoeCrafting.Test
             tree.Replace(tree.AfterSelected, "Regal Orb");
             tree.Replace(tree.AfterSelected, "While");
 
-            var craftingStep = tree.CraftingSteps[tree.CraftingSteps.Count - 2] as WhileCraftingStep;
-            craftingStep.Condition = mockCraftingCondition.Object;
+     //       var craftingStep = tree.CraftingSteps[tree.CraftingSteps.Count - 2] as WhileCraftingStep;
+     //       craftingStep.Condition.CraftingSubConditions.Add(mockCraftingCondition.Object);
 
             tree.Replace(tree.InsideSelected, "Exalted Orb");
 

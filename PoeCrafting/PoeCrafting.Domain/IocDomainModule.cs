@@ -1,5 +1,7 @@
 ﻿using Ninject.Modules;
 using PoeCrafting.Domain;
+using PoeCrafting.Domain.Condition;
+using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Domain.Currency;
 using PoeCrafting.Entities;
 
@@ -9,6 +11,9 @@ namespace PoeCrafting.UI
     {
         public override void Load()
         {
+            Bind<CraftingCondition>().ToSelf().InTransientScope();
+            Bind<CraftingSubcondition>().ToSelf().InTransientScope();
+
             Bind<EquipmentFetch>().ToSelf().InTransientScope();
 
             Bind<ICurrency>().To<AlchemyOrb>().Named("Alchemy");

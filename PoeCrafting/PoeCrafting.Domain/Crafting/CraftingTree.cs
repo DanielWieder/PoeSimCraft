@@ -15,7 +15,6 @@ namespace PoeCrafting.Domain.Crafting
         public InsertCraftingStep BeforeSelected { get; set; }
         public InsertCraftingStep AfterSelected { get; set; }
         public InsertCraftingStep InsideSelected { get; set; }
-        public InsertCraftingStep LastAfterConditional { get; set; }
 
         public List<ICraftingStep> CraftingSteps { get; set; }
 
@@ -82,19 +81,19 @@ namespace PoeCrafting.Domain.Crafting
                 selectedList.Insert(afterIndex, afterSelected);
             }
 
-            if (selected.HasChildren && !selected.Children.Any())
+            if (selected.Children != null && !selected.Children.Any())
             {
                 var insideSelected = new InsertCraftingStep(_factory);
                 InsideSelected = insideSelected;
                 selected.Children.Add(insideSelected);
             }
 
-            if ( selected == CraftingSteps.Last() && CraftingSteps.Last().HasChildren)
-            {
-                var lastAfterConditional = new InsertCraftingStep(_factory);
-                LastAfterConditional = lastAfterConditional;
-                CraftingSteps.Add(lastAfterConditional);
-            }
+            //if ( selected == CraftingSteps.Last() && CraftingSteps.Last().Children != null)
+            //{
+            //    var lastAfterConditional = new InsertCraftingStep(_factory);
+            //    LastAfterConditional = lastAfterConditional;
+            //    CraftingSteps.Add(lastAfterConditional);
+            //}
 
             UpdateStatus();
 
@@ -102,12 +101,6 @@ namespace PoeCrafting.Domain.Crafting
             {
                 RemoveInsertNodes();
             }
-        }
-
-        public double GetCurrencySpent()
-        {
-            var allNodes = CraftingSteps.Map(x => true, x => x.Children);
-            return allNodes.OfType<CurrencyCraftingStep>().Sum(x => x.CurrencyUsed);
         }
 
         public void Replace(ICraftingStep selected, string name)
@@ -173,6 +166,34 @@ namespace PoeCrafting.Domain.Crafting
             UpdateStatus();
         }
 
+        public void ClearConditions()
+        {
+            ClearConditions(CraftingSteps);
+        }
+
+        private void ClearConditions(IList<ICraftingStep> craftingSteps)
+        {
+            if (craftingSteps == null)
+            {
+                return;
+            }
+
+            foreach (var craftingStep in craftingSteps)
+            {
+                if (craftingStep.GetType() == typeof(IfCraftingStep))
+                {
+                    (craftingStep as IfCraftingStep).Condition.CraftingSubConditions.Clear();
+                }
+
+                if (craftingStep.GetType() == typeof(WhileCraftingStep))
+                {
+                    (craftingStep as WhileCraftingStep).Condition.CraftingSubConditions.Clear();
+                }
+
+                ClearConditions(craftingStep.Children);
+            }
+        }
+
         private void RemoveInsertNodes()
         {
             if (BeforeSelected != null)
@@ -187,10 +208,10 @@ namespace PoeCrafting.Domain.Crafting
             {
                 Remove(InsideSelected, CraftingSteps);
             }
-            if (LastAfterConditional != null)
-            {
-                Remove(LastAfterConditional, CraftingSteps);
-            }
+            //if (LastAfterConditional != null)
+            //{
+            //    Remove(LastAfterConditional, CraftingSteps);
+            //}
         }
 
         private void UpdateStatus()
@@ -227,7 +248,7 @@ namespace PoeCrafting.Domain.Crafting
             {
                 action(craftingSteps[i], i, craftingSteps);
 
-                if (craftingSteps[i].HasChildren && craftingSteps[i].Children.Any())
+                if (craftingSteps[i].Children != null && craftingSteps[i].Children.Any())
                 {
                     IterateSteps(action, craftingSteps[i].Children);
                 }

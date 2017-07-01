@@ -7,7 +7,22 @@
         xmlns:crafting="clr-namespace:PoeCrafting.Domain.Crafting;assembly=PoeCrafting.Domain"
         mc:Ignorable="d"
         Title="SimulationWindow" Height="500" Width="800">
-    <StackPanel Orientation="Horizontal">
-        <ContentControl Content="{Binding CraftingTree}"/>
-    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40" />
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="40" />
+        </Grid.ColumnDefinitions>
+        <ContentControl Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="5" Content="{Binding SelectedStep}"/>
+        <Button Grid.Column="1" Grid.Row="2" Content="Previous" Click="OnPreviousClick"/>
+        <Button Grid.Column="3" Grid.Row="2" Content="Next" Click="OnNextClick"/>
+    </Grid>
 </Window>

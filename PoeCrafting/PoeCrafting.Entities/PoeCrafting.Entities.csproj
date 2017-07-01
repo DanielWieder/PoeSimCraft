@@ -43,6 +43,8 @@
     <Compile Include="AccessoryEntity.cs" />
     <Compile Include="AffixType.cs" />
     <Compile Include="ArmourEntity.cs" />
+    <Compile Include="ConditionAffix.cs" />
+    <Compile Include="ConditionResolution.cs" />
     <Compile Include="CraftingStepStatus.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="EquipmentRarity.cs" />
@@ -51,6 +53,8 @@
     <Compile Include="Affix.cs" />
     <Compile Include="ITreeNavigation.cs" />
     <Compile Include="Stat.cs" />
+    <Compile Include="SubconditionAggregateType.cs" />
+    <Compile Include="SubconditionValueType.cs" />
     <Compile Include="WeaponEntity.cs" />
   </ItemGroup>
   <ItemGroup>

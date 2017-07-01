@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PoeCrafting.Domain.Condition;
 
 namespace PoeCrafting.Domain.Crafting
 {
@@ -11,14 +12,12 @@ namespace PoeCrafting.Domain.Crafting
     {
         private bool _initialized = false;
 
-        public List<ICraftingStep> Children { get; } = new List<ICraftingStep>();
-
         public CraftingStepStatus Status => _initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
         public string Name => "If";
-        public bool HasChildren => true;
-        public List<string> Options => new List<string>();
 
-        public ICraftingCondition Condition { get; set; }
+        public List<ICraftingStep> Children { get; } = new List<ICraftingStep>();
+        public CraftingCondition Condition { get; set; } = new CraftingCondition();
+        public List<string> Options => null;
 
         public void ClearStatus()
         {

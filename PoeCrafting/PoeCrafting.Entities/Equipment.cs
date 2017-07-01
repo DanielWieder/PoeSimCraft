@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace PoeCrafting.Entities
 {
@@ -8,12 +9,14 @@ namespace PoeCrafting.Entities
 
         public ItemBase ItemBase { get; set; }
 
-        public List<Affix> PossiblePrefixes { get; set; }
-        public List<Affix> PossibleSuffixes { get; set; }
-        public List<Affix> PossibleImplicits { get; set; }
+        public List<Affix> PossibleAffixes { get; set; }
+        public List<Affix> PossiblePrefixes => PossibleAffixes.Where(x => x.Type == "prefix").ToList();
+        public List<Affix> PossibleSuffixes => PossibleAffixes.Where(x => x.Type == "suffix").ToList();
 
-        public List<Stat> Prefixes { get; set; } = new List<Stat>();
-        public List<Stat> Suffixes { get; set; } = new List<Stat>();
+        public List<Stat> Stats { get; set; }
+        public List<Stat> Prefixes => Stats.Where(x => x.Affix.Type == "prefix").ToList();
+        public List<Stat> Suffixes => Stats.Where(x => x.Affix.Type == "suffix").ToList();
+
         public Stat Implicit { get; set; } = null;
 
         public int ItemLevel { get; set; } = 84;

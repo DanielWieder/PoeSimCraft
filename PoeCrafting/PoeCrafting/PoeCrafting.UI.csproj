@@ -70,14 +70,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CraftingTreeControl.xaml.cs">
+    <Compile Include="Controls\BaseSelectionControl.xaml.cs">
+      <DependentUpon>BaseSelectionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ConditionControl.xaml.cs">
+      <DependentUpon>ConditionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SubconditionSelectionControl.xaml.cs">
+      <DependentUpon>SubconditionSelectionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SubconditionControl.xaml.cs">
+      <DependentUpon>SubconditionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CraftingTreeControl.xaml.cs">
       <DependentUpon>CraftingTreeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CraftingTreeViewModel.cs" />
+    <Compile Include="Models\ConditionAffixControlModel.cs" />
+    <Compile Include="Models\CraftingTreeViewModel.cs" />
     <Compile Include="HomeWindow.xaml.cs">
       <DependentUpon>HomeWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="CraftingTreeControl.xaml">
+    <Page Include="Controls\BaseSelectionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ConditionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SubconditionSelectionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SubconditionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\CraftingTreeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -94,7 +123,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IocUiModule.cs" />
-    <Compile Include="CraftingTestbedModel.cs" />
+    <Compile Include="Models\CraftingTestbedModel.cs" />
+    <Compile Include="Models\TabConditionModel.cs" />
     <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="SimulationWindow.xaml.cs">
       <DependentUpon>SimulationWindow.xaml</DependentUpon>

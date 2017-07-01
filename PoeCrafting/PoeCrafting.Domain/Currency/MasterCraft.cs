@@ -53,9 +53,8 @@ namespace PoeCrafting.Domain.Currency
                 throw new InvalidOperationException("That crafted prefix is not in the list of available prefixes");
             }
 
-            var stat = StatFactory.Get(random, affix);
+            StatFactory.AddExplicit(random, item, new List<Affix> { affix });
 
-            item.Prefixes.Add(stat);
             return true;
         }
 

@@ -4,18 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PoeCrafting.Domain.Condition;
 
 namespace PoeCrafting.Domain.Crafting
 {
     public class WhileCraftingStep : ICraftingStep
     {
-        public List<ICraftingStep> Children { get; } = new List<ICraftingStep>();
+        private bool _initialized = false;
+
         public CraftingStepStatus Status => _initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
         public string Name => "While";
-        private bool _initialized = false;
-        public bool HasChildren => true;
-        public List<string> Options => new List<string>();
-        public ICraftingCondition Condition { get; set; }
+
+        public List<ICraftingStep> Children { get; } = new List<ICraftingStep>();
+        public CraftingCondition Condition { get; } = new CraftingCondition();
+        public List<string> Options => null;
 
         public void ClearStatus()
         {

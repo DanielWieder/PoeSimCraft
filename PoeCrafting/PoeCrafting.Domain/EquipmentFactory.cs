@@ -12,18 +12,17 @@ namespace PoeCrafting.Domain
 {
     public class EquipmentFactory
     {
-        private IFetchArmourByItemName _fetchArmorByItemName;
-        private IFetchAccessoriesByItemName _fetchAccessoriesByName;
-        private IFetchWeaponsByItemName _fetchWeaponsByName;
-        private IFetchAffixesByItemName _fetchAffixesByItemName;
-        private IFetchTypeByItemName _fetchTypeByItemName;
+        private readonly IFetchArmourByItemName _fetchArmorByItemName;
+        private readonly IFetchAccessoriesByItemName _fetchAccessoriesByName;
+        private readonly IFetchWeaponsByItemName _fetchWeaponsByName;
+        private readonly IFetchAffixesByItemName _fetchAffixesByItemName;
+        private readonly IFetchTypeByItemName _fetchTypeByItemName;
 
-        private IRandom _random;
-        private List<Affix> _implicits;
-        private List<Affix> _prefixes;
-        private List<Affix> _suffixes;
+        private readonly IRandom _random;
+        private List<Affix> _affixes;
         private Affix _baseImplicit;
         private ItemBase _baseItem;
+        private int _itemLevel;
 
         public EquipmentFactory(
             IRandom random, 
@@ -39,7 +38,7 @@ namespace PoeCrafting.Domain
             _fetchWeaponsByName = fetchWeaponsByName;
         }
 
-        public void Initialize(string baseItemName)
+        public void Initialize(string baseItemName, int itemLevel = 84)
         {
             if (string.IsNullOrEmpty(baseItemName)) return;
 
@@ -65,14 +64,26 @@ namespace PoeCrafting.Domain
             {
                 throw new InvalidOperationException("The equipment type does not match the passed type");
             }
-
+            _itemLevel = itemLevel;
             _baseImplicit = null;
             _fetchAffixesByItemName.Name = baseItemName;
             var affixes = _fetchAffixesByItemName.Execute();
 
-            _suffixes = affixes.Where(x => x.Type.Contains("suffix")).ToList();
-            _prefixes = affixes.Where(x => x.Type.Contains("prefix")).ToList();
-            _implicits = affixes.Where(x => x.Type.Contains("corrupted")).ToList();
+            _affixes = affixes.ToList();
+        }
+
+        public ItemBase GetBaseItem()
+        {
+            if (_baseItem == null) throw new InvalidOperationException("The equipment factory must be initialized before it can produce equipment");
+
+            return (ItemBase) _baseItem.Clone();
+        }
+
+        public List<Affix> GetPossibleAffixes()
+        {
+            if (_baseItem == null) throw new InvalidOperationException("The equipment factory must be initialized before it can produce equipment");
+
+            return this._affixes;
         }
 
         public Equipment CreateEquipment()
@@ -81,11 +92,10 @@ namespace PoeCrafting.Domain
 
             return new Equipment
             {
-                PossibleImplicits = this._implicits,
-                PossiblePrefixes = this._prefixes,
-                PossibleSuffixes = this._suffixes,
+                ItemLevel = this._itemLevel,
+                PossibleAffixes = this._affixes,
                 ItemBase = (ItemBase)_baseItem.Clone(),
-                Implicit = _baseImplicit != null ? StatFactory.Get(_random, _baseImplicit) : null
+                Implicit = _baseImplicit != null ? StatFactory.AffixToStat(_random, _baseImplicit) : null
             };
         }
     }

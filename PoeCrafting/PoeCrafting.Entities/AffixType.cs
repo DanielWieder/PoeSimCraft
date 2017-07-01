@@ -1,9 +1,16 @@
-﻿namespace PoeCrafting.Entities
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PoeCrafting.Entities
 {
     public enum AffixType
     {
-        Implicit,
         Prefix,
-        Suffix
+        Suffix,
+        Meta,
+        Implicit
     }
 }

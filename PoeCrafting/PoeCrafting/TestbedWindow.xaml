@@ -33,7 +33,7 @@
             </Grid.RowDefinitions>
 
             <Label Content="Currency" Grid.Column="0" Grid.Row="0"/>
-            <ListBox Grid.Column="0" Grid.Row="1" Grid.RowSpan="8" ItemsSource="{Binding Path=Currencies}" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedCurrency}"/>
+            <ListBox Grid.Column="0" Grid.Row="1" Grid.RowSpan="8" ItemsSource="{Binding Path=Currencies}" DisplayMemberPath="Group" SelectedItem="{Binding Path=SelectedCurrency}"/>
                 <Button Content="Craft&#xD;&#xA;" Grid.Column="0" Grid.Row="8" Click="OnCraftSelection"/>
 
             <Label Content="Item Types:" Grid.Column="2" Grid.Row="0"/>
@@ -77,19 +77,19 @@
             <Label Content="Min Prefix" Grid.Column="0" Grid.Row="0"/>
             <Label Content="{Binding Path=MinPrefix, Mode=OneWay}" Grid.Column="2" Grid.Row="0"/>
             
-            <Label Content="Max Prefix" Grid.Column="0" Grid.Row="2"/>
+            <Label Content="SelectedMax Prefix" Grid.Column="0" Grid.Row="2"/>
             <Label Content="{Binding Path=MaxPrefix, Mode=OneWay}" Grid.Column="2" Grid.Row="2"/>
 
             <Label Content="Min Suffix" Grid.Column="0" Grid.Row="4"/>
             <Label Content="{Binding Path=MinSuffix, Mode=OneWay}" Grid.Column="2" Grid.Row="4"/>
 
-            <Label Content="Max Suffix" Grid.Column="0" Grid.Row="6"/>
+            <Label Content="SelectedMax Suffix" Grid.Column="0" Grid.Row="6"/>
             <Label Content="{Binding Path=MaxSuffix, Mode=OneWay}" Grid.Column="2" Grid.Row="6"/>
 
             <Label Content="Min Affix" Grid.Column="0" Grid.Row="8"/>
             <Label Content="{Binding Path=MinAffix, Mode=OneWay}" Grid.Column="2" Grid.Row="8"/>
 
-            <Label Content="Max Affix" Grid.Column="0" Grid.Row="10"/>
+            <Label Content="SelectedMax Affix" Grid.Column="0" Grid.Row="10"/>
             <Label Content="{Binding Path=MaxAffix, Mode=OneWay}" Grid.Column="2" Grid.Row="10"/>
 
             <Label Content="Rarity" Grid.Column="0" Grid.Row="12"/>

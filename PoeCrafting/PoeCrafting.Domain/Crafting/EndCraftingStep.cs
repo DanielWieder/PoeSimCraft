@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PoeCrafting.Domain.Condition;
 using PoeCrafting.Entities;
 
 namespace PoeCrafting.Domain.Crafting
 {
     class EndCraftingStep : ICraftingStep
     {
-        public List<ICraftingStep> Children => new List<ICraftingStep>();
         public CraftingStepStatus Status => _initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
-
         public string Name => "End";
-        public bool HasChildren => false;
-        public List<string> Options => new List<string>();
+
+        public List<ICraftingStep> Children => null;
+        public List<string> Options => null;
+        public CraftingCondition Condition => null;
 
         private bool _initialized = false;
 
