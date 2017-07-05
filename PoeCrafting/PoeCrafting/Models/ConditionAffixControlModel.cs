@@ -18,32 +18,38 @@ namespace PoeCrafting.UI.Models
 
         private readonly List<Affix> _affixes;
         private readonly ItemBase _itemBase;
-        private readonly AffixType _affixType;
+        public readonly AffixType AffixType;
 
         public SubconditionValueType ValueType { get; set; }
 
-        public ConditionAffix FirstAffix { get; set; }
-        public ConditionAffix SecondAffix { get; set; }
-        public ConditionAffix ThirdAffix { get; set; }
+        public string FirstAffix { get; set; }
+        public int? FirstAffixMin { get; set; }
+        public int? FirstAffixMax { get; set; }
 
+        public string SecondAffix { get; set; }
+        public int? SecondAffixMin { get; set; }
+        public int? SecondAffixMax { get; set; }
+
+        public string ThirdAffix { get; set; }
+        public int? ThirdAffixMin { get; set; }
+        public int? ThirdAffixMax { get; set; }
 
         public List<string> ValidAffixes
         {
             get
             {
-                return _affixes.Where(x => (FirstAffix == null || x.Group != FirstAffix.Group) && 
-                                             (SecondAffix == null || x.Group != SecondAffix.Group) && 
-                                             (ThirdAffix == null || x.Group != ThirdAffix.Group))
-                                             .Select(x => x.Group)
-                                             .ToList();
+                var affixes = _affixes.Where(x => (FirstAffix == null || x.Group != FirstAffix) &&
+                                                  (SecondAffix == null || x.Group != SecondAffix) &&
+                                                  (ThirdAffix == null || x.Group != ThirdAffix))
+                    .Where(x => x.Type == AffixType.ToString().ToLower())
+                    .Select(x => x.Group)
+                    .Distinct()
+                    .ToList();
+
+                affixes.Insert(0, string.Empty);
+                return affixes.ToList();
             }
         }
-        public bool IsFirstAffixMinValid => IsRangeValid(FirstAffix.Group, FirstAffix.Min) && IsMinLessThanMax(FirstAffix.Min, FirstAffix.Max);
-        public bool IsFirstAffixMaxValid => IsRangeValid(FirstAffix.Group, FirstAffix.Max) && IsMinLessThanMax(FirstAffix.Min, FirstAffix.Max);
-        public bool IsSecondAffixMinValid => IsRangeValid(SecondAffix.Group, SecondAffix.Min) && IsMinLessThanMax(SecondAffix.Min, SecondAffix.Max);
-        public bool IsSecondAffixMaxValid => IsRangeValid(SecondAffix.Group, SecondAffix.Max) && IsMinLessThanMax(SecondAffix.Min, SecondAffix.Max);
-        public bool IsThirdAffixMinValid => IsRangeValid(ThirdAffix.Group, ThirdAffix.Min) && IsMinLessThanMax(ThirdAffix.Min, ThirdAffix.Max);
-        public bool IsThirdAffixMaxValid => IsRangeValid(ThirdAffix.Group, ThirdAffix.Max) && IsMinLessThanMax(ThirdAffix.Min, ThirdAffix.Max);
 
         public ConditionAffixControlModel(ItemBase itemBase, SubconditionValueType subconditionValueType, List<Affix> affixes, AffixType affixType)
         {
@@ -51,45 +57,7 @@ namespace PoeCrafting.UI.Models
 
             ValueType = subconditionValueType;
             _affixes = affixes;
-            _affixType = affixType;
-        }
-
-        public void SetAffix(string group, ConditionAffix affix)
-        {
-            if (string.IsNullOrEmpty(group))
-            {
-                affix.Group = string.Empty;
-                affix.Min = null;
-                affix.Max = null;
-                return;
-            }
-
-            affix.Group = group;
-            affix.Min = 0;
-            affix.Max = ConditionValueCalculator.GetGroupMax(group, _itemBase, _affixes, _affixType);
-        }
-
-        private bool IsMinLessThanMax(int? min, int? max)
-        {
-            if (!min.HasValue || !max.HasValue)
-            {
-                return true;
-            }
-
-            return min.Value <= max.Value;
-        }
-
-        private bool IsRangeValid(string group, int? value)
-        {
-            if (!value.HasValue)
-            {
-                return true;
-            }
-
-            var minOption = 0;
-            var maxOption = ConditionValueCalculator.GetGroupMax(group, _itemBase, _affixes, _affixType);
-
-            return minOption <= value.Value && maxOption >= value.Value;
+            AffixType = affixType;
         }
     }
 }

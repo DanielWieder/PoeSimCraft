@@ -16,52 +16,52 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="500" />
         </Grid.ColumnDefinitions>
-        <TreeView ItemsSource="{Binding Tree.Tree}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown">
-        <TreeView.ItemContainerStyle>
-            <Style TargetType="{x:Type TreeViewItem}">
-                <Setter Property="IsExpanded" Value="True" />
+        <TreeView ItemsSource="{Binding Tree.Tree}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" SelectedItemChanged="OnSelectedStepChanged">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="True" />
                     <Setter Property="IsSelected" Value="{Binding Selected, Mode=TwoWay}" />
-                <Setter Property="FontWeight" Value="Normal" />
+                    <Setter Property="FontWeight" Value="Normal" />
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="RoyalBlue" />
                             <Setter Property="Foreground" Value="White" />
-                    </Trigger>
+                        </Trigger>
                     </Style.Triggers>
-            </Style>
-        </TreeView.ItemContainerStyle>
+                </Style>
+            </TreeView.ItemContainerStyle>
 
-        <TreeView.ItemTemplate>
+            <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                <Border BorderBrush="{Binding BorderBrush}" BorderThickness="1">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="20" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="80" />
-                        </Grid.ColumnDefinitions>
+                    <Border BorderBrush="{Binding BorderBrush}" BorderThickness="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="80" />
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="{Binding Path=Name}"/>
-                        <ComboBox Grid.Column="1" ItemsSource="{Binding Path=Options}" SelectionChanged="OnInsertOptionSelected">
-                            <ComboBox.Style>
-                                <Style TargetType="ComboBox">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsVisible}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ComboBox.Style>
-                        </ComboBox>
-                    </Grid>
-                </Border>
-            </HierarchicalDataTemplate>
-        </TreeView.ItemTemplate>
-    </TreeView>
-    <Button Content="Delete" Grid.Row="1" Grid.Column="0" Click="OnDeleteClick"></Button>
-     <ContentControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Content="{Binding Condition}"/>
+                            <TextBlock Grid.Column="0" Text="{Binding Path=Name}"/>
+                            <ComboBox Grid.Column="1" ItemsSource="{Binding Path=Options}" SelectionChanged="OnInsertOptionSelected">
+                                <ComboBox.Style>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasOptions}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ComboBox.Style>
+                            </ComboBox>
+                        </Grid>
+                    </Border>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <Button Content="Delete" Grid.Row="1" Grid.Column="0" Click="OnDeleteClick"></Button>
+        <ContentControl Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Content="{Binding Condition}"/>
     </Grid>
 </UserControl>

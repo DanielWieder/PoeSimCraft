@@ -20,16 +20,16 @@
             <ColumnDefinition Width="30" />
             <ColumnDefinition Width="50" />
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" Content="Prefixes"/>
-        <ComboBox Grid.Row="0" Grid.Column="2" SelectedValue="{Binding Model}" SelectedValuePath="" ItemsSource="{Binding ValidAffxes}" DisplayMemberPath="Name"/>
-        <ComboBox Grid.Row="1" Grid.Column="2" SelectedValue="{Binding Model}" ItemsSource="{Binding ValidAffxes}" DisplayMemberPath="Name"/>
-        <ComboBox Grid.Row="2" Grid.Column="2" SelectedValue="{Binding Model}" ItemsSource="{Binding ValidAffxes}" DisplayMemberPath="Name"/>
+        <Label Grid.Row="0" Grid.Column="0" Content="{Binding AffixType}"/>
+        <ComboBox Grid.Row="0" Grid.Column="2" SelectedValue="{Binding Model}" SelectedValuePath="FirstAffix" ItemsSource="{Binding ValidAffxes}"/>
+        <ComboBox Grid.Row="1" Grid.Column="2" SelectedValue="{Binding Model}" SelectedValuePath="SecondAffix" ItemsSource="{Binding ValidAffxes}"/>
+        <ComboBox Grid.Row="2" Grid.Column="2" SelectedValue="{Binding Model}" SelectedValuePath="ThirdAffix" ItemsSource="{Binding ValidAffxes}"/>
 
-        <TextBox Grid.Row="0" Grid.Column="4" Text="Min"/>
-        <TextBox Grid.Row="0" Grid.Column="6" Text="Max"/>
-        <TextBox Grid.Row="1" Grid.Column="4" Text="Min"/>
-        <TextBox Grid.Row="1" Grid.Column="6" Text="Max"/>
-        <TextBox Grid.Row="2" Grid.Column="4" Text="Min"/>
-        <TextBox Grid.Row="2" Grid.Column="6" Text="Max"/>
+        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding Source=Model, Path=FirstAffixMin}"/>
+        <TextBox Grid.Row="0" Grid.Column="6" Text="{Binding Source=Model, Path=FirstAffixMax}"/>
+        <TextBox Grid.Row="1" Grid.Column="4" Text="{Binding Source=Model, Path=SecondAffixMin}"/>
+        <TextBox Grid.Row="1" Grid.Column="6" Text="{Binding Source=Model, Path=SecondAffixMax}"/>
+        <TextBox Grid.Row="2" Grid.Column="4" Text="{Binding Source=Model, Path=ThirdAffixMin}"/>
+        <TextBox Grid.Row="2" Grid.Column="6" Text="{Binding Source=Model, Path=ThirdAffixMax}"/>
     </Grid>
 </UserControl>

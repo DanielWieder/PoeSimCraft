@@ -25,7 +25,9 @@ namespace PoeCrafting.Domain.Crafting
             CraftingSteps = new List<ICraftingStep>();
 
             var start = new StartCraftingStep();
+            var end = new EndCraftingStep();
             CraftingSteps.Add(start);
+            CraftingSteps.Add(end);
 
             Select(start);
         }
@@ -155,7 +157,7 @@ namespace PoeCrafting.Domain.Crafting
 
         public void Delete(ICraftingStep craftingStep)
         {
-            if (craftingStep == null || craftingStep == CraftingSteps[0])
+            if (craftingStep == null || craftingStep == CraftingSteps.First() || craftingStep == CraftingSteps.Last())
             {
                 return;
             }
@@ -233,10 +235,13 @@ namespace PoeCrafting.Domain.Crafting
             }
             foreach (var craftingStep in craftingSteps)
             {
-                var isRemoved = Remove(toRemove, craftingStep.Children);
-                if (isRemoved)
+                if (craftingStep.Children != null)
                 {
-                    return true;
+                    var isRemoved = Remove(toRemove, craftingStep.Children);
+                    if (isRemoved)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;

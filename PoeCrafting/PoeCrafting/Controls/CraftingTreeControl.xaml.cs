@@ -28,12 +28,11 @@ namespace PoeCrafting.UI.Controls
     public partial class CraftingTreeControl : UserControl, INotifyPropertyChanged
     {
         private readonly CraftingTree _tree;
-        private ICraftingStep _selected = null;
+        private ICraftingStep _selected;
         private List<Affix> _affixes;
         private ItemBase _itemBase;
         public CraftingTreeViewModel Tree { get; set; }
         public ConditionControl Condition { get; set; }
-        public bool Selected { get; set; }
 
         public CraftingTreeControl(CurrencyFactory factory)
         {
@@ -49,10 +48,6 @@ namespace PoeCrafting.UI.Controls
             _affixes = affixes;
             _tree.ClearConditions();
             Tree.UpdateTree(_tree, _selected);
-
-            CraftingCondition condition = new CraftingCondition();
-            Condition = new ConditionControl(condition, _itemBase, _affixes);
-            OnPropertyChanged(nameof(Condition));
         }
 
         private void OnInsertOptionSelected(object sender, SelectionChangedEventArgs e)
@@ -84,11 +79,20 @@ namespace PoeCrafting.UI.Controls
             }
         }
 
-        private void UIElement_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var model = sender as CraftingStepViewModel;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            if (model?.Value == null)
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void OnSelectedStepChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            var treeView = sender as TreeView;
+            var model = treeView.SelectedItem as CraftingStepViewModel;
+
+            if (model?.Value == null || _selected == model.Value)
             {
                 return;
             }
@@ -100,18 +104,41 @@ namespace PoeCrafting.UI.Controls
                 Condition = new ConditionControl(model.Condition, _itemBase, _affixes);
                 OnPropertyChanged(nameof(Condition));
             }
+            else
+            {
+                Condition = null;
+                OnPropertyChanged(nameof(Condition));
+            }
 
             _tree.Select(craftingStep);
             _selected = model.Value;
             Tree.UpdateTree(_tree, _selected);
+
+            var item = FindItem(x => x.Value == _selected, treeView.Items.OfType<CraftingStepViewModel>().ToList());
+            if (item != null)
+            {
+        //        item.Selected = true;
+            }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private CraftingStepViewModel FindItem(Func<CraftingStepViewModel, bool> findItem, List<CraftingStepViewModel> collection )
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            foreach (CraftingStepViewModel item in collection)
+            {
+                if (findItem(item))
+                {
+                    return item;
+                }
+
+                var result = FindItem(findItem, item.Children.ToList());
+                {
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+            }
+            return null;
         }
     }
 }

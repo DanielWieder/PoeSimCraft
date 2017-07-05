@@ -29,26 +29,41 @@ namespace PoeCrafting.UI.Controls
             set { Model.ValueType = value; }
         }
 
+        public string AffixType => Model.AffixType.ToString();
+
         public List<string> ValidAffxes => Model.ValidAffixes;
-
-
 
         public List<ConditionAffix> Conditions
         {
             get
             {
                 var list = new List<ConditionAffix>();
-                if (Model.FirstAffix != null)
+                if (!string.IsNullOrEmpty(Model.FirstAffix))
                 {
-                    list.Add(Model.FirstAffix);
+                    list.Add(new ConditionAffix
+                    {
+                        Group = Model.FirstAffix,
+                        Min = Model.FirstAffixMin,
+                        Max = Model.FirstAffixMax
+                    });
                 }
-                if (Model.SecondAffix != null)
+                if (!string.IsNullOrEmpty(Model.SecondAffix))
                 {
-                    list.Add(Model.SecondAffix);
+                    list.Add(new ConditionAffix
+                    {
+                        Group = Model.SecondAffix,
+                        Min = Model.SecondAffixMin,
+                        Max = Model.SecondAffixMax
+                    });
                 }
-                if (Model.ThirdAffix != null)
+                if (!string.IsNullOrEmpty(Model.ThirdAffix))
                 {
-                    list.Add(Model.ThirdAffix);
+                    list.Add(new ConditionAffix
+                    {
+                        Group = Model.ThirdAffix,
+                        Min = Model.ThirdAffixMin,
+                        Max = Model.ThirdAffixMax
+                    });
                 }
                 return list;
             }
@@ -56,8 +71,9 @@ namespace PoeCrafting.UI.Controls
 
         public SubconditionSelectionControl(ItemBase itemBase, List<Affix> affixes, AffixType affixType)
         {
-            InitializeComponent();
             Model = new ConditionAffixControlModel(itemBase, SubconditionValueType.Flat, affixes, affixType);
+            DataContext = this;
+            InitializeComponent();
         }
     }
 }

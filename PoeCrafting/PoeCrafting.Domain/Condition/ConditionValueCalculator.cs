@@ -91,14 +91,13 @@ namespace PoeCrafting.Domain.Condition
             var prefixes = a.Affixes.Where(x => x.Type == AffixType.Prefix).ToList();
             var suffixes = a.Affixes.Where(x => x.Type == AffixType.Suffix).ToList();
 
-            if (group.Contains("OpenPrefix") || group.Contains("OpenSuffix"))
+            if (group.Contains("OpenPrefix"))
             {
-                var pool = group.Contains("Prefix") ? prefixes : suffixes;
-                var isMatch = group.Contains("Single") ? pool.Count <= 2 :
-                                group.Contains("Double") ? pool.Count <= 1 :
-                                group.Contains("Triple") && pool.Count == 0;
-
-                return isMatch ? 1 : 0;
+                return prefixes.Count();
+            }
+            if (group.Contains("OpenSuffix"))
+            {
+                return suffixes.Count();
             }
             if (group == "TotalEnergyShield")
             {

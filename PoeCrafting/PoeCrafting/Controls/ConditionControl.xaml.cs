@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -27,9 +28,12 @@ namespace PoeCrafting.UI.Controls
     /// </summary>
     public partial class ConditionControl : UserControl, INotifyPropertyChanged
     {
-        public List<SubconditionControl> SubconditionControls { get; set; }
+        private SubconditionControl _selectedSubcondition;
+        private readonly ItemBase _itemBase;
+        private readonly List<Affix> _affixes;
+        private readonly CraftingCondition _craftingCondition;
 
-
+        public ObservableCollection<SubconditionControl> SubconditionControls { get; set; }
 
         public SubconditionControl SelectedSubcondition
         {
@@ -41,18 +45,20 @@ namespace PoeCrafting.UI.Controls
             }
         }
 
-        private SubconditionControl _selectedSubcondition;
-        private ItemBase _itemBase;
-        private List<Affix> _affixes;
-        private CraftingCondition _craftingCondition;
-
-
         public ConditionControl(CraftingCondition condition, ItemBase itemBase, List<Affix> affixes )
         {
             _itemBase = itemBase;
             _affixes = affixes;
             _craftingCondition = condition;
-            SubconditionControls = condition.CraftingSubConditions.Select(x => new SubconditionControl(x, itemBase, affixes)).ToList();
+
+            SubconditionControls = new ObservableCollection<SubconditionControl>();
+
+            foreach (CraftingSubcondition t in condition.CraftingSubConditions)
+            {
+                var subconditionControl = new SubconditionControl(t, itemBase, affixes, GetNextIndex());
+                subconditionControl.OnDeleteEvent += (x, y) => RemoveSubcondition(y.Control);
+                SubconditionControls.Add(subconditionControl);
+            }
 
             if (SubconditionControls.Count == 0)
             {
@@ -71,19 +77,29 @@ namespace PoeCrafting.UI.Controls
         public void AddSubcondition()
         {
             var subcondition = new CraftingSubcondition();
-            var subconditionControl = new SubconditionControl(subcondition, _itemBase, _affixes);
+            var subconditionControl = new SubconditionControl(subcondition, _itemBase, _affixes, GetNextIndex());
+            subconditionControl.OnDeleteEvent += (x, y) => RemoveSubcondition(y.Control);
+
             _craftingCondition.CraftingSubConditions.Add(subcondition);
             SubconditionControls.Add(subconditionControl);
 
             OnPropertyChanged(nameof(SubconditionControls));
         }
 
-        public void RemoveSubcondition()
+        private int GetNextIndex()
         {
-            if (this.SelectedSubcondition != null)
+            if (!SubconditionControls.Any())
             {
-                SubconditionControls.Remove(SelectedSubcondition);
-                _craftingCondition.CraftingSubConditions.Remove(SelectedSubcondition.SubCondition);
+                return 1;
+            }
+
+            return SubconditionControls.Max(x => x.Index) + 1;
+        }
+
+        public void RemoveSubcondition(SubconditionControl subcondition)
+        {
+                SubconditionControls.Remove(subcondition);
+                _craftingCondition.CraftingSubConditions.Remove(subcondition.SubCondition);
                 SelectedSubcondition = null;
 
                 if (SubconditionControls.Count == 0)
@@ -95,12 +111,6 @@ namespace PoeCrafting.UI.Controls
 
                 OnPropertyChanged(nameof(SelectedSubcondition));
                 OnPropertyChanged(nameof(SubconditionControls));
-            }
-        }
-
-        private void OnDeleteClick(object sender, RoutedEventArgs e)
-        {
-            RemoveSubcondition();
         }
 
         private void OnAddClick(object sender, RoutedEventArgs e)

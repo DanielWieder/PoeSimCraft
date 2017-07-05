@@ -28,11 +28,11 @@ namespace PoeCrafting.UI
         public void UpdateTree(CraftingTree craftingTree, ICraftingStep selected)
         {
             Tree.Clear();
-
-            foreach (var item in craftingTree.CraftingSteps.Select(x => new CraftingStepViewModel(x, selected)))
+            var steps = craftingTree.CraftingSteps.Select(x => new CraftingStepViewModel(x, selected)).ToList();
+            for (int i = 0; i < steps.Count(); i++)
             {
-                item.UpdateStatus();
-                Tree.Add(item);
+                steps[i].UpdateStatus();
+                Tree.Add(steps[i]);
             }
 
             OnPropertyChanged(nameof(Tree));
@@ -70,6 +70,7 @@ namespace PoeCrafting.UI
 
         public ICraftingStep Value => _value;
         public string Name => _value.Name;
+
         public ObservableCollection<CraftingStepViewModel> Children { get; }
 
         public SolidColorBrush BorderBrush
@@ -104,6 +105,11 @@ namespace PoeCrafting.UI
 
             Options = craftingStep.Options == null ? new ObservableCollection<string>() : new ObservableCollection<string>(craftingStep.Options);
 
+            if (craftingStep == selected)
+            {
+                _selected = true;
+            }
+
             if (craftingStep.Children == null)
             {
                 Children = new ObservableCollection<CraftingStepViewModel>();
@@ -111,12 +117,6 @@ namespace PoeCrafting.UI
             else
             {
                 var children = craftingStep.Children.Select(x => new CraftingStepViewModel(x, selected)).ToArray();
-
-                if (craftingStep == selected)
-                {
-                    _selected = true;
-                }
-
                 Children = new ObservableCollection<CraftingStepViewModel>(children);
             }
         }

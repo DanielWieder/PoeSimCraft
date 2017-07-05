@@ -16,7 +16,7 @@ namespace PoeCrafting.Data
                                 FROM Item i
                                 JOIN ItemSubType ist ON ist.ItemSubtypeId = i.ItemSubtypeId
                                 JOIN ItemType it ON ist.ItemTypeId = it.ItemTypeId
-                                WHERE i.Name = '{Name}'";
+                                WHERE i.Name = '{Name.Replace("'", "''")}'";
 
             return db.Fetch<string>(command);
         }

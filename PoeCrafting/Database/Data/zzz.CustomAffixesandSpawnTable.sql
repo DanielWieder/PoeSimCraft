@@ -99,28 +99,37 @@ WHERE i.[Group] LIKE '%Resistance%'
 AND i.GenerationType = 'suffix'
 AND t.Value = '1'
 
+-------------------------------------- Global Spawn Tag --------------------------------------
+
+INSERT INTO SpawnTag (Name)
+VALUES ('global')
+
+INSERT ItemSpawnTagMap
+(
+    ItemId, SpawnTagId
+)
+SELECT i.ItemId, (SELECT SpawnTagId
+	FROM SpawnTag
+	WHERE [Name] = 'global')
+FROM Item i
+
 -------------------------------------- Open Prefixes/Suffixes --------------------------------------
 
-INSERT INTO Affix (Domain, GenerationType, [Group])
-VALUES  ('item', 'meta', 'SingleOpenPrefix'),
-        ('item', 'meta', 'DoubleOpenPrefix'),
-        ('item', 'meta', 'TripleOpenPrefix'),
-        ('item', 'meta', 'SingleOpenSuffix'),
-        ('item', 'meta', 'DoubleOpenSuffix'),
-		('item', 'meta', 'TripleOpenSuffix')
-
+INSERT INTO Affix (Domain, GenerationType, [Group], StatMin1, StatMax1)
+VALUES  ('item', 'meta', 'OpenPrefix', 1, 3),
+        ('item', 'meta', 'OpenSuffix', 1, 3)
 
 INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Value], [Weight])
 VALUES(
 	(
         SELECT AffixId
         FROM Affix
-        WHERE [Group] = 'SingleOpenPrefix'
+        WHERE [Group] = 'OpenPrefix'
     ),
 	(
 		SELECT SpawnTagId
 		FROM SpawnTag
-		WHERE [Name] = 'Default'
+		WHERE [Name] = 'global'
 	), 
 	1, 
 	0
@@ -131,77 +140,14 @@ VALUES(
 	(
         SELECT AffixId
         FROM Affix
-        WHERE [Group] = 'DoubleOpenPrefix'
+        WHERE [Group] = 'OpenSuffix'
     ),
 	(
 		SELECT SpawnTagId
 		FROM SpawnTag
-		WHERE [Name] = 'Default'
+		WHERE [Name] = 'global'
 	), 
 	1, 
 	0
 )
 
-INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Value], [Weight])
-VALUES(
-	(
-        SELECT AffixId
-        FROM Affix
-        WHERE [Group] = 'TripleOpenPrefix'
-    ),
-	(
-		SELECT SpawnTagId
-		FROM SpawnTag
-		WHERE [Name] = 'Default'
-	), 
-	1, 
-	0
-)
-
-INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Value], [Weight])
-VALUES(
-	(
-        SELECT AffixId
-        FROM Affix
-        WHERE [Group] = 'SingleOpenSuffix'
-    ),
-	(
-		SELECT SpawnTagId
-		FROM SpawnTag
-		WHERE [Name] = 'Default'
-	), 
-	1, 
-	0
-)
-
-INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Value], [Weight])
-VALUES(
-	(
-        SELECT AffixId
-        FROM Affix
-        WHERE [Group] = 'DoubleOpenSuffix'
-    ),
-	(
-		SELECT SpawnTagId
-		FROM SpawnTag
-		WHERE [Name] = 'Default'
-	), 
-	1, 
-	0
-)
-
-INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Value], [Weight])
-VALUES(
-	(
-        SELECT AffixId
-        FROM Affix
-        WHERE [Group] = 'TripleOpenSuffix'
-    ),
-	(
-		SELECT SpawnTagId
-		FROM SpawnTag
-		WHERE [Name] = 'Default'
-	), 
-	1, 
-	0
-)

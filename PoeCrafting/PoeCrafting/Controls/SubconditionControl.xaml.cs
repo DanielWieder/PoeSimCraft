@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,13 +18,20 @@ using PoeCrafting.Domain.Condition;
 using PoeCrafting.Entities;
 using PoeCrafting.UI.Models;
 using PoeCrafting.Domain.Crafting;
+using PoeCrafting.UI.Annotations;
 
 namespace PoeCrafting.UI.Controls
 {
+    public class OnDeleteEventArgs
+    {
+        public OnDeleteEventArgs(SubconditionControl c) { Control = c; }
+        public SubconditionControl Control { get; private set; } // readonly
+    }
+
     /// <summary>
     /// Interaction logic for ConditionControl.xaml
     /// </summary>
-    public partial class SubconditionControl : UserControl
+    public partial class SubconditionControl : UserControl, INotifyPropertyChanged
     {
         public SubconditionSelectionControl PrefixConditions { get; set; }
         public SubconditionSelectionControl SuffixConditions { get; set; }
@@ -30,10 +39,49 @@ namespace PoeCrafting.UI.Controls
 
         public CraftingSubcondition SubCondition;
 
-        public string SubconditionName { get; set; } = "Test";
+        // Declare the delegate (if using non-generic pattern).
+        public delegate void OnDeleteEventHandler(object sender, OnDeleteEventArgs e);
 
-        public SubconditionControl(CraftingSubcondition subCondition, ItemBase itemBase, List<Affix> affixes)
+        // Declare the event.
+        public event OnDeleteEventHandler OnDeleteEvent;
+
+        private string _subconditionName;
+
+        public int Index { get; set; }
+
+        public string SubconditionName
         {
+            get { return _subconditionName; }
+            set
+            {
+                _subconditionName = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private string _selectedAggregateType = "And";
+
+        public string SelectedAggregateType
+        {
+            get { return _selectedAggregateType; }
+            set
+            {
+                _selectedAggregateType = value;
+                OnPropertyChanged(nameof(AggregateTypeHasMinMax));
+            }
+        }
+
+        public List<string> AggregateTypes { get; } = Enum.GetNames(typeof(SubconditionAggregateType)).ToList();
+        public int? AggregateTypeMin { get; set; }
+        public int? AggregateTypeMax { get; set; }
+
+        public bool AggregateTypeHasMinMax => SelectedAggregateType == "Sum" || SelectedAggregateType == "Count";
+
+        public SubconditionControl(CraftingSubcondition subCondition, ItemBase itemBase, List<Affix> affixes, int index)
+        {
+            SubconditionName = "Subcondition " + index;
+            Index = index;
             SubCondition = subCondition;
             PrefixConditions = new SubconditionSelectionControl(itemBase, affixes, AffixType.Prefix);
             SuffixConditions = new SubconditionSelectionControl(itemBase, affixes, AffixType.Suffix);
@@ -44,9 +92,26 @@ namespace PoeCrafting.UI.Controls
 
         public void Save()
         {
+            SubCondition.AggregateType =
+                (SubconditionAggregateType) Enum.Parse(typeof(SubconditionAggregateType), SelectedAggregateType);
+            SubCondition.AggregateMin = AggregateTypeMin;
+            SubCondition.AggregateMax = AggregateTypeMax;
             SubCondition.PrefixConditions = PrefixConditions.Conditions;
             SubCondition.SuffixConditions = SuffixConditions.Conditions;
             SubCondition.MetaConditions = MetaConditions.Conditions;
+        }
+
+        private void OnDeleteClick(object sender, RoutedEventArgs e)
+        {
+            OnDeleteEvent?.Invoke(this, new OnDeleteEventArgs(this));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
