@@ -28,18 +28,12 @@ namespace PoeCrafting.Domain.Currency
                 return false;
             }
 
-            item.Prefixes.Clear();
-            item.Suffixes.Clear();
+            item.Stats.Clear();
 
-            var roll = Random.Next(3);
-
-            if (roll == 0 || roll == 2)
+            int affixCount = Random.Next(2);
+            for (int i = 0; i < affixCount; i++)
             {
-                item.Prefixes.Add(StatFactory.Get(Random, item.PossiblePrefixes, item.Prefixes, item.ItemLevel));
-            }
-            if(roll == 1 || roll == 2)
-            {
-                item.Suffixes.Add(StatFactory.Get(Random, item.PossiblePrefixes, item.Suffixes, item.ItemLevel));
+                StatFactory.AddExplicit(Random, item);
             }
 
             return true;

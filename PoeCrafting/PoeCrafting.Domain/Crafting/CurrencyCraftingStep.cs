@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PoeCrafting.Domain.Condition;
 using PoeCrafting.Domain.Currency;
 using PoeCrafting.Entities;
 
@@ -12,10 +13,11 @@ namespace PoeCrafting.Domain.Crafting
     {
         private readonly ICurrency _currency;
         private ItemStatus _status = new ItemStatus();
-        private CraftTracker _tracker = new CraftTracker();
+        public string Name => _currency.Name;
 
-        public List<string> Options => new List<string>();
-        public List<ICraftingStep> Children => new List<ICraftingStep>();
+        public List<string> Options => null;
+        public List<ICraftingStep> Children => null;
+        public CraftingCondition Condition => null;
 
         public CraftingStepStatus Status
         {
@@ -40,14 +42,6 @@ namespace PoeCrafting.Domain.Crafting
             }
         }
 
-        public bool IsCompleted => false;
-        public string Name => _currency.Name;
-
-        public bool HasChildren => false;
-        public int TimesUsedCount => _tracker.SuccessfulUsesCount;
-        public int ItemsUsedOnCount => _tracker.ItemsSuccessfullyUsedOnCount;
-        public double CurrencyUsed => _tracker.SuccessfulUsesCount * _currency.Value;
-
         public CurrencyCraftingStep(ICurrency currency)
         {
             this._currency = currency;
@@ -56,7 +50,6 @@ namespace PoeCrafting.Domain.Crafting
         public void ClearStatus()
         {
             _status = new ItemStatus();
-            _tracker.Clear();
         }
 
         public ItemStatus UpdateStatus(ItemStatus current)
@@ -77,7 +70,6 @@ namespace PoeCrafting.Domain.Crafting
         public Equipment Craft(Equipment equipment)
         {
             bool success = _currency.Execute(equipment);
-            _tracker.TrackCraft(equipment, success);
             return equipment;
         }
 

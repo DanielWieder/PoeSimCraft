@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PoeCrafting.Domain.Condition;
 using PoeCrafting.Domain.Currency;
 using PoeCrafting.Entities;
 
@@ -17,7 +18,8 @@ namespace PoeCrafting.Domain.Crafting
         public CraftingStepStatus Status => _status.Initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
         public string Name => "Insert";
         public bool HasChildren => false;
-
+        public CraftingCondition Condition => null;
+        public bool Selected { get; set; }
         public InsertCraftingStep(CurrencyFactory factory)
         {
             _currencyFactory = factory;

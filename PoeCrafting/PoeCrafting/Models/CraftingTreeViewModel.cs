@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using PoeCrafting.Domain.Condition;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
@@ -17,27 +18,25 @@ namespace PoeCrafting.UI
     {
         public ObservableCollection<CraftingStepViewModel> Tree { get; set; }
 
-        public CraftingTreeViewModel(CraftingTree craftingTree)
+        public CraftingTreeViewModel(CraftingTree craftingTree, ICraftingStep selected)
         {
-            var craftingSteps = craftingTree.CraftingSteps.Select(x => new CraftingStepViewModel(x));
+            var craftingSteps = craftingTree.CraftingSteps.Select(x => new CraftingStepViewModel(x, selected));
 
             Tree = new ObservableCollection<CraftingStepViewModel>(craftingSteps.ToArray());
         }
 
-        public void UpdateTree(CraftingTree craftingTree)
+        public void UpdateTree(CraftingTree craftingTree, ICraftingStep selected)
         {
             Tree.Clear();
-
-            foreach (var item in craftingTree.CraftingSteps.Select(x => new CraftingStepViewModel(x)))
+            var steps = craftingTree.CraftingSteps.Select(x => new CraftingStepViewModel(x, selected)).ToList();
+            for (int i = 0; i < steps.Count(); i++)
             {
-                item.UpdateStatus();
-                Tree.Add(item);
+                steps[i].UpdateStatus();
+                Tree.Add(steps[i]);
             }
 
             OnPropertyChanged(nameof(Tree));
         }
-
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -50,14 +49,29 @@ namespace PoeCrafting.UI
 
     public class CraftingStepViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<CraftingStepViewModel> _children;
         private readonly ICraftingStep _value;
-        public bool IsSelected { get; set; }
+        private bool _selected = false;
+
+        public bool Selected
+        {
+            get { return _selected; }
+            set
+            {
+                _selected = value;
+                OnPropertyChanged(nameof(Selected));
+            }
+        }
+
+        public ObservableCollection<string> Options { get; }
+        public bool HasOptions => Options.Any();
+
+        public CraftingCondition Condition => _value.Condition;
+        public bool HasCondition => _value.Condition != null;
+
         public ICraftingStep Value => _value;
-        public bool IsVisible => _value.Options.Any();
         public string Name => _value.Name;
-        public ObservableCollection<string> Options => new ObservableCollection<string>(_value.Options);
-        public ObservableCollection<CraftingStepViewModel> Children => _children;
+
+        public ObservableCollection<CraftingStepViewModel> Children { get; }
 
         public SolidColorBrush BorderBrush
         {
@@ -85,12 +99,26 @@ namespace PoeCrafting.UI
             }
         }
 
-        public CraftingStepViewModel(ICraftingStep craftingStep)
+        public CraftingStepViewModel(ICraftingStep craftingStep, ICraftingStep selected)
         {
             _value = craftingStep;
-            var children = craftingStep.Children.Select(x => new CraftingStepViewModel(x)).ToArray();
-            _children = new ObservableCollection<CraftingStepViewModel>(children);
 
+            Options = craftingStep.Options == null ? new ObservableCollection<string>() : new ObservableCollection<string>(craftingStep.Options);
+
+            if (craftingStep == selected)
+            {
+                _selected = true;
+            }
+
+            if (craftingStep.Children == null)
+            {
+                Children = new ObservableCollection<CraftingStepViewModel>();
+            }
+            else
+            {
+                var children = craftingStep.Children.Select(x => new CraftingStepViewModel(x, selected)).ToArray();
+                Children = new ObservableCollection<CraftingStepViewModel>(children);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

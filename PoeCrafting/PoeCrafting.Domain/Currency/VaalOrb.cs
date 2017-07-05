@@ -31,7 +31,7 @@ namespace PoeCrafting.Domain.Currency
 
             if (roll == 0)
             {
-                item.Implicit = StatFactory.Get(Random, item.PossibleImplicits, new List<Stat>(), item.ItemLevel);
+                StatFactory.SetImplicit(Random, item);
             }
             if (roll == 1)
             {

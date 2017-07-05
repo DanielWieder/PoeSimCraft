@@ -28,7 +28,7 @@ namespace PoeCrafting.Data
                                 JOIN Armour a ON i.ItemId = a.ItemId
                                 JOIN ItemSubType ist ON ist.ItemSubtypeId = i.ItemSubtypeId
                                 JOIN ItemType it ON ist.ItemTypeId = it.ItemTypeId
-                                WHERE i.Name = '{Name}'";
+                                WHERE i.Name = '{Name.Replace("'", "''")}'";
 
             var entity = db.Fetch<AccessoryEntity>(command);
             var item = new ItemBase()

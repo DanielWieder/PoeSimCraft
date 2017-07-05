@@ -174,7 +174,7 @@ namespace PoeCrafting.UI.Annotations
   ///
   ///   string _name;
   /// 
-  ///   public string Name {
+  ///   public string Group {
   ///     get { return _name; }
   ///     set { _name = value; NotifyChanged("LastName"); /* Warning */ }
   ///   }
@@ -441,7 +441,7 @@ namespace PoeCrafting.UI.Annotations
   /// <example><code>
   /// [Pure] int Multiply(int x, int y) => x * y;
   /// 
-  /// void M() {
+  /// void Max() {
   ///   Multiply(123, 42); // Waring: Return value of pure method is not used
   /// }
   /// </code></example>

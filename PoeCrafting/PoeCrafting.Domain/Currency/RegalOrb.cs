@@ -30,14 +30,7 @@ namespace PoeCrafting.Domain.Currency
 
             item.Rarity = EquipmentRarity.Rare;
 
-            if (Random.Next(2) == 0)
-            {
-                item.Prefixes.Add(StatFactory.Get(Random, item.PossiblePrefixes, item.Prefixes, item.ItemLevel));
-            }
-            else
-            {
-                item.Suffixes.Add(StatFactory.Get(Random, item.PossiblePrefixes, item.Suffixes, item.ItemLevel));
-            }
+            StatFactory.AddExplicit(Random, item);
 
             return true;
         }

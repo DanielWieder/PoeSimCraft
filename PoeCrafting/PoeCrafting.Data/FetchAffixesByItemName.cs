@@ -33,7 +33,7 @@ namespace PoeCrafting.Data
                                 JOIN AffixSpawnTagMap astm ON astm.AffixId = a.AffixId
                                 JOIN ItemSpawnTagMap istm ON istm.SpawnTagId = astm.SpawnTagId
                                 join Item i ON istm.ItemId = i.ItemId 
-                                WHERE i.Name = '{Name}'";
+                                WHERE i.Name = '{Name.Replace("'", "''")}'";
 
             return db.FetchList<Affix>(command);
         }
