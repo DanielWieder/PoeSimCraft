@@ -85,6 +85,8 @@ namespace PoeCrafting.UI.Controls
             Index = index;
             SubCondition = subCondition;
             _selectedAggregateType =  subCondition.AggregateType.ToString();
+            AggregateTypeMin = subCondition.AggregateMin;
+            AggregateTypeMax = subCondition.AggregateMax;
             PrefixConditions = new SubconditionSelectionControl(subCondition.PrefixConditions, affixes, AffixType.Prefix);
             SuffixConditions = new SubconditionSelectionControl(subCondition.SuffixConditions, affixes, AffixType.Suffix);
             MetaConditions = new SubconditionSelectionControl(subCondition.MetaConditions, affixes, AffixType.Meta);
@@ -94,7 +96,6 @@ namespace PoeCrafting.UI.Controls
 
         public CraftingSubcondition Save()
         {
-
             SubCondition.Name = _subconditionName;
             SubCondition.ValueType = SubconditionValueType.Flat;
             SubCondition.AggregateType =

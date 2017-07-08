@@ -10,6 +10,7 @@ namespace PoeCrafting.UI
     {
         public override void Load()
         {
+            Bind<CraftingResultsControl>().ToSelf().InTransientScope();
             Bind<CraftingControl>().ToSelf().InTransientScope();
             Bind<ItemListControl>().ToSelf().InTransientScope();
             Bind<ConditionControl>().ToSelf().InTransientScope();

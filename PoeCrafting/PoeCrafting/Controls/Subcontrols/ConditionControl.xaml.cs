@@ -55,7 +55,6 @@ namespace PoeCrafting.UI.Controls
 
             foreach (CraftingSubcondition t in condition.CraftingSubConditions)
             {
-                var subconditionControl = new SubconditionControl(t, itemBase, affixes, GetNextIndex());
                 var subconditionControl = new SubconditionControl(t, affixes, GetNextIndex());
                 subconditionControl.OnDeleteEvent += (x, y) => RemoveSubcondition(y.Control);
                 SubconditionControls.Add(subconditionControl);
@@ -78,7 +77,7 @@ namespace PoeCrafting.UI.Controls
         public void AddSubcondition()
         {
             var subcondition = new CraftingSubcondition();
-            var subconditionControl = new SubconditionControl(subcondition, _itemBase, _affixes, GetNextIndex());
+            var subconditionControl = new SubconditionControl(subcondition, _affixes, GetNextIndex());
             subconditionControl.OnDeleteEvent += (x, y) => RemoveSubcondition(y.Control);
 
             _craftingCondition.CraftingSubConditions.Add(subcondition);
@@ -117,6 +116,15 @@ namespace PoeCrafting.UI.Controls
         private void OnAddClick(object sender, RoutedEventArgs e)
         {
             AddSubcondition();
+        }
+
+        public void Save()
+        {
+            _craftingCondition.CraftingSubConditions.Clear();
+            foreach (var subcondition in SubconditionControls.Select(x => x.Save()))
+            {
+                _craftingCondition.CraftingSubConditions.Add(subcondition);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

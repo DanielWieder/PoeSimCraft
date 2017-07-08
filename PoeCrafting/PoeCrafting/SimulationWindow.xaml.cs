@@ -25,21 +25,43 @@ namespace PoeCrafting.UI
     /// </summary>
     public partial class SimulationWindow : Window, INotifyPropertyChanged
     {
+        private readonly List<ISimulationControl> _controls;
+        private readonly EquipmentFactory _factory;
 
         private CraftingTreeControl CraftingTree { get; }
         private BaseSelectionControl BaseSelection { get; }
         private ItemListControl ItemList { get; }
         private CraftingControl Crafting { get; }
+        private CraftingResultsControl Results { get;  }
+
+        private int _currentControlIndex = 0;
 
         public ContentControl SelectedStep { get; set; }
-        private EquipmentFactory _factory;
+        public bool IsReady => _controls[_currentControlIndex].IsReady();
 
-        public SimulationWindow(CraftingTreeControl craftingTree, BaseSelectionControl baseSelection, ItemListControl itemList, CraftingControl crafting, EquipmentFactory factory)
+
+        public SimulationWindow(
+            CraftingTreeControl craftingTree, 
+            BaseSelectionControl baseSelection, 
+            ItemListControl itemList, 
+            CraftingControl crafting, 
+            CraftingResultsControl results,
+            EquipmentFactory factory)
         {
             CraftingTree = craftingTree;
             BaseSelection = baseSelection;
             ItemList = itemList;
             Crafting = crafting;
+            Results = results;
+
+            _controls = new List<ISimulationControl>
+            {
+                BaseSelection,
+                CraftingTree,
+                ItemList,
+                Crafting,
+                Results
+            };
 
             SelectedStep = BaseSelection;
             InitializeComponent();
@@ -56,59 +78,52 @@ namespace PoeCrafting.UI
 
         private void OnPreviousClick(object sender, RoutedEventArgs e)
         {
-            if (SelectedStep == CraftingTree)
+            if (_currentControlIndex > 0)
             {
-                SelectedStep = BaseSelection;
-                OnPropertyChanged(nameof(SelectedStep));
+                _currentControlIndex--;
             }
-            else if (SelectedStep == ItemList)
-            {
-                SelectedStep = CraftingTree;
-                OnPropertyChanged(nameof(SelectedStep));
-            }
-            else if (SelectedStep == Crafting)
-            {
-                SelectedStep = ItemList;
-                OnPropertyChanged(nameof(SelectedStep));
-            }
+
+            SelectedStep = _controls[_currentControlIndex] as ContentControl;
+            OnPropertyChanged(nameof(SelectedStep));
         }
 
         private void OnNextClick(object sender, RoutedEventArgs e)
         {
-            if (SelectedStep == BaseSelection && BaseSelection.IsReady())
+            if (!_controls[_currentControlIndex].IsReady() || _currentControlIndex >= _controls.Count - 1)
+            {
+                return;
+            }
+            
+            _controls[_currentControlIndex].Save();
+            _currentControlIndex++;
+
+            SelectedStep = _controls[_currentControlIndex] as ContentControl;
+            OnPropertyChanged(nameof(SelectedStep));
+
+            if (_controls[_currentControlIndex] == CraftingTree)
             {
                 _factory.Initialize(BaseSelection.SelectedBase, BaseSelection.ItemLevel);
-
                 var affixes = _factory.GetPossibleAffixes();
                 var baseItem = _factory.GetBaseItem();
                 CraftingTree.Initialize(affixes, baseItem);
-
-                SelectedStep = CraftingTree;
-                OnPropertyChanged(nameof(SelectedStep));
             }
-            else if (SelectedStep == CraftingTree && CraftingTree.IsReady())
+            else if (_controls[_currentControlIndex] == ItemList)
             {
-                CraftingTree.Save();
-
                 var affixes = _factory.GetPossibleAffixes();
                 var baseItem = _factory.GetBaseItem();
 
                 ItemList.Initialize(affixes, baseItem);
-
-                SelectedStep = ItemList;
-                OnPropertyChanged(nameof(SelectedStep));
             }
-            else if (SelectedStep == ItemList && ItemList.IsReady())
+            else if (_controls[_currentControlIndex] == Crafting)
             {
-                ItemList.Save();
-
                 var craftingTree = CraftingTree.CraftingTree;
                 var itemList = ItemList.ItemPrototypes.ToList();
 
-                Crafting.Initialize(craftingTree, _factory, itemList);
-                Crafting.Run();
-                SelectedStep = Crafting;
-                OnPropertyChanged(nameof(SelectedStep));
+                Crafting.Initialize(craftingTree, _factory, itemList, BaseSelection.Currency);
+            }
+            else if (_controls[_currentControlIndex] == Results)
+            {
+                Results.Initialize(Crafting.MatchingItems);
             }
         }
 

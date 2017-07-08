@@ -19,6 +19,9 @@ namespace PoeCrafting.Domain.Crafting
         public List<ICraftingStep> Children => null;
         public CraftingCondition Condition => null;
 
+        public CraftTracker Tracker = new CraftTracker();
+        public double Value => _currency.Value;
+
         public CraftingStepStatus Status
         {
             get
@@ -70,6 +73,7 @@ namespace PoeCrafting.Domain.Crafting
         public Equipment Craft(Equipment equipment)
         {
             bool success = _currency.Execute(equipment);
+            Tracker.TrackCraft(equipment, success);
             return equipment;
         }
 

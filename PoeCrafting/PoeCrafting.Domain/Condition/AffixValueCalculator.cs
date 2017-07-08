@@ -7,7 +7,7 @@ using PoeCrafting.Entities;
 
 namespace PoeCrafting.Domain.Condition
 {
-    public static class ConditionValueCalculator
+    public static class AffixValueCalculator
     {
         private class ConditionContainer
         {
@@ -22,14 +22,14 @@ namespace PoeCrafting.Domain.Condition
             public int Value;
         }
 
-        public static int GetConditionValue(string group, Equipment item, AffixType type, SubconditionValueType valueType)
+        public static int GetAffixValue(string group, Equipment item, AffixType type, SubconditionValueType valueType)
         {
             var conditionItem = new ConditionContainer()
             {
                 ItemBase = item.ItemBase,
                 Affixes = item.Prefixes.Concat(item.Suffixes).Select(x => StatToCondition(x.Affix, valueType, x.Value1)).ToList()
             };
-            return GetConditionValue(group, type, conditionItem);
+            return GetAffixValue(group, type, conditionItem);
         }
 
         public static int GetGroupMax(string group, ItemBase itemBase, List<Affix> affixes, AffixType type)
@@ -41,7 +41,7 @@ namespace PoeCrafting.Domain.Condition
                 ItemBase = itemBase,
                 Affixes = affixes.Select(x => StatToCondition(x, max)).ToList()
             };
-            return GetConditionValue(group, type, conditionItem);
+            return GetAffixValue(group, type, conditionItem);
         }
 
         private static ItemProperty StatToCondition(Affix affix, SubconditionValueType valueType, int value = 0)
@@ -49,7 +49,8 @@ namespace PoeCrafting.Domain.Condition
             return new ItemProperty()
             {
                 Group = affix.Group,
-                Value = GetTypedValue(affix, valueType, value)
+                Value = GetTypedValue(affix, valueType, value),
+                Type = (AffixType)Enum.Parse(typeof(AffixType), affix.Type, true)
             };
         }
 
@@ -68,7 +69,7 @@ namespace PoeCrafting.Domain.Condition
             }
         }
 
-        private static int GetConditionValue(string group, AffixType type, ConditionContainer a)
+        private static int GetAffixValue(string group, AffixType type, ConditionContainer a)
         {
             if (type == AffixType.Prefix)
             {
@@ -93,11 +94,11 @@ namespace PoeCrafting.Domain.Condition
 
             if (group.Contains("OpenPrefix"))
             {
-                return prefixes.Count();
+                return 3 - prefixes.Count();
             }
             if (group.Contains("OpenSuffix"))
             {
-                return suffixes.Count();
+                return 3 - suffixes.Count();
             }
             if (group == "TotalEnergyShield")
             {

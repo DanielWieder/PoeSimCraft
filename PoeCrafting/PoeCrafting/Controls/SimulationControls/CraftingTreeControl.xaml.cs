@@ -26,7 +26,7 @@ namespace PoeCrafting.UI.Controls
     /// <summary>
     /// Interaction logic for CraftingTree.xaml
     /// </summary>
-    public partial class CraftingTreeControl : UserControl, INotifyPropertyChanged
+    public partial class CraftingTreeControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
         public CraftingTree CraftingTree { get; set; }
         private ICraftingStep _selected;

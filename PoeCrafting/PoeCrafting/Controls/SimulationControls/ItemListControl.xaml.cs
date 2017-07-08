@@ -26,7 +26,7 @@ namespace PoeCrafting.UI
     /// <summary>
     /// Interaction logic for ItemListControl.xaml
     /// </summary>
-    public partial class ItemListControl : UserControl, INotifyPropertyChanged
+    public partial class ItemListControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
         private List<Affix> _affixes;
         private ItemBase _itemBase;

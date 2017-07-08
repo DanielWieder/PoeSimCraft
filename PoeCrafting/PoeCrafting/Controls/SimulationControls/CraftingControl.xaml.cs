@@ -19,15 +19,17 @@ using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
 using PoeCrafting.UI.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PoeCrafting.UI.Controls
 {
     /// <summary>
     /// Interaction logic for CraftingControl.xaml
     /// </summary>
-    public partial class CraftingControl : UserControl, INotifyPropertyChanged
+    public partial class CraftingControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
-        private int RunCount = 1000;
+        private int _totalCurrency;
         public int Progress { get; set; } = 0;
         public List<Equipment> EquipmentList = new List<Equipment>();
 
@@ -38,6 +40,8 @@ namespace PoeCrafting.UI.Controls
         public Dictionary<ItemPrototypeModel, List<Equipment>> MatchingItems;
         public int ItemCount = 0;
 
+        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+        Task task;
 
         public CraftingControl()
         {
@@ -45,25 +49,59 @@ namespace PoeCrafting.UI.Controls
             DataContext = this;
         }
 
-        public void Initialize(CraftingTree craftingTree, EquipmentFactory factory, List<ItemPrototypeModel> itemPrototypes)
+        public void Initialize(CraftingTree craftingTree, EquipmentFactory factory, List<ItemPrototypeModel> itemPrototypes, int currency)
         {
+            _totalCurrency = currency;
             _craftingTree = craftingTree;
+            _craftingTree.ClearCurrencySpent();
+
             _factory = factory;
-            _itemPrototypes = itemPrototypes.OrderBy(x => x.Value).ThenBy(x => x.ItemName).ToList();
+            _itemPrototypes = itemPrototypes.OrderByDescending(x => x.Value).ThenBy(x => x.ItemName).ToList();
             MatchingItems = new Dictionary<ItemPrototypeModel, List<Equipment>>();
             foreach (var prototype in _itemPrototypes)
             {
                 MatchingItems.Add(prototype, new List<Equipment>());
             }
 
+            if (task != null && task.Status == TaskStatus.Running)
+            {
+                cancellationTokenSource.Cancel();
+            }
 
             ItemCount = 0;
+            Progress = 0;
+
+            RunTask();
         }
 
-        public void Run()
+        public void RunTask()
         {
-            for (int i = 0; i < RunCount; i++)
+            cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
+
+            task = new Task(() => Run(token), token);
+            task.Start();
+        }
+
+        private void Run(CancellationToken ct)
+        {
+            ct.ThrowIfCancellationRequested();
+
+            for (double currencySpent = 0; currencySpent < _totalCurrency; currencySpent =_craftingTree.GetCurrencySpent())
             {
+                if (ct.IsCancellationRequested)
+                {
+                    ct.ThrowIfCancellationRequested();
+                }
+
+                // If an item has been created and no currency was spent then no currency will ever be spent and it will cause an infinite loop
+                if (ItemCount == 1 && currencySpent == 0)
+                {
+                    Progress = 100;
+                    OnPropertyChanged(nameof(Progress));
+                    return;
+                }
+
                 var newItem = _factory.CreateEquipment();
                 var result = _craftingTree.Craft(newItem);
                 EquipmentList.Add(result);
@@ -79,14 +117,29 @@ namespace PoeCrafting.UI.Controls
 
                 ItemCount++;
 
-                Progress = (int)(EquipmentList.Count/(float)RunCount * 100f);
-                OnPropertyChanged(nameof(Progress));
+                var newProgress = (int) (currencySpent/_totalCurrency*100);
+
+                if(newProgress != Progress)
+                {
+                    Progress = (int) (currencySpent/_totalCurrency*100);
+                    OnPropertyChanged(nameof(Progress));
+                }
             }
+            Progress = 100;
+            OnPropertyChanged(nameof(Progress));
         }
 
         public bool IsReady()
         {
             return Progress == 100;
+        }
+
+        public void Save()
+        {
+            if (task != null && task.Status == TaskStatus.Running)
+            {
+                cancellationTokenSource.Cancel();
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

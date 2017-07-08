@@ -43,6 +43,40 @@ namespace PoeCrafting.Domain.Crafting
             return equipment;
         }
 
+        public double GetCurrencySpent()
+        {
+            double total = 0;
+            Action<ICraftingStep, int, IList<ICraftingStep>> action = (current, index, list) =>
+            {
+                if (current is CurrencyCraftingStep)
+                {
+                    var currencyCraftingStep = current as CurrencyCraftingStep;
+                    total += currencyCraftingStep.Value*currencyCraftingStep.Tracker.SuccessfulUsesCount;
+                }
+            };
+
+            IterateSteps(action, CraftingSteps);
+
+            return total;
+        }
+
+        public double ClearCurrencySpent()
+        {
+            double total = 0;
+            Action<ICraftingStep, int, IList<ICraftingStep>> action = (current, index, list) =>
+            {
+                if (current is CurrencyCraftingStep)
+                {
+                    var currencyCraftingStep = current as CurrencyCraftingStep;
+                    currencyCraftingStep.Tracker.Clear();
+                }
+            };
+
+            IterateSteps(action, CraftingSteps);
+
+            return total;
+        }
+
         public void Select(ICraftingStep selected)
         {
             if (selected.GetType() == typeof(InsertCraftingStep))

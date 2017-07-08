@@ -22,7 +22,7 @@ namespace PoeCrafting.UI.Controls
     /// <summary>
     /// Interaction logic for BaseSelectionControl.xaml
     /// </summary>
-    public partial class BaseSelectionControl : UserControl, INotifyPropertyChanged
+    public partial class BaseSelectionControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
         private string _selectedSubtype;
 
@@ -53,6 +53,9 @@ namespace PoeCrafting.UI.Controls
             return !string.IsNullOrEmpty(SelectedSubtype) &&
                    !string.IsNullOrEmpty(SelectedBase);
         }
+
+        public void Save()
+        { }
 
         public BaseSelectionControl(EquipmentFetch fetch)
         {

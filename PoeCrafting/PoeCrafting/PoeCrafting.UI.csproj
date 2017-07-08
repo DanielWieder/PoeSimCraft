@@ -70,28 +70,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\BaseSelectionControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\BaseSelectionControl.xaml.cs">
       <DependentUpon>BaseSelectionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ConditionControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\CraftingResultsControl.xaml.cs">
+      <DependentUpon>CraftingResultsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Subcontrols\ConditionControl.xaml.cs">
       <DependentUpon>ConditionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CraftingControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\CraftingControl.xaml.cs">
       <DependentUpon>CraftingControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SubconditionSelectionControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\ISimulationControl.cs" />
+    <Compile Include="Controls\Subcontrols\SubconditionSelectionControl.xaml.cs">
       <DependentUpon>SubconditionSelectionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SubconditionControl.xaml.cs">
+    <Compile Include="Controls\Subcontrols\SubconditionControl.xaml.cs">
       <DependentUpon>SubconditionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CraftingTreeControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\CraftingTreeControl.xaml.cs">
       <DependentUpon>CraftingTreeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ItemListControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\ItemListControl.xaml.cs">
       <DependentUpon>ItemListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ItemControl.xaml.cs">
+    <Compile Include="Controls\Subcontrols\ItemControl.xaml.cs">
       <DependentUpon>ItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ConditionAffixControlModel.cs" />
@@ -99,35 +103,39 @@
     <Compile Include="HomeWindow.xaml.cs">
       <DependentUpon>HomeWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\BaseSelectionControl.xaml">
+    <Page Include="Controls\SimulationControls\BaseSelectionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ConditionControl.xaml">
+    <Page Include="Controls\SimulationControls\CraftingResultsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\CraftingControl.xaml">
+    <Page Include="Controls\Subcontrols\ConditionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SubconditionSelectionControl.xaml">
+    <Page Include="Controls\SimulationControls\CraftingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SubconditionControl.xaml">
+    <Page Include="Controls\Subcontrols\SubconditionSelectionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\CraftingTreeControl.xaml">
+    <Page Include="Controls\Subcontrols\SubconditionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ItemListControl.xaml">
+    <Page Include="Controls\SimulationControls\CraftingTreeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ItemControl.xaml">
+    <Page Include="Controls\SimulationControls\ItemListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Subcontrols\ItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
