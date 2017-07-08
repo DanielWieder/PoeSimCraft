@@ -46,6 +46,8 @@ namespace PoeCrafting.UI.Controls
 
         public int ItemLevel { get; set; } = 84;
 
+        public int Currency { get; set; } = 1000;
+
         public bool IsReady()
         {
             return !string.IsNullOrEmpty(SelectedSubtype) &&

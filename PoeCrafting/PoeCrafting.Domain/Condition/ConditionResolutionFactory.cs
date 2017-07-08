@@ -16,7 +16,7 @@ namespace PoeCrafting.Domain.Condition
             return new ConditionResolution()
             {
                 IsPresent = value != -1,
-                IsMatch = IsValueWithinBounds(affix, value),
+                IsMatch = value != -1 && IsValueWithinBounds(affix, value),
                 Value = value
             };
         }

@@ -95,7 +95,7 @@ namespace PoeCrafting.Domain
                 ItemLevel = this._itemLevel,
                 PossibleAffixes = this._affixes,
                 ItemBase = (ItemBase)_baseItem.Clone(),
-                Implicit = _baseImplicit != null ? StatFactory.AffixToStat(_random, _baseImplicit) : null
+                Implicit = _baseImplicit != null ? StatFactory.AffixToStat(_random, _baseImplicit) : null,
             };
         }
     }

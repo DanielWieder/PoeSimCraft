@@ -15,18 +15,16 @@
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80" />
-            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="120" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="80" />
             <ColumnDefinition Width="80" />
             <ColumnDefinition Width="80" />
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0">Name</Label>
-        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SubconditionName}"></TextBox>
-        <ComboBox Grid.Column="3" Grid.Row="0" ItemsSource="{Binding AggregateTypes}" SelectedValue="{Binding SelectedAggregateType}"></ComboBox>
-        <TextBox Grid.Column="4" Grid.Row="0" Text="{Binding AggregateTypeMin}" IsEnabled="{Binding AggregateTypeHasMinMax}">
+        <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding SubconditionName}"></TextBox>
+        <ComboBox Grid.Column="2" Grid.Row="0" ItemsSource="{Binding AggregateTypes}" SelectedValue="{Binding SelectedAggregateType}"></ComboBox>
+        <TextBox Grid.Column="3" Grid.Row="0" Text="{Binding AggregateTypeMin}" IsEnabled="{Binding AggregateTypeHasMinMax}">
             <TextBox.Style>
                 <Style TargetType="{x:Type TextBox}">
                     <Style.Triggers>
@@ -37,7 +35,7 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
-        <TextBox Grid.Column="5" Grid.Row="0" Text="{Binding AggregateTypeMax}" IsEnabled="{Binding AggregateTypeHasMinMax}">
+        <TextBox Grid.Column="4" Grid.Row="0" Text="{Binding AggregateTypeMax}" IsEnabled="{Binding AggregateTypeHasMinMax}">
             <TextBox.Style>
                 <Style TargetType="{x:Type TextBox}">
                     <Style.Triggers>
@@ -48,9 +46,9 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
-        <ContentControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" Margin="0, 5" Content="{Binding PrefixConditions}"/>
-        <ContentControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="6" Margin="0, 5" Content="{Binding SuffixConditions}"/>
-        <ContentControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="6" Margin="0, 5" Content="{Binding MetaConditions}"/>
+        <ContentControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Margin="0, 5" Content="{Binding PrefixConditions}"/>
+        <ContentControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Margin="0, 5" Content="{Binding SuffixConditions}"/>
+        <ContentControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Margin="0, 5" Content="{Binding MetaConditions}"/>
         <Button Grid.Column="5" Grid.Row="4" Click="OnDeleteClick" Margin="0, 5">Delete</Button>
     </Grid>
 

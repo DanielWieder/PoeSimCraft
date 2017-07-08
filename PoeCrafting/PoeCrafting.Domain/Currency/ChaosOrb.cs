@@ -42,8 +42,7 @@ namespace PoeCrafting.Domain.Currency
                            roll < fourMod + fiveMod ? 5 : 
                            6;
 
-            item.Prefixes.Clear();
-            item.Suffixes.Clear();
+            item.Stats.Clear();
             for (int i = 0; i < modCount; i++)
             {
                 StatFactory.AddExplicit(Random, item);

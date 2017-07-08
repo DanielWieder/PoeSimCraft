@@ -76,6 +76,9 @@
     <Compile Include="Controls\ConditionControl.xaml.cs">
       <DependentUpon>ConditionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CraftingControl.xaml.cs">
+      <DependentUpon>CraftingControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SubconditionSelectionControl.xaml.cs">
       <DependentUpon>SubconditionSelectionControl.xaml</DependentUpon>
     </Compile>
@@ -84,6 +87,12 @@
     </Compile>
     <Compile Include="Controls\CraftingTreeControl.xaml.cs">
       <DependentUpon>CraftingTreeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ItemListControl.xaml.cs">
+      <DependentUpon>ItemListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ItemControl.xaml.cs">
+      <DependentUpon>ItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ConditionAffixControlModel.cs" />
     <Compile Include="Models\CraftingTreeViewModel.cs" />
@@ -98,6 +107,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CraftingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SubconditionSelectionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -107,6 +120,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\CraftingTreeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ItemListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -124,6 +145,7 @@
     </Compile>
     <Compile Include="IocUiModule.cs" />
     <Compile Include="Models\CraftingTestbedModel.cs" />
+    <Compile Include="Models\ItemPrototypeModel.cs" />
     <Compile Include="Models\TabConditionModel.cs" />
     <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="SimulationWindow.xaml.cs">

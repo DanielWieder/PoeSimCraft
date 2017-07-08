@@ -67,7 +67,7 @@ namespace PoeCrafting.UI.Annotations
   /// <summary>
   /// Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
   /// and Lazy classes to indicate that the value of a collection item, of the Task.Result property
-  /// or of the Lazy.Value property can never be null.
+  /// or of the Lazy.ItemValue property can never be null.
   /// </summary>
   [AttributeUsage(
     AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
@@ -77,7 +77,7 @@ namespace PoeCrafting.UI.Annotations
   /// <summary>
   /// Can be appplied to symbols of types derived from IEnumerable as well as to symbols of Task
   /// and Lazy classes to indicate that the value of a collection item, of the Task.Result property
-  /// or of the Lazy.Value property can be null.
+  /// or of the Lazy.ItemValue property can be null.
   /// </summary>
   [AttributeUsage(
     AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
@@ -208,9 +208,9 @@ namespace PoeCrafting.UI.Annotations
   /// <list>
   /// <item>FDT      ::= FDTRow [;FDTRow]*</item>
   /// <item>FDTRow   ::= Input =&gt; Output | Output &lt;= Input</item>
-  /// <item>Input    ::= ParameterName: Value [, Input]*</item>
-  /// <item>Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}</item>
-  /// <item>Value    ::= true | false | null | notnull | canbenull</item>
+  /// <item>Input    ::= ParameterName: ItemValue [, Input]*</item>
+  /// <item>Output   ::= [ParameterName: ItemValue]* {halt|stop|void|nothing|ItemValue}</item>
+  /// <item>ItemValue    ::= true | false | null | notnull | canbenull</item>
   /// </list>
   /// If method has single input parameter, it's name could be omitted.<br/>
   /// Using <c>halt</c> (or <c>void</c>/<c>nothing</c>, which is the same)

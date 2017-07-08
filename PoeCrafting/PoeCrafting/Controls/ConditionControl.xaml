@@ -8,20 +8,20 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="20" />
             <RowDefinition Height="*" MinHeight="200"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="40"/>
             <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="*" MinWidth="200"/>
-            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="*" MinWidth="40"/>
         </Grid.ColumnDefinitions>
 
         <ComboBox Grid.Column="0" Grid.Row="0" SelectedItem="{Binding SelectedSubcondition, Mode=TwoWay}" ItemsSource="{Binding SubconditionControls}" DisplayMemberPath="SubconditionName"/>
-        <Button Grid.Column="3" Grid.Row="0" Content="Add" Click="OnAddClick"/>
+        <Button Grid.Column="2" Grid.Row="0" Content="Add" Click="OnAddClick"/>
         <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderThickness="0 1 0 1" BorderBrush="Black">
             <ScrollViewer>
                 <ContentControl ScrollViewer.VerticalScrollBarVisibility="Auto" Content="{Binding SelectedSubcondition, Mode=TwoWay }"/>

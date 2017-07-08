@@ -78,20 +78,25 @@ namespace PoeCrafting.UI.Controls
 
         public bool AggregateTypeHasMinMax => SelectedAggregateType == "Sum" || SelectedAggregateType == "Count";
 
-        public SubconditionControl(CraftingSubcondition subCondition, ItemBase itemBase, List<Affix> affixes, int index)
+        public SubconditionControl(CraftingSubcondition subCondition, List<Affix> affixes, int index)
         {
-            SubconditionName = "Subcondition " + index;
+            SubconditionName = string.IsNullOrEmpty(subCondition.Name) ? "Subcondition " + index : subCondition.Name;
+
             Index = index;
             SubCondition = subCondition;
-            PrefixConditions = new SubconditionSelectionControl(itemBase, affixes, AffixType.Prefix);
-            SuffixConditions = new SubconditionSelectionControl(itemBase, affixes, AffixType.Suffix);
-            MetaConditions = new SubconditionSelectionControl(itemBase, affixes, AffixType.Meta);
+            _selectedAggregateType =  subCondition.AggregateType.ToString();
+            PrefixConditions = new SubconditionSelectionControl(subCondition.PrefixConditions, affixes, AffixType.Prefix);
+            SuffixConditions = new SubconditionSelectionControl(subCondition.SuffixConditions, affixes, AffixType.Suffix);
+            MetaConditions = new SubconditionSelectionControl(subCondition.MetaConditions, affixes, AffixType.Meta);
             DataContext = this;
             InitializeComponent();
         }
 
-        public void Save()
+        public CraftingSubcondition Save()
         {
+
+            SubCondition.Name = _subconditionName;
+            SubCondition.ValueType = SubconditionValueType.Flat;
             SubCondition.AggregateType =
                 (SubconditionAggregateType) Enum.Parse(typeof(SubconditionAggregateType), SelectedAggregateType);
             SubCondition.AggregateMin = AggregateTypeMin;
@@ -99,6 +104,7 @@ namespace PoeCrafting.UI.Controls
             SubCondition.PrefixConditions = PrefixConditions.Conditions;
             SubCondition.SuffixConditions = SuffixConditions.Conditions;
             SubCondition.MetaConditions = MetaConditions.Conditions;
+            return SubCondition;
         }
 
         private void OnDeleteClick(object sender, RoutedEventArgs e)

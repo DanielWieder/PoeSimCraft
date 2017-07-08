@@ -9,11 +9,11 @@ namespace PoeCrafting.Entities
 
         public ItemBase ItemBase { get; set; }
 
-        public List<Affix> PossibleAffixes { get; set; }
+        public List<Affix> PossibleAffixes { get; set; } = new List<Affix>();
         public List<Affix> PossiblePrefixes => PossibleAffixes.Where(x => x.Type == "prefix").ToList();
         public List<Affix> PossibleSuffixes => PossibleAffixes.Where(x => x.Type == "suffix").ToList();
 
-        public List<Stat> Stats { get; set; }
+        public List<Stat> Stats { get; set; } = new List<Stat>();
         public List<Stat> Prefixes => Stats.Where(x => x.Affix.Type == "prefix").ToList();
         public List<Stat> Suffixes => Stats.Where(x => x.Affix.Type == "suffix").ToList();
 

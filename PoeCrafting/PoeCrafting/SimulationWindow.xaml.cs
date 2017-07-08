@@ -28,14 +28,18 @@ namespace PoeCrafting.UI
 
         private CraftingTreeControl CraftingTree { get; }
         private BaseSelectionControl BaseSelection { get; }
+        private ItemListControl ItemList { get; }
+        private CraftingControl Crafting { get; }
 
         public ContentControl SelectedStep { get; set; }
         private EquipmentFactory _factory;
 
-        public SimulationWindow(CraftingTreeControl craftingTree, BaseSelectionControl baseSelection, EquipmentFactory factory)
+        public SimulationWindow(CraftingTreeControl craftingTree, BaseSelectionControl baseSelection, ItemListControl itemList, CraftingControl crafting, EquipmentFactory factory)
         {
             CraftingTree = craftingTree;
             BaseSelection = baseSelection;
+            ItemList = itemList;
+            Crafting = crafting;
 
             SelectedStep = BaseSelection;
             InitializeComponent();
@@ -57,6 +61,16 @@ namespace PoeCrafting.UI
                 SelectedStep = BaseSelection;
                 OnPropertyChanged(nameof(SelectedStep));
             }
+            else if (SelectedStep == ItemList)
+            {
+                SelectedStep = CraftingTree;
+                OnPropertyChanged(nameof(SelectedStep));
+            }
+            else if (SelectedStep == Crafting)
+            {
+                SelectedStep = ItemList;
+                OnPropertyChanged(nameof(SelectedStep));
+            }
         }
 
         private void OnNextClick(object sender, RoutedEventArgs e)
@@ -70,6 +84,30 @@ namespace PoeCrafting.UI
                 CraftingTree.Initialize(affixes, baseItem);
 
                 SelectedStep = CraftingTree;
+                OnPropertyChanged(nameof(SelectedStep));
+            }
+            else if (SelectedStep == CraftingTree && CraftingTree.IsReady())
+            {
+                CraftingTree.Save();
+
+                var affixes = _factory.GetPossibleAffixes();
+                var baseItem = _factory.GetBaseItem();
+
+                ItemList.Initialize(affixes, baseItem);
+
+                SelectedStep = ItemList;
+                OnPropertyChanged(nameof(SelectedStep));
+            }
+            else if (SelectedStep == ItemList && ItemList.IsReady())
+            {
+                ItemList.Save();
+
+                var craftingTree = CraftingTree.CraftingTree;
+                var itemList = ItemList.ItemPrototypes.ToList();
+
+                Crafting.Initialize(craftingTree, _factory, itemList);
+                Crafting.Run();
+                SelectedStep = Crafting;
                 OnPropertyChanged(nameof(SelectedStep));
             }
         }

@@ -27,8 +27,7 @@ namespace PoeCrafting.Domain.Currency
 
             item.Rarity = EquipmentRarity.Normal;
 
-            item.Prefixes.Clear();
-            item.Suffixes.Clear();
+            item.Stats.Clear();
 
             return true;
         }

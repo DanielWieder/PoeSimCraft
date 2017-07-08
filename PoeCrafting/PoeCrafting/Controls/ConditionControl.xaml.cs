@@ -56,6 +56,7 @@ namespace PoeCrafting.UI.Controls
             foreach (CraftingSubcondition t in condition.CraftingSubConditions)
             {
                 var subconditionControl = new SubconditionControl(t, itemBase, affixes, GetNextIndex());
+                var subconditionControl = new SubconditionControl(t, affixes, GetNextIndex());
                 subconditionControl.OnDeleteEvent += (x, y) => RemoveSubcondition(y.Control);
                 SubconditionControls.Add(subconditionControl);
             }
