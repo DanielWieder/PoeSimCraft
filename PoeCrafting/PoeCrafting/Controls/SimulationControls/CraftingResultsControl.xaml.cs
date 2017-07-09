@@ -43,6 +43,9 @@ namespace PoeCrafting.UI.Controls
 
         public void Initialize(Dictionary<ItemPrototypeModel, List<Equipment>> items)
         {
+            ItemResults = string.Empty;
+            OnPropertyChanged(nameof(ItemResults));
+
             ItemDictionary = items;
             ItemPrototypes.Clear();
             foreach (var itemPrototype in ItemDictionary.Keys)
@@ -90,7 +93,7 @@ namespace PoeCrafting.UI.Controls
                 builder.Append(Environment.NewLine);
 
 
-                if (item.ItemBase.Properties["EnergyShield"] > 0)
+                if (item.ItemBase.Properties.ContainsKey("EnergyShield") && item.ItemBase.Properties["EnergyShield"] > 0)
                 {
                     var totalEs = AffixValueCalculator.GetAffixValue("TotalEnergyShield", item, AffixType.Meta, SubconditionValueType.Flat);
                     var maxEs = AffixValueCalculator.GetAffixValue("TotalEnergyShield", item, AffixType.Meta, SubconditionValueType.Max);
@@ -100,7 +103,7 @@ namespace PoeCrafting.UI.Controls
                     builder.Append(Environment.NewLine);
                 }
 
-                if (item.ItemBase.Properties["Armour"] > 0)
+                if (item.ItemBase.Properties.ContainsKey("Armour") && item.ItemBase.Properties["Armour"] > 0)
                 {
                     var totalArmour = AffixValueCalculator.GetAffixValue("TotalArmour", item, AffixType.Meta, SubconditionValueType.Flat);
                     var maxArmour = AffixValueCalculator.GetAffixValue("TotalArmour", item, AffixType.Meta, SubconditionValueType.Max);
@@ -110,7 +113,7 @@ namespace PoeCrafting.UI.Controls
                     builder.Append(Environment.NewLine);
                 }
 
-                if (item.ItemBase.Properties["Evasion"] > 0)
+                if (item.ItemBase.Properties.ContainsKey("Evasion") && item.ItemBase.Properties["Evasion"] > 0)
                 {
                     var totalEvasion = AffixValueCalculator.GetAffixValue("TotalEvasion", item, AffixType.Meta, SubconditionValueType.Flat);
                     var maxEvasion = AffixValueCalculator.GetAffixValue("TotalEvasion", item, AffixType.Meta, SubconditionValueType.Max);

@@ -16,16 +16,9 @@ namespace PoeCrafting.Data
             string command = $@"SELECT
                                     i.Name,
                                     i.Level,
-                                    a.Armour,
-                                    a.Evasion,
-                                    a.EnergyShield,
-                                    a.Str,
-                                    a.Dex,
-                                    a.Int,
                                     ist.Name as Subtype,
                                     it.Name as Type
                                 FROM Item i
-                                JOIN Armour a ON i.ItemId = a.ItemId
                                 JOIN ItemSubType ist ON ist.ItemSubtypeId = i.ItemSubtypeId
                                 JOIN ItemType it ON ist.ItemTypeId = it.ItemTypeId
                                 WHERE i.Name = '{Name.Replace("'", "''")}'";

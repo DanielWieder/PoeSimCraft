@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="127,88,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Subtypes}" SelectedItem="{Binding SelectedSubtype}"/>
-        <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" Margin="127,133,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Bases}" SelectedItem="{Binding SelectedBase}"/>
+        <ComboBox x:Name="comboBox1" HorizontalAlignment="Left" Margin="127,133,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Bases}" SelectedItem="{Binding SelectedBase}" IsEnabled="{Binding HasSubtype}"/>
         <Label x:Name="label" Content="Type" HorizontalAlignment="Left" Margin="43,84,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label_Copy" Content="Subtype" HorizontalAlignment="Left" Margin="43,133,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="Level" HorizontalAlignment="Left" Margin="43,173,0,0" VerticalAlignment="Top"/>

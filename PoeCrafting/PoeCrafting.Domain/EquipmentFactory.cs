@@ -50,7 +50,7 @@ namespace PoeCrafting.Domain
                 _fetchArmorByItemName.Name = baseItemName;
                 _baseItem = _fetchArmorByItemName.Execute();
             }
-            else if (type.Contains("Accessory"))
+            else if (type.Contains("Jewelry"))
             {
                 _fetchAccessoriesByName.Name = baseItemName;
                 _baseItem = _fetchAccessoriesByName.Execute();

@@ -31,6 +31,8 @@ namespace PoeCrafting.UI.Controls
     {
         private int _totalCurrency;
         public int Progress { get; set; } = 0;
+        public string Message { get; set; } = "Crafting...";
+
         public List<Equipment> EquipmentList = new List<Equipment>();
 
         private CraftingTree _craftingTree;
@@ -70,6 +72,10 @@ namespace PoeCrafting.UI.Controls
 
             ItemCount = 0;
             Progress = 0;
+            Message = "Crafting...";
+
+            OnPropertyChanged(nameof(Message));
+            OnPropertyChanged(nameof(Progress));
 
             RunTask();
         }
@@ -98,6 +104,8 @@ namespace PoeCrafting.UI.Controls
                 if (ItemCount == 1 && currencySpent == 0)
                 {
                     Progress = 100;
+                    Message = "Completed";
+                    OnPropertyChanged(nameof(Message));
                     OnPropertyChanged(nameof(Progress));
                     return;
                 }
@@ -125,8 +133,10 @@ namespace PoeCrafting.UI.Controls
                     OnPropertyChanged(nameof(Progress));
                 }
             }
+            Message = "Completed";
             Progress = 100;
             OnPropertyChanged(nameof(Progress));
+            OnPropertyChanged(nameof(Message));
         }
 
         public bool IsReady()

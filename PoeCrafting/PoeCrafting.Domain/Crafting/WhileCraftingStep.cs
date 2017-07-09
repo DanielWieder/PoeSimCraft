@@ -33,8 +33,6 @@ namespace PoeCrafting.Domain.Crafting
             if (Children.Count > 0)
             {
                 var first = Children.First();
-                var nextSteps = Children.ToList();
-                nextSteps.RemoveAt(0);
 
                 ItemStatus endStatus = (ItemStatus) status.Clone();
                 bool isStatusEquilibrium = false;
@@ -44,17 +42,20 @@ namespace PoeCrafting.Domain.Crafting
                 // Combining status always take the widest value within the max/min so it should always converge.
                 while (!isStatusEquilibrium)
                 {
-                    var nextStatus = first.NavigateTree((ItemStatus) endStatus.Clone(), nextSteps,
-                        (step, item) => step.UpdateStatus(status));
+                    var nextSteps = Children.ToList();
+                    nextSteps.RemoveAt(0);
 
-                    if (nextStatus.Completed)
+                    var lastStatus = first.NavigateTree((ItemStatus) endStatus.Clone(), nextSteps,
+                        (step, nextStatus) => step.UpdateStatus(nextStatus));
+
+                    if (lastStatus.Completed)
                     {
                         isStatusEquilibrium = true;
                     }
                     else
                     {
 
-                        var combinedStatus = ItemStatus.Combine(new List<ItemStatus> {endStatus, nextStatus});
+                        var combinedStatus = ItemStatus.Combine(new List<ItemStatus> {endStatus, lastStatus });
                         if (endStatus.AreEqual(combinedStatus))
                         {
                             isStatusEquilibrium = true;

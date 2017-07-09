@@ -60,7 +60,7 @@ namespace PoeCrafting.UI.Controls
         }
 
 
-        private string _selectedAggregateType = "And";
+        private string _selectedAggregateType;
 
         public string SelectedAggregateType
         {
@@ -68,9 +68,32 @@ namespace PoeCrafting.UI.Controls
             set
             {
                 _selectedAggregateType = value;
+                AggregateTypeDescription = GetAggregateTypeDescription();
                 OnPropertyChanged(nameof(AggregateTypeHasMinMax));
+                OnPropertyChanged(nameof(AggregateTypeDescription));
             }
         }
+
+        private string GetAggregateTypeDescription()
+        {
+            switch (_selectedAggregateType)
+            {
+                case "And":
+                    return "All specified mods must exist and match their values.";
+                case "Not":
+                    return "None of specified mods must exist.";
+                case "Count":
+                    return "Specify the number of mods that should be matched.";
+                case "Sum":
+                    return "The mods' values must add to the specified total value.";
+                case "If":
+                    return "If a mod is present, its value must match the specified min/max.";
+                default:
+                    return string.Empty;
+            }
+        }
+
+        public string AggregateTypeDescription { get; set; }
 
         public List<string> AggregateTypes { get; } = Enum.GetNames(typeof(SubconditionAggregateType)).ToList();
         public int? AggregateTypeMin { get; set; }
@@ -84,7 +107,7 @@ namespace PoeCrafting.UI.Controls
 
             Index = index;
             SubCondition = subCondition;
-            _selectedAggregateType =  subCondition.AggregateType.ToString();
+            SelectedAggregateType =  subCondition.AggregateType.ToString();
             AggregateTypeMin = subCondition.AggregateMin;
             AggregateTypeMax = subCondition.AggregateMax;
             PrefixConditions = new SubconditionSelectionControl(subCondition.PrefixConditions, affixes, AffixType.Prefix);

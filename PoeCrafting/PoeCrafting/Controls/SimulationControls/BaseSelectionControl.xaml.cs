@@ -31,14 +31,17 @@ namespace PoeCrafting.UI.Controls
         public List<string> Subtypes { get; }
         public List<string> Bases { get; set; }
 
+        public bool HasSubtype => !string.IsNullOrEmpty(_selectedSubtype);
+
         public string SelectedSubtype
         {
             get { return _selectedSubtype; }
             set
             {
                 _selectedSubtype = value;
-                Bases = _fetch.FetchBasesBySubtype(_selectedSubtype);
+                Bases = _fetch.FetchBasesBySubtype(_selectedSubtype).OrderBy(x => x).ToList();
                 OnPropertyChanged(nameof(Bases));
+                OnPropertyChanged(nameof(HasSubtype));
             }
         }
 
@@ -60,7 +63,7 @@ namespace PoeCrafting.UI.Controls
         public BaseSelectionControl(EquipmentFetch fetch)
         {
             _fetch = fetch;
-            Subtypes = fetch.FetchSubtypes();
+            Subtypes = fetch.FetchSubtypes().OrderBy(x => x).ToList();
             InitializeComponent();
             DataContext = this;
         }

@@ -97,10 +97,20 @@ namespace PoeCrafting.UI
                 Index = index
             };
             ItemPrototypes.Add(prototypeModel);
+            SelectedItem = prototypeModel;
+            UpdateSelectedItem();
+
+            OnPropertyChanged(nameof(SelectedItem));
+            OnPropertyChanged(nameof(ItemControl));
             OnPropertyChanged(nameof(ItemPrototypes));
         }
 
         private void OnItemSelected(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateSelectedItem();
+        }
+
+        private void UpdateSelectedItem()
         {
             if (SelectedItem == null)
             {

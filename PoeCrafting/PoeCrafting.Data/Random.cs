@@ -8,7 +8,7 @@ namespace PoeCrafting.Data
 {
     public class PoeRandom : IRandom
     {
-        Random _random = new Random();
+        readonly Random _random = new Random();
         public int Next()
         {
             return _random.Next();

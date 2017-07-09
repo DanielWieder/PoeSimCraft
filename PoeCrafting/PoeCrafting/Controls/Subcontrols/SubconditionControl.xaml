@@ -4,52 +4,105 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PoeCrafting.UI"
-             mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="500">
-    <Grid>
+             mc:Ignorable="d">
+    <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" MinHeight="50" />
+            <RowDefinition Height="Auto" MinHeight="50"/>
+            <RowDefinition Height="Auto" MinHeight="50"/>
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="80" />
-            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="*" MinWidth="300"/>
             <ColumnDefinition Width="80" />
         </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding SubconditionName}"></TextBox>
-        <ComboBox Grid.Column="2" Grid.Row="0" ItemsSource="{Binding AggregateTypes}" SelectedValue="{Binding SelectedAggregateType}"></ComboBox>
-        <TextBox Grid.Column="3" Grid.Row="0" Text="{Binding AggregateTypeMin}" IsEnabled="{Binding AggregateTypeHasMinMax}">
-            <TextBox.Style>
-                <Style TargetType="{x:Type TextBox}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding AggregateTypeHasMinMax}" Value="False">
-                            <Setter Property="Background" Value="LightGray"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
-        </TextBox>
-        <TextBox Grid.Column="4" Grid.Row="0" Text="{Binding AggregateTypeMax}" IsEnabled="{Binding AggregateTypeHasMinMax}">
-            <TextBox.Style>
-                <Style TargetType="{x:Type TextBox}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding AggregateTypeHasMinMax}" Value="False">
-                            <Setter Property="Background" Value="LightGray"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
-        </TextBox>
-        <ContentControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Margin="0, 5" Content="{Binding PrefixConditions}"/>
-        <ContentControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="5" Margin="0, 5" Content="{Binding SuffixConditions}"/>
-        <ContentControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5" Margin="0, 5" Content="{Binding MetaConditions}"/>
-        <Button Grid.Column="5" Grid.Row="4" Click="OnDeleteClick" Margin="0, 5">Delete</Button>
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Label Width="120">Subcondition Name</Label>
+            <TextBox Text="{Binding SubconditionName}" Width="120"></TextBox>
+        </StackPanel>
+
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="80" />
+            </Grid.ColumnDefinitions>
+
+
+            <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding AggregateTypes}" SelectedValue="{Binding SelectedAggregateType}"></ComboBox>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding AggregateTypeMin}" IsEnabled="{Binding AggregateTypeHasMinMax}" x:Name="AggregateTypeMinBox">
+                <TextBox.Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AggregateTypeHasMinMax}" Value="False">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <!-- The hint text block code should be moved into a user control. -->
+            <TextBlock Grid.Row="0" Grid.Column="1" IsHitTestVisible="False" Text="Min" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Text, ElementName=AggregateTypeMinBox}" Value="" />
+                                    <Condition Binding="{Binding IsFocused, ElementName=AggregateTypeMinBox}" Value="False" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding AggregateTypeMax}" IsEnabled="{Binding AggregateTypeHasMinMax}"  x:Name="AggregateTypeMaxBox">
+                <TextBox.Style>
+                    <Style TargetType="{x:Type TextBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AggregateTypeHasMinMax}" Value="False">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+            <TextBlock Grid.Row="0" Grid.Column="2" IsHitTestVisible="False" Text="Max" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,0,0" Foreground="DarkGray">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Text, ElementName=AggregateTypeMaxBox}" Value="" />
+                                    <Condition Binding="{Binding IsFocused, ElementName=AggregateTypeMaxBox}" Value="False" />
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+        
+        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding AggregateTypeDescription}"></Label>
+        
+        <ContentControl Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding PrefixConditions}"/>
+        <ContentControl Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding SuffixConditions}"/>
+        <ContentControl Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding MetaConditions}"/>
+        <Button Grid.Column="1" Grid.Row="8" Click="OnDeleteClick">Delete</Button>
     </Grid>
 
 </UserControl>
