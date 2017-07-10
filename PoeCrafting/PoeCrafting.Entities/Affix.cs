@@ -14,6 +14,8 @@
         public string Type { get; set; }
         public string Group { get; set; }
 
+        public int GroupWeight { get; set; }
+
         public string StatName1 { get; set; }
         public int StatMin1 { get; set; }
         public int StatMax1 { get; set; }

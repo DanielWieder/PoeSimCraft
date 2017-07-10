@@ -51,7 +51,7 @@ namespace PoeCrafting.Domain
                 return;
             }
 
-            var affix = SelectAffixFromPool(random, item.ItemLevel, item.Stats, pool);
+            var affix = SelectAffixFromPool(random, item.Stats, pool, item.TotalWeight);
             var stat = AffixToStat(random, affix);
 
             item.Stats.Add(stat);
@@ -60,31 +60,28 @@ namespace PoeCrafting.Domain
         public static void SetImplicit(IRandom random, Equipment item)
         {
             var pool = item.PossibleAffixes.Where(x => x.Type == "corrupted").ToList();
-            var affix = SelectAffixFromPool(random, item.ItemLevel, new List<Stat>(), pool);
+            var affix = SelectAffixFromPool(random, new List<Stat>(), pool, item.TotalWeight);
             var stat = AffixToStat(random, affix);
 
             item.Implicit = stat;
         }
 
-        private static Affix SelectAffixFromPool(IRandom random, int itemLevel, List<Stat> current, List<Affix> pool)
+        private static Affix SelectAffixFromPool(IRandom random, List<Stat> current, List<Affix> pool, int totalWeight)
         {
-            var validmodifiers = pool
-                .Where(x => x.Weight > 0)
-                .Where(x => x.ILvl <= itemLevel)
-                .Where(x => current.All(y => y.Affix.Group != x.Group))
-                .ToList();
+            var validmodifiers = pool.Where(x => current.All(y => y.Affix.Group != x.Group)).ToList();
 
-            var totalOdds = validmodifiers.Select(x => x.Weight).Sum();
+            var temp = validmodifiers.Sum(x => x.Weight);
+            var totalOdds = totalWeight - current.Sum(x => x.Affix.GroupWeight);
             var roll = random.NextDouble()*totalOdds;
 
             double accumulator = 0;
-            for (int i = 0; i < validmodifiers.Count(); i++)
+            foreach (var modifier in validmodifiers)
             {
-                accumulator += validmodifiers[i].Weight;
+                accumulator += modifier.Weight;
 
                 if (roll <= accumulator)
                 {
-                    return validmodifiers[i];
+                    return modifier;
                 }
             }
             return null;
