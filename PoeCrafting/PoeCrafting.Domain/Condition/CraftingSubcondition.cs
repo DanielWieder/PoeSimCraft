@@ -9,15 +9,16 @@ namespace PoeCrafting.Domain.Condition
 {
     public class CraftingSubcondition : ICraftingSubcondition
     {
-        public SubconditionAggregateType AggregateType { get; set; }
+        public SubconditionAggregateType AggregateType { get; set; } = SubconditionAggregateType.And;
         public int? AggregateMin { get; set; }
         public int? AggregateMax { get; set; }
 
         public SubconditionValueType ValueType { get; set; }
 
-        public List<ConditionAffix> PrefixConditions;
-        public List<ConditionAffix> SuffixConditions;
-        public List<ConditionAffix> MetaConditions;
+        public List<ConditionAffix> PrefixConditions { get; set; } = new List<ConditionAffix>();
+        public List<ConditionAffix> SuffixConditions { get; set; } = new List<ConditionAffix>();
+        public List<ConditionAffix> MetaConditions { get; set; } = new List<ConditionAffix>();
+        public string Name { get; set; }
 
         public bool IsValid(Equipment item)
         {

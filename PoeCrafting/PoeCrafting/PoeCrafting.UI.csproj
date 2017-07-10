@@ -14,6 +14,23 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\danie\Documents\GitHub\PoeSimCraft\PoeCrafting\Publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,6 +50,18 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>5BB435625237D5529BF5BAFC25E877C609064FBE</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>PoeCrafting.UI_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -70,43 +99,79 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\BaseSelectionControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\BaseSelectionControl.xaml.cs">
       <DependentUpon>BaseSelectionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ConditionControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\CraftingResultsControl.xaml.cs">
+      <DependentUpon>CraftingResultsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Subcontrols\ConditionControl.xaml.cs">
       <DependentUpon>ConditionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SubconditionSelectionControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\CraftingControl.xaml.cs">
+      <DependentUpon>CraftingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SimulationControls\ISimulationControl.cs" />
+    <Compile Include="Controls\Subcontrols\HintTextBlock.xaml.cs">
+      <DependentUpon>HintTextBlock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Subcontrols\SubconditionSelectionControl.xaml.cs">
       <DependentUpon>SubconditionSelectionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SubconditionControl.xaml.cs">
+    <Compile Include="Controls\Subcontrols\SubconditionControl.xaml.cs">
       <DependentUpon>SubconditionControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CraftingTreeControl.xaml.cs">
+    <Compile Include="Controls\SimulationControls\CraftingTreeControl.xaml.cs">
       <DependentUpon>CraftingTreeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SimulationControls\ItemListControl.xaml.cs">
+      <DependentUpon>ItemListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Subcontrols\ItemControl.xaml.cs">
+      <DependentUpon>ItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ConditionAffixControlModel.cs" />
     <Compile Include="Models\CraftingTreeViewModel.cs" />
     <Compile Include="HomeWindow.xaml.cs">
       <DependentUpon>HomeWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\BaseSelectionControl.xaml">
+    <Page Include="Controls\SimulationControls\BaseSelectionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ConditionControl.xaml">
+    <Page Include="Controls\SimulationControls\CraftingResultsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SubconditionSelectionControl.xaml">
+    <Page Include="Controls\Subcontrols\ConditionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SubconditionControl.xaml">
+    <Page Include="Controls\SimulationControls\CraftingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\CraftingTreeControl.xaml">
+    <Page Include="Controls\Subcontrols\HintTextBlock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Subcontrols\SubconditionSelectionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Subcontrols\SubconditionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SimulationControls\CraftingTreeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SimulationControls\ItemListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Subcontrols\ItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -124,6 +189,7 @@
     </Compile>
     <Compile Include="IocUiModule.cs" />
     <Compile Include="Models\CraftingTestbedModel.cs" />
+    <Compile Include="Models\ItemPrototypeModel.cs" />
     <Compile Include="Models\TabConditionModel.cs" />
     <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="SimulationWindow.xaml.cs">
@@ -157,6 +223,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+    <None Include="PoeCrafting.UI_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -184,6 +251,18 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

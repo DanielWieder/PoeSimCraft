@@ -13,7 +13,7 @@ namespace PoeCrafting.Domain
             AddExplicit(random, item, item.PossibleAffixes);
         }
 
-        public static void AddExplicit(IRandom random, Equipment item, List<Affix> possibleAffixs )
+        public static void AddExplicit(IRandom random, Equipment item, List<Affix> possibleAffixes )
         {
             int maxAffixCount;
             
@@ -39,11 +39,11 @@ namespace PoeCrafting.Domain
 
             if (item.Suffixes.Count < maxAffixCount/2)
             {
-               pool.AddRange(possibleAffixs.Where(x => x.Type == "suffix")); 
+               pool.AddRange(possibleAffixes.Where(x => x.Type == "suffix")); 
             }
             if (item.Prefixes.Count < maxAffixCount/2)
             {
-                pool.AddRange(possibleAffixs.Where(x => x.Type == "prefix"));
+                pool.AddRange(possibleAffixes.Where(x => x.Type == "prefix"));
             }
 
             if (pool.Count == 0)

@@ -30,7 +30,7 @@ namespace PoeCrafting.Domain.Currency
 
             item.Stats.Clear();
 
-            int affixCount = Random.Next(2);
+            int affixCount = Random.Next(2) + 1;
             for (int i = 0; i < affixCount; i++)
             {
                 StatFactory.AddExplicit(Random, item);

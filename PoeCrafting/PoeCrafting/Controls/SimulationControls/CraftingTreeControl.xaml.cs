@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -25,19 +26,19 @@ namespace PoeCrafting.UI.Controls
     /// <summary>
     /// Interaction logic for CraftingTree.xaml
     /// </summary>
-    public partial class CraftingTreeControl : UserControl, INotifyPropertyChanged
+    public partial class CraftingTreeControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
-        private readonly CraftingTree _tree;
+        public CraftingTree CraftingTree { get; set; }
         private ICraftingStep _selected;
-        private List<Affix> _affixes;
+        private ObservableCollection<Affix> _affixes;
         private ItemBase _itemBase;
         public CraftingTreeViewModel Tree { get; set; }
         public ConditionControl Condition { get; set; }
 
         public CraftingTreeControl(CurrencyFactory factory)
         {
-            _tree = new CraftingTree(factory);
-            Tree = new CraftingTreeViewModel(_tree, _selected);
+            CraftingTree = new CraftingTree(factory);
+            Tree = new CraftingTreeViewModel(CraftingTree, _selected);
             InitializeComponent();
             DataContext = this;
         }
@@ -45,9 +46,11 @@ namespace PoeCrafting.UI.Controls
         public void Initialize(List<Affix> affixes, ItemBase itemBase)
         {
             _itemBase = itemBase;
-            _affixes = affixes;
-            _tree.ClearConditions();
-            Tree.UpdateTree(_tree, _selected);
+            _affixes = new ObservableCollection<Affix>(affixes);
+            CraftingTree.ClearConditions();
+            Condition = null;
+
+            Tree.UpdateTree(CraftingTree, _selected);
         }
 
         private void OnInsertOptionSelected(object sender, SelectionChangedEventArgs e)
@@ -63,18 +66,18 @@ namespace PoeCrafting.UI.Controls
             var craftingStep = model.Value;
             var selection = comboBox.SelectedItem as string;
 
-            _tree.Replace(craftingStep, selection);
+            CraftingTree.Replace(craftingStep, selection);
 
-            Tree.UpdateTree(_tree, _selected);
+            Tree.UpdateTree(CraftingTree, _selected);
         }
 
         private void OnDeleteClick(object sender, RoutedEventArgs e)
         {
             if (_selected != null)
             {
-                _tree.Delete(_selected);
+                CraftingTree.Delete(_selected);
 
-                Tree.UpdateTree(_tree, _selected);
+                Tree.UpdateTree(CraftingTree, _selected);
                 _selected = null;
             }
         }
@@ -99,9 +102,11 @@ namespace PoeCrafting.UI.Controls
 
             var craftingStep = model.Value;
 
+            Condition?.Save();
+
             if (model.HasCondition)
             {
-                Condition = new ConditionControl(model.Condition, _itemBase, _affixes);
+                Condition = new ConditionControl(model.Condition, _itemBase, _affixes.ToList());
                 OnPropertyChanged(nameof(Condition));
             }
             else
@@ -110,35 +115,19 @@ namespace PoeCrafting.UI.Controls
                 OnPropertyChanged(nameof(Condition));
             }
 
-            _tree.Select(craftingStep);
+            CraftingTree.Select(craftingStep);
             _selected = model.Value;
-            Tree.UpdateTree(_tree, _selected);
-
-            var item = FindItem(x => x.Value == _selected, treeView.Items.OfType<CraftingStepViewModel>().ToList());
-            if (item != null)
-            {
-        //        item.Selected = true;
-            }
+            Tree.UpdateTree(CraftingTree, _selected);
         }
 
-        private CraftingStepViewModel FindItem(Func<CraftingStepViewModel, bool> findItem, List<CraftingStepViewModel> collection )
+        public bool IsReady()
         {
-            foreach (CraftingStepViewModel item in collection)
-            {
-                if (findItem(item))
-                {
-                    return item;
-                }
+            return true;
+        }
 
-                var result = FindItem(findItem, item.Children.ToList());
-                {
-                    if (result != null)
-                    {
-                        return result;
-                    }
-                }
-            }
-            return null;
+        public void Save()
+        {
+            Condition?.Save();
         }
     }
 }

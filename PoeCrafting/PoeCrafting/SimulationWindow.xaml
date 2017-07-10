@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PoeCrafting.UI"
         xmlns:crafting="clr-namespace:PoeCrafting.Domain.Crafting;assembly=PoeCrafting.Domain"
         mc:Ignorable="d"
-        Title="SimulationWindow" Height="500" Width="800">
+        Title="SimulationWindow" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />

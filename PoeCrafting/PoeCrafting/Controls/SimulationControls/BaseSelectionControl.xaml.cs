@@ -22,7 +22,7 @@ namespace PoeCrafting.UI.Controls
     /// <summary>
     /// Interaction logic for BaseSelectionControl.xaml
     /// </summary>
-    public partial class BaseSelectionControl : UserControl, INotifyPropertyChanged
+    public partial class BaseSelectionControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
         private string _selectedSubtype;
 
@@ -31,14 +31,17 @@ namespace PoeCrafting.UI.Controls
         public List<string> Subtypes { get; }
         public List<string> Bases { get; set; }
 
+        public bool HasSubtype => !string.IsNullOrEmpty(_selectedSubtype);
+
         public string SelectedSubtype
         {
             get { return _selectedSubtype; }
             set
             {
                 _selectedSubtype = value;
-                Bases = _fetch.FetchBasesBySubtype(_selectedSubtype);
+                Bases = _fetch.FetchBasesBySubtype(_selectedSubtype).OrderBy(x => x).ToList();
                 OnPropertyChanged(nameof(Bases));
+                OnPropertyChanged(nameof(HasSubtype));
             }
         }
 
@@ -46,16 +49,21 @@ namespace PoeCrafting.UI.Controls
 
         public int ItemLevel { get; set; } = 84;
 
+        public int Currency { get; set; } = 1000;
+
         public bool IsReady()
         {
             return !string.IsNullOrEmpty(SelectedSubtype) &&
                    !string.IsNullOrEmpty(SelectedBase);
         }
 
+        public void Save()
+        { }
+
         public BaseSelectionControl(EquipmentFetch fetch)
         {
             _fetch = fetch;
-            Subtypes = fetch.FetchSubtypes();
+            Subtypes = fetch.FetchSubtypes().OrderBy(x => x).ToList();
             InitializeComponent();
             DataContext = this;
         }

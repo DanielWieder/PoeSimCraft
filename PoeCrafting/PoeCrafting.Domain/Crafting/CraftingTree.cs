@@ -43,6 +43,40 @@ namespace PoeCrafting.Domain.Crafting
             return equipment;
         }
 
+        public double GetCurrencySpent()
+        {
+            double total = 0;
+            Action<ICraftingStep, int, IList<ICraftingStep>> action = (current, index, list) =>
+            {
+                if (current is CurrencyCraftingStep)
+                {
+                    var currencyCraftingStep = current as CurrencyCraftingStep;
+                    total += currencyCraftingStep.Value*currencyCraftingStep.Tracker.SuccessfulUsesCount;
+                }
+            };
+
+            IterateSteps(action, CraftingSteps);
+
+            return total;
+        }
+
+        public double ClearCurrencySpent()
+        {
+            double total = 0;
+            Action<ICraftingStep, int, IList<ICraftingStep>> action = (current, index, list) =>
+            {
+                if (current is CurrencyCraftingStep)
+                {
+                    var currencyCraftingStep = current as CurrencyCraftingStep;
+                    currencyCraftingStep.Tracker.Clear();
+                }
+            };
+
+            IterateSteps(action, CraftingSteps);
+
+            return total;
+        }
+
         public void Select(ICraftingStep selected)
         {
             if (selected.GetType() == typeof(InsertCraftingStep))
@@ -83,19 +117,12 @@ namespace PoeCrafting.Domain.Crafting
                 selectedList.Insert(afterIndex, afterSelected);
             }
 
-            if (selected.Children != null && !selected.Children.Any())
+            if (selected.Children != null)
             {
                 var insideSelected = new InsertCraftingStep(_factory);
                 InsideSelected = insideSelected;
-                selected.Children.Add(insideSelected);
+                selected.Children.Insert(0, InsideSelected);
             }
-
-            //if ( selected == CraftingSteps.Last() && CraftingSteps.Last().Children != null)
-            //{
-            //    var lastAfterConditional = new InsertCraftingStep(_factory);
-            //    LastAfterConditional = lastAfterConditional;
-            //    CraftingSteps.Add(lastAfterConditional);
-            //}
 
             UpdateStatus();
 
@@ -210,10 +237,6 @@ namespace PoeCrafting.Domain.Crafting
             {
                 Remove(InsideSelected, CraftingSteps);
             }
-            //if (LastAfterConditional != null)
-            //{
-            //    Remove(LastAfterConditional, CraftingSteps);
-            //}
         }
 
         private void UpdateStatus()

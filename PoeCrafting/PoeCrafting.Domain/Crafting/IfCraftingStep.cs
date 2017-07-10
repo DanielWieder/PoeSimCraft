@@ -35,15 +35,15 @@ namespace PoeCrafting.Domain.Crafting
                 var nextSteps = Children.ToList();
                 nextSteps.RemoveAt(0);
 
-                var nextStatus = (ItemStatus) status.Clone();
-                nextStatus = first.NavigateTree(nextStatus, nextSteps, (step, item) => step.UpdateStatus(nextStatus));
+                var initialStatus = (ItemStatus) status.Clone();
+                var endStatus = first.NavigateTree(initialStatus, nextSteps, (step, nextStatus) => step.UpdateStatus(nextStatus));
 
-                if (nextStatus.Completed)
+                if (endStatus.Completed)
                 {
                     return status;
                 }
 
-                return ItemStatus.Combine(new List<ItemStatus> {status, nextStatus});
+                return ItemStatus.Combine(new List<ItemStatus> {status, endStatus });
 
             }
             return status;

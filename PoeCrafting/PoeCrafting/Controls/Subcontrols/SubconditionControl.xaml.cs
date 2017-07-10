@@ -60,7 +60,7 @@ namespace PoeCrafting.UI.Controls
         }
 
 
-        private string _selectedAggregateType = "And";
+        private string _selectedAggregateType;
 
         public string SelectedAggregateType
         {
@@ -68,9 +68,32 @@ namespace PoeCrafting.UI.Controls
             set
             {
                 _selectedAggregateType = value;
+                AggregateTypeDescription = GetAggregateTypeDescription();
                 OnPropertyChanged(nameof(AggregateTypeHasMinMax));
+                OnPropertyChanged(nameof(AggregateTypeDescription));
             }
         }
+
+        private string GetAggregateTypeDescription()
+        {
+            switch (_selectedAggregateType)
+            {
+                case "And":
+                    return "All specified mods must exist and match their values.";
+                case "Not":
+                    return "None of specified mods must exist.";
+                case "Count":
+                    return "Specify the number of mods that should be matched.";
+                case "Sum":
+                    return "The mods' values must add to the specified total value.";
+                case "If":
+                    return "If a mod is present, its value must match the specified min/max.";
+                default:
+                    return string.Empty;
+            }
+        }
+
+        public string AggregateTypeDescription { get; set; }
 
         public List<string> AggregateTypes { get; } = Enum.GetNames(typeof(SubconditionAggregateType)).ToList();
         public int? AggregateTypeMin { get; set; }
@@ -78,20 +101,26 @@ namespace PoeCrafting.UI.Controls
 
         public bool AggregateTypeHasMinMax => SelectedAggregateType == "Sum" || SelectedAggregateType == "Count";
 
-        public SubconditionControl(CraftingSubcondition subCondition, ItemBase itemBase, List<Affix> affixes, int index)
+        public SubconditionControl(CraftingSubcondition subCondition, List<Affix> affixes, int index)
         {
-            SubconditionName = "Subcondition " + index;
+            SubconditionName = string.IsNullOrEmpty(subCondition.Name) ? "Subcondition " + index : subCondition.Name;
+
             Index = index;
             SubCondition = subCondition;
-            PrefixConditions = new SubconditionSelectionControl(itemBase, affixes, AffixType.Prefix);
-            SuffixConditions = new SubconditionSelectionControl(itemBase, affixes, AffixType.Suffix);
-            MetaConditions = new SubconditionSelectionControl(itemBase, affixes, AffixType.Meta);
+            SelectedAggregateType =  subCondition.AggregateType.ToString();
+            AggregateTypeMin = subCondition.AggregateMin;
+            AggregateTypeMax = subCondition.AggregateMax;
+            PrefixConditions = new SubconditionSelectionControl(subCondition.PrefixConditions, affixes, AffixType.Prefix);
+            SuffixConditions = new SubconditionSelectionControl(subCondition.SuffixConditions, affixes, AffixType.Suffix);
+            MetaConditions = new SubconditionSelectionControl(subCondition.MetaConditions, affixes, AffixType.Meta);
             DataContext = this;
             InitializeComponent();
         }
 
-        public void Save()
+        public CraftingSubcondition Save()
         {
+            SubCondition.Name = _subconditionName;
+            SubCondition.ValueType = SubconditionValueType.Flat;
             SubCondition.AggregateType =
                 (SubconditionAggregateType) Enum.Parse(typeof(SubconditionAggregateType), SelectedAggregateType);
             SubCondition.AggregateMin = AggregateTypeMin;
@@ -99,6 +128,7 @@ namespace PoeCrafting.UI.Controls
             SubCondition.PrefixConditions = PrefixConditions.Conditions;
             SubCondition.SuffixConditions = SuffixConditions.Conditions;
             SubCondition.MetaConditions = MetaConditions.Conditions;
+            return SubCondition;
         }
 
         private void OnDeleteClick(object sender, RoutedEventArgs e)

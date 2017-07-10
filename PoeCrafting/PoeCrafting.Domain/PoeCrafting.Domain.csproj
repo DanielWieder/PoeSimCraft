@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Condition\ConditionResolutionFactory.cs" />
-    <Compile Include="Condition\ConditionValueCalculator.cs" />
+    <Compile Include="Condition\AffixValueCalculator.cs" />
     <Compile Include="Condition\CraftingCondition.cs" />
     <Compile Include="Condition\CraftingSubcondition.cs" />
     <Compile Include="Crafting\CurrencyCraftingStep.cs" />
@@ -56,6 +56,7 @@
     <Compile Include="Crafting\InsertCraftingStep.cs" />
     <Compile Include="Crafting\StartCraftingStep.cs" />
     <Compile Include="Crafting\WhileCraftingStep.cs" />
+    <Compile Include="CraftTracker.cs" />
     <Compile Include="CurrencyFactory.cs" />
     <Compile Include="Currency\ItemStatus.cs" />
     <Compile Include="Currency\AlchemyOrb.cs" />

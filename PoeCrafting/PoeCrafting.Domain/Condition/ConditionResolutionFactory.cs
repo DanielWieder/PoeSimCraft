@@ -11,12 +11,12 @@ namespace PoeCrafting.Domain.Condition
     {
         public static ConditionResolution ResolveCondition(ConditionAffix affix, Equipment item, AffixType type, SubconditionValueType valueType)
         {
-            var value = ConditionValueCalculator.GetConditionValue(affix.Group, item, type, valueType);
+            var value = AffixValueCalculator.GetAffixValue(affix.Group, item, type, valueType);
 
             return new ConditionResolution()
             {
                 IsPresent = value != -1,
-                IsMatch = IsValueWithinBounds(affix, value),
+                IsMatch = value != -1 && IsValueWithinBounds(affix, value),
                 Value = value
             };
         }

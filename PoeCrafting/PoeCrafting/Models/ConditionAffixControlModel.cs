@@ -17,7 +17,6 @@ namespace PoeCrafting.UI.Models
         // If the ItemLevel is changed then invalid values will be outlined in red
 
         private readonly List<Affix> _affixes;
-        private readonly ItemBase _itemBase;
         public readonly AffixType AffixType;
 
         public SubconditionValueType ValueType { get; set; }
@@ -38,23 +37,23 @@ namespace PoeCrafting.UI.Models
         {
             get
             {
-                var affixes = _affixes.Where(x => (FirstAffix == null || x.Group != FirstAffix) &&
+                var unique = _affixes.Where(x => (FirstAffix == null || x.Group != FirstAffix) &&
                                                   (SecondAffix == null || x.Group != SecondAffix) &&
-                                                  (ThirdAffix == null || x.Group != ThirdAffix))
-                    .Where(x => x.Type == AffixType.ToString().ToLower())
-                    .Select(x => x.Group)
-                    .Distinct()
-                    .ToList();
+                                                  (ThirdAffix == null || x.Group != ThirdAffix)).ToList();
 
-                affixes.Insert(0, string.Empty);
-                return affixes.ToList();
+                var matching = unique.Where(x => x.Type == AffixType.ToString().ToLower()).ToList();
+
+                var group = matching.Select(x => x.Group).ToList();
+
+                var distinct = group.Distinct().ToList();
+
+                distinct.Insert(0, string.Empty);
+                return distinct.ToList();
             }
         }
 
-        public ConditionAffixControlModel(ItemBase itemBase, SubconditionValueType subconditionValueType, List<Affix> affixes, AffixType affixType)
+        public ConditionAffixControlModel(SubconditionValueType subconditionValueType, List<Affix> affixes, AffixType affixType)
         {
-            _itemBase = itemBase;
-
             ValueType = subconditionValueType;
             _affixes = affixes;
             AffixType = affixType;

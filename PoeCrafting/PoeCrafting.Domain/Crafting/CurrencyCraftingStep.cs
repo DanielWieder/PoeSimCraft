@@ -19,6 +19,9 @@ namespace PoeCrafting.Domain.Crafting
         public List<ICraftingStep> Children => null;
         public CraftingCondition Condition => null;
 
+        public CraftTracker Tracker = new CraftTracker();
+        public double Value => _currency.Value;
+
         public CraftingStepStatus Status
         {
             get
@@ -54,22 +57,15 @@ namespace PoeCrafting.Domain.Crafting
 
         public ItemStatus UpdateStatus(ItemStatus current)
         {
-            if (!_status.Initialized)
-            {
-                _status = current;
-            }
-            else
-            {
-                // We combine the status since update status can be run multiple times due to if/while statements
-                _status = current.Initialized ? ItemStatus.Combine(new List<ItemStatus> { current, _status }) : current;
-            }
+            _status = (ItemStatus)current.Clone();
 
-            return _currency.GetNextStatus((ItemStatus)current.Clone());
+            return _currency.GetNextStatus(current);
         }
 
         public Equipment Craft(Equipment equipment)
         {
             bool success = _currency.Execute(equipment);
+            Tracker.TrackCraft(equipment, success);
             return equipment;
         }
 

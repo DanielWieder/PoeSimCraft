@@ -50,7 +50,7 @@ namespace PoeCrafting.Domain
                 _fetchArmorByItemName.Name = baseItemName;
                 _baseItem = _fetchArmorByItemName.Execute();
             }
-            else if (type.Contains("Accessory"))
+            else if (type.Contains("Jewelry"))
             {
                 _fetchAccessoriesByName.Name = baseItemName;
                 _baseItem = _fetchAccessoriesByName.Execute();
@@ -95,7 +95,7 @@ namespace PoeCrafting.Domain
                 ItemLevel = this._itemLevel,
                 PossibleAffixes = this._affixes,
                 ItemBase = (ItemBase)_baseItem.Clone(),
-                Implicit = _baseImplicit != null ? StatFactory.AffixToStat(_random, _baseImplicit) : null
+                Implicit = _baseImplicit != null ? StatFactory.AffixToStat(_random, _baseImplicit) : null,
             };
         }
     }
