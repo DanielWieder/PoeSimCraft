@@ -81,10 +81,15 @@ namespace PoeCrafting.Domain.Crafting
             if (Children.Count > 0)
             {
                 var first = Children.First();
-                var nextSteps = Children.ToList();
-                nextSteps.RemoveAt(0);
                 while (Condition.IsValid(equipment))
                 {
+                    if (equipment.Completed)
+                    {
+                        return equipment;
+                    }
+
+                    var nextSteps = Children.ToList();
+                    nextSteps.RemoveAt(0);
                     first.NavigateTree(equipment, nextSteps, (step, item) => step.Craft(item));
                 }
             }

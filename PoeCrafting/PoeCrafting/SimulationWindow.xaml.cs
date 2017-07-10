@@ -78,6 +78,8 @@ namespace PoeCrafting.UI
 
         private void OnPreviousClick(object sender, RoutedEventArgs e)
         {
+            _controls[_currentControlIndex].Save();
+
             if (_currentControlIndex > 0)
             {
                 _currentControlIndex--;

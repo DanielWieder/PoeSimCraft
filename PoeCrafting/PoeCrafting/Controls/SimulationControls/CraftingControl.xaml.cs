@@ -101,7 +101,7 @@ namespace PoeCrafting.UI.Controls
                 }
 
                 // If an item has been created and no currency was spent then no currency will ever be spent and it will cause an infinite loop
-                if (ItemCount == 1 && currencySpent == 0)
+                if (ItemCount == 1 && currencySpent <= 0)
                 {
                     Progress = 100;
                     Message = "Completed";

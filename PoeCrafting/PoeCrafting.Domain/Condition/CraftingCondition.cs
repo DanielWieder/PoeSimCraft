@@ -13,9 +13,9 @@ namespace PoeCrafting.Domain.Condition
 
         public bool IsValid(Equipment item)
         {
-            foreach (var subcondition in CraftingSubConditions)
+            for (int i = CraftingSubConditions.Count - 1; i >= 0; i--)
             {
-                if (!subcondition.IsValid(item))
+                if (!CraftingSubConditions[i].IsValid(item))
                 {
                     return false;
                 }
