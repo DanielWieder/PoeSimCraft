@@ -25,6 +25,9 @@ namespace PoeCrafting.Domain
         private Affix _baseImplicit;
         private ItemBase _baseItem;
         private int _itemLevel;
+        private int _suffixWeight;
+        private int _prefixWeight;
+        private int _totalWeight;
 
         public EquipmentFactory(
             IRandom random, 
@@ -73,7 +76,9 @@ namespace PoeCrafting.Domain
 
 
             affixes = affixes.Where(x => x.Weight > 0)
-                             .Where(x => x.ILvl <= itemLevel).ToList();
+                             .Where(x => x.ILvl <= itemLevel)
+                             .Where(x => x.Type == "prefix" || x.Type == "suffix")
+                             .ToList();
             
             var groupWeights = affixes
                 .GroupBy(x => x.Group)
@@ -86,8 +91,13 @@ namespace PoeCrafting.Domain
             }
 
             _affixes = affixes.ToList();
-            _prefixes = affixes.Where(x => x.Group == "prefix").ToList();
-            _suffixes = affixes.Where(x => x.Group == "suffix").ToList();
+            _prefixes = affixes.Where(x => x.Type == "prefix").ToList();
+            _suffixes = affixes.Where(x => x.Type == "suffix").ToList();
+
+            _suffixWeight = this._suffixes.Sum(x => x.Weight);
+            _prefixWeight = this._prefixes.Sum(x => x.Weight);
+            _totalWeight = this._affixes.Sum(x => x.Weight);
+
         }
 
         public ItemBase GetBaseItem()
@@ -110,13 +120,15 @@ namespace PoeCrafting.Domain
 
             return new Equipment
             {
-                TotalWeight = this._affixes.Sum(x => x.Weight),
                 ItemLevel = this._itemLevel,
                 PossibleAffixes = this._affixes,
                 PossiblePrefixes = this._prefixes,
                 PossibleSuffixes = this._suffixes,
                 ItemBase = (ItemBase)_baseItem.Clone(),
                 Implicit = _baseImplicit != null ? StatFactory.AffixToStat(_random, _baseImplicit) : null,
+                TotalWeight = _totalWeight,
+                PrefixWeight = _prefixWeight,
+                SuffixWeight = _suffixWeight
             };
         }
     }

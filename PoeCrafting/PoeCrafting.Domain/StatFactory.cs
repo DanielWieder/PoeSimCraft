@@ -35,15 +35,28 @@ namespace PoeCrafting.Domain
                 return;
             }
 
+
+            var totalWeight = item.TotalWeight;
+
             List<Affix> pool = new List<Affix>();
 
             if (item.Suffixes.Count < maxAffixCount/2)
             {
-               pool.AddRange(possibleAffixes.Where(x => x.Type == "suffix")); 
+                pool.AddRange(possibleAffixes.Where(x => x.Type == "suffix"));
+                totalWeight -= item.Stats.Where(x => x.Affix.Type == "suffix").Sum(x => x.Affix.GroupWeight);
+            }
+            else
+            {
+                totalWeight -= item.SuffixWeight;
             }
             if (item.Prefixes.Count < maxAffixCount/2)
             {
                 pool.AddRange(possibleAffixes.Where(x => x.Type == "prefix"));
+                totalWeight -= item.Stats.Where(x => x.Affix.Type == "prefix").Sum(x => x.Affix.GroupWeight);
+            }
+            else
+            {
+                totalWeight -= item.PrefixWeight;
             }
 
             if (pool.Count == 0)
@@ -51,7 +64,7 @@ namespace PoeCrafting.Domain
                 return;
             }
 
-            var affix = SelectAffixFromPool(random, item.Stats, pool, item.TotalWeight);
+            var affix = SelectAffixFromPool(random, item.Stats, pool, totalWeight);
             var stat = AffixToStat(random, affix);
 
             item.Stats.Add(stat);
@@ -68,14 +81,21 @@ namespace PoeCrafting.Domain
 
         private static Affix SelectAffixFromPool(IRandom random, List<Stat> current, List<Affix> pool, int totalWeight)
         {
-            var validmodifiers = pool.Where(x => current.All(y => y.Affix.Group != x.Group)).ToList();
 
-            var temp = validmodifiers.Sum(x => x.Weight);
-            var totalOdds = totalWeight - current.Sum(x => x.Affix.GroupWeight);
-            var roll = random.NextDouble()*totalOdds;
+            var currentGroups = current.Select(x => x.Affix.Group).ToArray();
+            var filtered = new List<Affix>(pool);
+            for (int i = filtered.Count - 1; i >= 0; i--)
+            {
+                if (currentGroups.Contains(filtered[i].Group))
+                {
+                    filtered.RemoveAt(i);
+                }
+            }
+
+            var roll = random.NextDouble()* totalWeight;
 
             double accumulator = 0;
-            foreach (var modifier in validmodifiers)
+            foreach (var modifier in filtered)
             {
                 accumulator += modifier.Weight;
 

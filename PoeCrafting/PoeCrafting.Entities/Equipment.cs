@@ -24,5 +24,7 @@ namespace PoeCrafting.Entities
         public EquipmentRarity Rarity { get; set; } = EquipmentRarity.Normal;
         public bool Corrupted { get; set; } = false;
         public int TotalWeight { get; set; }
+        public int PrefixWeight { get; set; }
+        public int SuffixWeight { get; set; }
     }
 }
