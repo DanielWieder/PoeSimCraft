@@ -16,3 +16,5 @@ PoeSimCraftImporter/PoeSimCraftImporter/obj/*
 *.pfx
 *.suo
 *.user
+*.psess
+*.vspx

@@ -9,9 +9,9 @@ namespace PoeCrafting.Entities
 
         public ItemBase ItemBase { get; set; }
 
-        public List<Affix> PossibleAffixes { get; set; } = new List<Affix>();
-        public List<Affix> PossiblePrefixes => PossibleAffixes.Where(x => x.Type == "prefix").ToList();
-        public List<Affix> PossibleSuffixes => PossibleAffixes.Where(x => x.Type == "suffix").ToList();
+        public List<Affix> PossibleAffixes { get; set; }
+        public List<Affix> PossiblePrefixes { get; set; }
+        public List<Affix> PossibleSuffixes { get; set; }
 
         public List<Stat> Stats { get; set; } = new List<Stat>();
         public List<Stat> Prefixes => Stats.Where(x => x.Affix.Type == "prefix").ToList();
@@ -23,5 +23,6 @@ namespace PoeCrafting.Entities
 
         public EquipmentRarity Rarity { get; set; } = EquipmentRarity.Normal;
         public bool Corrupted { get; set; } = false;
+        public int TotalWeight { get; set; }
     }
 }
