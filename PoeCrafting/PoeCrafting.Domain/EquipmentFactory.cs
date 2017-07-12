@@ -75,17 +75,17 @@ namespace PoeCrafting.Domain
             var affixes = _fetchAffixesByItemName.Execute();
 
 
-            affixes = affixes.Where(x => x.Weight > 0)
-                             .Where(x => x.ILvl <= itemLevel)
-                             .Where(x => x.Type == "prefix" || x.Type == "suffix")
+            affixes = affixes.Where(x => x.ILvl <= itemLevel)
                              .ToList();
-            
-            var groupWeights = affixes
+
+            var rollableAffixes = affixes.Where(x => x.Type == "prefix" || x.Type == "suffix").ToList();
+
+            var groupWeights = rollableAffixes
                 .GroupBy(x => x.Group)
                 .ToDictionary(x => x.Key, x => x.Sum(y => y.Weight));
 
 
-            foreach(var affix in affixes)
+            foreach(var affix in rollableAffixes)
             {
                 affix.GroupWeight = groupWeights[affix.Group];
             }
@@ -96,7 +96,8 @@ namespace PoeCrafting.Domain
 
             _suffixWeight = this._suffixes.Sum(x => x.Weight);
             _prefixWeight = this._prefixes.Sum(x => x.Weight);
-            _totalWeight = this._affixes.Sum(x => x.Weight);
+
+            _totalWeight = rollableAffixes.Sum(x => x.Weight);
 
         }
 

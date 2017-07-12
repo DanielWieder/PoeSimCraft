@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -96,7 +97,7 @@ namespace PoeCrafting.Test
 
             tree.Replace(tree.InsideSelected, "Exalted Orb");
 
-            tree.Craft(equipment);
+            tree.Craft(equipment, default(CancellationToken));
 
             Assert.AreEqual(3, equipment.Suffixes.Count);
             Assert.AreEqual(3, equipment.Prefixes.Count);
@@ -122,7 +123,7 @@ namespace PoeCrafting.Test
             var tree = _container.Get<CraftingTree>();
             tree.Replace(tree.AfterSelected, "End");
             tree.Replace(tree.AfterSelected, "Vaal Orb");
-            tree.Craft(equipment);
+            tree.Craft(equipment, default(CancellationToken));
 
             Assert.IsFalse(equipment.Corrupted);
         }

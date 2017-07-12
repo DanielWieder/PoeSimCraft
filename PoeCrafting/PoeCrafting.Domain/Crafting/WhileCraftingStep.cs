@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using PoeCrafting.Domain.Condition;
 
@@ -74,7 +75,7 @@ namespace PoeCrafting.Domain.Crafting
             }
         }
 
-        public Equipment Craft(Equipment equipment)
+        public Equipment Craft(Equipment equipment, CancellationToken ct)
         {
             if (equipment.Completed) return equipment;
 
@@ -83,6 +84,11 @@ namespace PoeCrafting.Domain.Crafting
                 var first = Children.First();
                 while (Condition.IsValid(equipment))
                 {
+                    if (ct.IsCancellationRequested)
+                    {
+                        ct.ThrowIfCancellationRequested();
+                    }
+
                     if (equipment.Completed)
                     {
                         return equipment;
@@ -90,15 +96,15 @@ namespace PoeCrafting.Domain.Crafting
 
                     var nextSteps = Children.ToList();
                     nextSteps.RemoveAt(0);
-                    first.NavigateTree(equipment, nextSteps, (step, item) => step.Craft(item));
+                    first.NavigateTree(equipment, nextSteps, (step, item) => step.Craft(item, ct), ct);
                 }
             }
             return equipment;
         }
 
-        public T NavigateTree<T>(T item, List<ICraftingStep> queue, Func<ICraftingStep, T, T> action) where T : ITreeNavigation
+        public T NavigateTree<T>(T item, List<ICraftingStep> queue, Func<ICraftingStep, T, T> action, CancellationToken ct) where T : ITreeNavigation
         {
-            return this.DefaultNavigateTree(item, queue, action);
+            return this.DefaultNavigateTree(item, queue, action, ct);
         }
     }
 }

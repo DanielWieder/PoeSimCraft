@@ -111,7 +111,7 @@ namespace PoeCrafting.UI.Controls
                 }
 
                 var newItem = _factory.CreateEquipment();
-                var result = _craftingTree.Craft(newItem);
+                var result = _craftingTree.Craft(newItem, ct);
                 EquipmentList.Add(result);
 
                 foreach (var prototype in _itemPrototypes)

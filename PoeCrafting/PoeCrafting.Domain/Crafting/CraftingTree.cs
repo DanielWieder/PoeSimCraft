@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using PoeCrafting.Entities;
 using PoeCrafting.Domain.Currency;
@@ -32,14 +33,14 @@ namespace PoeCrafting.Domain.Crafting
             Select(start);
         }
 
-        public Equipment Craft(Equipment equipment)
+        public Equipment Craft(Equipment equipment, CancellationToken ct)
         {
             RemoveInsertNodes();
 
             var first = CraftingSteps.First();
             var nextSteps = CraftingSteps.ToList();
             nextSteps.RemoveAt(0);
-            first.NavigateTree(equipment, nextSteps, (step, item) => step.Craft(item));
+            first.NavigateTree(equipment, nextSteps, (step, item) => step.Craft(item, ct), ct);
             return equipment;
         }
 
