@@ -33,7 +33,7 @@
             </Grid.RowDefinitions>
 
             <Label Content="Currency" Grid.Column="0" Grid.Row="0"/>
-            <ListBox Grid.Column="0" Grid.Row="1" Grid.RowSpan="8" ItemsSource="{Binding Path=Currencies}" DisplayMemberPath="Group" SelectedItem="{Binding Path=SelectedCurrency}"/>
+            <ListBox Grid.Column="0" Grid.Row="1" Grid.RowSpan="8" ItemsSource="{Binding Path=Currencies}" DisplayMemberPath="ModType" SelectedItem="{Binding Path=SelectedCurrency}"/>
                 <Button Content="Craft&#xD;&#xA;" Grid.Column="0" Grid.Row="8" Click="OnCraftSelection"/>
 
             <Label Content="Item Types:" Grid.Column="2" Grid.Row="0"/>

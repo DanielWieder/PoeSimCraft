@@ -14,10 +14,14 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
-            <ProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="200" Minimum="0" Maximum="100" Value="{Binding Progress, Mode=TwoWay}"/>
-            <Label FontSize="20" Content="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="40"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Label Content="Currency (C)" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding Path=Currency}"/>
+            </StackPanel>
+            <Button HorizontalAlignment="Center" Width="120" VerticalAlignment="Center" Click="OnCraftClick">Craft</Button>
+            <ProgressBar HorizontalAlignment="Center" VerticalAlignment="Center" Height="30" Width="200" Minimum="0" Maximum="100" Value="{Binding Progress, Mode=TwoWay}" Visibility="{Binding MessageVisibility}"/>
+            <Label FontSize="20" Content="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="40" Visibility="{Binding MessageVisibility}"/>
         </StackPanel>
     </Grid>
 </UserControl>

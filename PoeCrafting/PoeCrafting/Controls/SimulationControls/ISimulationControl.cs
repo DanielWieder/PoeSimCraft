@@ -9,7 +9,7 @@ namespace PoeCrafting.UI.Controls
 {
     public interface ISimulationControl
     {
-        bool IsReady();
-        void Save();
+        bool CanComplete();
+        void OnClose();
     }
 }

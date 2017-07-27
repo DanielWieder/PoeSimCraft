@@ -13,7 +13,5 @@
         <Label x:Name="label_Copy" Content="Subtype" HorizontalAlignment="Left" Margin="43,133,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label1" Content="Level" HorizontalAlignment="Left" Margin="43,173,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="23" Margin="127,177,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding Path=ItemLevel}"/>
-        <Label x:Name="label2" Content="Currency (C)" HorizontalAlignment="Left" Margin="43,216,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="23" Margin="127,220,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding Path=Currency}"/>
     </Grid>
 </UserControl>

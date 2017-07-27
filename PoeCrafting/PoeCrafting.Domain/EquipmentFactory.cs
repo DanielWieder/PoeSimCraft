@@ -2,7 +2,9 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using PoeCrafting.Data;
 using PoeCrafting.Entities;
@@ -74,20 +76,31 @@ namespace PoeCrafting.Domain
             _fetchAffixesByItemName.Name = baseItemName;
             var affixes = _fetchAffixesByItemName.Execute();
 
+            foreach (var affix in affixes)
+            {
+                affix.ModType = Regex.Replace(affix.ModName, "[0-9_]", "");
+            }
+
+            affixes = affixes.GroupBy(x => x.Name)
+                .Select(x => x.Count() == 1 ? x : x.Where(y => y.SpawnTag != "default"))
+                .Where(x => x.Any())
+                .Select(x => x.First())
+                .ToList();
 
             affixes = affixes.Where(x => x.ILvl <= itemLevel)
+                             .Where(x => x.Weight > 0 || x.Type == "meta")
                              .ToList();
 
             var rollableAffixes = affixes.Where(x => x.Type == "prefix" || x.Type == "suffix").ToList();
 
-            var groupWeights = rollableAffixes
-                .GroupBy(x => x.Group)
+            var modTypeWeights = rollableAffixes
+                .GroupBy(x => x.ModType)
                 .ToDictionary(x => x.Key, x => x.Sum(y => y.Weight));
 
 
             foreach(var affix in rollableAffixes)
             {
-                affix.GroupWeight = groupWeights[affix.Group];
+                affix.ModTypeWeight = modTypeWeights[affix.ModType];
             }
 
             _affixes = affixes.ToList();

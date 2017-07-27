@@ -57,7 +57,7 @@ namespace PoeCrafting.UI.Controls
             {
                 list.Add(new ConditionAffix
                 {
-                    Group = FirstAffix,
+                    ModType = RemoveSpaces(FirstAffix),
                     Min = FirstAffixMin,
                     Max = FirstAffixMax
                 });
@@ -66,7 +66,7 @@ namespace PoeCrafting.UI.Controls
             {
                 list.Add(new ConditionAffix
                 {
-                    Group = SecondAffix,
+                    ModType = RemoveSpaces(SecondAffix),
                     Min = SecondAffixMin,
                     Max = SecondAffixMax
                 });
@@ -75,7 +75,7 @@ namespace PoeCrafting.UI.Controls
             {
                 list.Add(new ConditionAffix
                 {
-                    Group = ThirdAffix,
+                    ModType = RemoveSpaces(ThirdAffix),
                     Min = ThirdAffixMin,
                     Max = ThirdAffixMax
                 });
@@ -102,7 +102,7 @@ namespace PoeCrafting.UI.Controls
             {
                 if (_initialConditions.Count >= 1)
                 {
-                    FirstAffix = _initialConditions[0].Group;
+                    FirstAffix = AddSpaces(_initialConditions[0].ModType);
                     FirstAffixMin = _initialConditions[0].Min;
                     FirstAffixMax = _initialConditions[0].Max;
 
@@ -112,7 +112,7 @@ namespace PoeCrafting.UI.Controls
                 }
                 if (_initialConditions.Count >= 2)
                 {
-                    SecondAffix = _initialConditions[1].Group;
+                    SecondAffix = AddSpaces(_initialConditions[1].ModType);
                     SecondAffixMin = _initialConditions[1].Min;
                     SecondAffixMax = _initialConditions[1].Max;
 
@@ -122,7 +122,7 @@ namespace PoeCrafting.UI.Controls
                 }
                 if (_initialConditions.Count >= 3)
                 {
-                    ThirdAffix = _initialConditions[2].Group;
+                    ThirdAffix = AddSpaces(_initialConditions[2].ModType);
                     ThirdAffixMin = _initialConditions[2].Min;
                     ThirdAffixMax = _initialConditions[2].Max;
 
@@ -135,18 +135,31 @@ namespace PoeCrafting.UI.Controls
 
         public List<string> GetValidAffixes()
         {
-     //       var unique = _affixes.Where(x => (FirstAffix == null || x.Group != FirstAffix) &&
-   //                                             (SecondAffix == null || x.Group != SecondAffix) &&
-     //                                           (ThirdAffix == null || x.Group != ThirdAffix)).ToList();
+     //       var unique = _affixes.Where(x => (FirstAffix == null || x.ModType != FirstAffix) &&
+   //                                             (SecondAffix == null || x.ModType != SecondAffix) &&
+     //                                           (ThirdAffix == null || x.ModType != ThirdAffix)).ToList();
 
             var matching = _affixes.Where(x => x.Type == _affixType.ToString().ToLower()).ToList();
 
-            var group = matching.Select(x => x.Group).ToList();
+            var mods = matching.Select(x => x.ModType).ToList();
 
-            var distinct = group.Distinct().ToList();
+            var distinct =
+                mods.Distinct()
+                    .Select(AddSpaces)
+                    .ToList();
 
             distinct.Insert(0, string.Empty);
             return distinct.ToList();
+        }
+
+        private static string AddSpaces(string x)
+        {
+            return string.Concat(x.Select(y => Char.IsUpper(y) ? " " + y : y.ToString())).TrimStart(' ');
+        }
+
+        private static string RemoveSpaces(string x)
+        {
+            return x.Replace(" ", "");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

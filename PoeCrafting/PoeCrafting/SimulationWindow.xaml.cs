@@ -37,8 +37,7 @@ namespace PoeCrafting.UI
         private int _currentControlIndex = 0;
 
         public ContentControl SelectedStep { get; set; }
-        public bool IsReady => _controls[_currentControlIndex].IsReady();
-
+        public bool IsReady => _controls[_currentControlIndex].CanComplete();
 
         public SimulationWindow(
             CraftingTreeControl craftingTree, 
@@ -63,7 +62,11 @@ namespace PoeCrafting.UI
                 Results
             };
 
+            Crafting.OnCompletion = () => OnNextClick(this, null);
+
             SelectedStep = BaseSelection;
+            BaseSelection.Initialize(() => OnPropertyChanged(nameof(IsReady)));
+
             InitializeComponent();
             DataContext = this;
 
@@ -78,7 +81,7 @@ namespace PoeCrafting.UI
 
         private void OnPreviousClick(object sender, RoutedEventArgs e)
         {
-            _controls[_currentControlIndex].Save();
+            _controls[_currentControlIndex].OnClose();
 
             if (_currentControlIndex > 0)
             {
@@ -91,12 +94,12 @@ namespace PoeCrafting.UI
 
         private void OnNextClick(object sender, RoutedEventArgs e)
         {
-            if (!_controls[_currentControlIndex].IsReady() || _currentControlIndex >= _controls.Count - 1)
+            if (_currentControlIndex >= _controls.Count - 1)
             {
                 return;
             }
             
-            _controls[_currentControlIndex].Save();
+            _controls[_currentControlIndex].OnClose();
             _currentControlIndex++;
 
             SelectedStep = _controls[_currentControlIndex] as ContentControl;
@@ -104,29 +107,34 @@ namespace PoeCrafting.UI
 
             if (_controls[_currentControlIndex] == CraftingTree)
             {
-                _factory.Initialize(BaseSelection.SelectedBase, BaseSelection.ItemLevel);
+                var baseInfo = BaseSelection.BaseInformation;
+                _factory.Initialize(baseInfo.SelectedBase, baseInfo.ItemLevel);
                 var affixes = _factory.GetPossibleAffixes();
                 var baseItem = _factory.GetBaseItem();
-                CraftingTree.Initialize(affixes, baseItem);
+                CraftingTree.Initialize(affixes, baseItem, baseInfo);
             }
             else if (_controls[_currentControlIndex] == ItemList)
             {
+                var baseInfo = BaseSelection.BaseInformation;
                 var affixes = _factory.GetPossibleAffixes();
                 var baseItem = _factory.GetBaseItem();
 
-                ItemList.Initialize(affixes, baseItem);
+                ItemList.Initialize(affixes, baseItem, baseInfo);
             }
             else if (_controls[_currentControlIndex] == Crafting)
             {
                 var craftingTree = CraftingTree.CraftingTree;
                 var itemList = ItemList.ItemPrototypes.ToList();
 
-                Crafting.Initialize(craftingTree, _factory, itemList, BaseSelection.Currency);
+                Crafting.Initialize(craftingTree, _factory, itemList);
             }
             else if (_controls[_currentControlIndex] == Results)
             {
                 Results.Initialize(Crafting.MatchingItems);
             }
+
+            OnPropertyChanged(nameof(IsReady));
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

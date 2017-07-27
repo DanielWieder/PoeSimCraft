@@ -1,11 +1,11 @@
 -------------------------------------- Total Defenses/Resistances --------------------------------------
 
-INSERT INTO Affix (Domain, GenerationType, [Group])
-VALUES  ('item','meta','TotalEnergyShield'),
-        ('item','meta','TotalArmour'),
-        ('item','meta','TotalEvasion'),
-        ('item','meta','TotalResistances'),
-        ('item','meta','TotalElementalResistances')
+INSERT INTO Affix (Domain, GenerationType, [Group], [Name], [ModName], Level)
+VALUES  ('item','meta','TotalEnergyShield','TotalEnergyShield','TotalEnergyShield',1),
+        ('item','meta','TotalArmour','TotalArmour','TotalArmour',1),
+        ('item','meta','TotalEvasion','TotalEvasion','TotalEvasion',1),
+        ('item','meta','TotalResistances','TotalResistances','TotalResistances',1),
+        ('item','meta','TotalElementalResistances','TotalElementalResistances','TotalElementalResistances',1)
 
 INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Value], [Weight])
 	SELECT DISTINCT 

@@ -30,6 +30,7 @@ namespace PoeCrafting.UI
     {
         private List<Affix> _affixes;
         private ItemBase _itemBase;
+        private BaseInfomation _baseInfo;
 
         public ObservableCollection<ItemPrototypeModel> ItemPrototypes { get; set; }
         public ItemPrototypeModel SelectedItem { get; set; }
@@ -43,20 +44,24 @@ namespace PoeCrafting.UI
             DataContext = this;
         }
 
-        public void Initialize(List<Affix> affixes, ItemBase itemBase)
+        public void Initialize(List<Affix> affixes, ItemBase itemBase, BaseInfomation baseInfo)
         {
-            _itemBase = itemBase;
-            _affixes = affixes;
-            SelectedItem = new ItemPrototypeModel();
-            ItemPrototypes.Clear();
-            ItemControl = null;
+            if (_baseInfo == null || !_baseInfo.Equals(baseInfo))
+            {
+                _itemBase = itemBase;
+                _affixes = affixes;
+                _baseInfo = baseInfo;
+                SelectedItem = new ItemPrototypeModel();
+                ItemPrototypes.Clear();
+                ItemControl = null;
 
-            AddItem();
-            SelectedItem = ItemPrototypes[0];
-            OnPropertyChanged(nameof(SelectedItem));
+                AddItem();
+                SelectedItem = ItemPrototypes[0];
+                OnPropertyChanged(nameof(SelectedItem));
+            }
         }
 
-        public void Save()
+        public void OnClose()
         {
             ItemControl?.Save();
         }
@@ -145,7 +150,7 @@ namespace PoeCrafting.UI
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public bool IsReady()
+        public bool CanComplete()
         {
             return true;
         }

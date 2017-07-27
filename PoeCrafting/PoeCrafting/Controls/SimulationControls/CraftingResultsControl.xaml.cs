@@ -56,12 +56,12 @@ namespace PoeCrafting.UI.Controls
             OnPropertyChanged(nameof(ItemPrototypes));
         }
 
-        public bool IsReady()
+        public bool CanComplete()
         {
             return false;
         }
 
-        public void Save()
+        public void OnClose()
         {
         }
 
@@ -75,6 +75,19 @@ namespace PoeCrafting.UI.Controls
             var list = ItemDictionary[SelectedItem];
 
             StringBuilder builder = new StringBuilder();
+
+            if (list.Any())
+            {
+                builder.Append(Environment.NewLine);
+                builder.Append("Base Item Name: " + list[0].ItemBase.Name);
+                builder.Append(Environment.NewLine);
+                builder.Append("Base Item Type: " + list[0].ItemBase.Type);
+                builder.Append(Environment.NewLine);
+                builder.Append("Base Item Subtype: " + list[0].ItemBase.Subtype);
+                builder.Append(Environment.NewLine);
+                builder.Append(Environment.NewLine);
+            }
+
             builder.Append("Count: " + list.Count);
 
             if (list.Count > 50)
@@ -128,7 +141,7 @@ namespace PoeCrafting.UI.Controls
                 foreach (var prefix in item.Prefixes)
                 {
                     builder.Append("\t");
-                    builder.Append(prefix.Affix.Group + ": " + prefix.Value1);
+                    builder.Append(AddSpaces(prefix.Affix.ModType) + ": " + prefix.Value1);
                     builder.Append(Environment.NewLine);
                 }
 
@@ -137,15 +150,26 @@ namespace PoeCrafting.UI.Controls
                 foreach (var suffix in item.Suffixes)
                 {
                     builder.Append("\t");
-                    builder.Append(suffix.Affix.Group + ": " + suffix.Value1);
+                    builder.Append(AddSpaces(suffix.Affix.ModType) + ": " + suffix.Value1);
+                    builder.Append(Environment.NewLine);
+                }
+
+                if (item.Corrupted)
+                {
+                    builder.Append("\t");
+                    builder.Append("Corrupted");
                     builder.Append(Environment.NewLine);
                 }
             }
-            
 
             ItemResults = builder.ToString();
 
             OnPropertyChanged(nameof(ItemResults));
+        }
+
+        private static string AddSpaces(string x)
+        {
+            return string.Concat(x.Select(y => Char.IsUpper(y) ? " " + y : y.ToString())).TrimStart(' ');
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

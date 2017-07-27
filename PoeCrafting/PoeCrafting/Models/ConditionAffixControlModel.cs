@@ -37,15 +37,15 @@ namespace PoeCrafting.UI.Models
         {
             get
             {
-                var unique = _affixes.Where(x => (FirstAffix == null || x.Group != FirstAffix) &&
-                                                  (SecondAffix == null || x.Group != SecondAffix) &&
-                                                  (ThirdAffix == null || x.Group != ThirdAffix)).ToList();
+                var unique = _affixes.Where(x => (FirstAffix == null || x.ModType != FirstAffix) &&
+                                                  (SecondAffix == null || x.ModType != SecondAffix) &&
+                                                  (ThirdAffix == null || x.ModType != ThirdAffix)).ToList();
 
                 var matching = unique.Where(x => x.Type == AffixType.ToString().ToLower()).ToList();
 
-                var group = matching.Select(x => x.Group).ToList();
+                var mods = matching.Select(x => x.ModType).ToList();
 
-                var distinct = group.Distinct().ToList();
+                var distinct = mods.Distinct().ToList();
 
                 distinct.Insert(0, string.Empty);
                 return distinct.ToList();

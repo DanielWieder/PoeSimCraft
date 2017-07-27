@@ -28,10 +28,12 @@ namespace PoeCrafting.Data
 	                                a.StatMax2,
 	                                a.StatName3,
 	                                a.StatMin3,
-	                                a.StatMax3
+	                                a.StatMax3,
+                                    t.Name as SpawnTag
                                 FROM Affix a
                                 JOIN AffixSpawnTagMap astm ON astm.AffixId = a.AffixId
                                 JOIN ItemSpawnTagMap istm ON istm.SpawnTagId = astm.SpawnTagId
+                                Join SpawnTag t ON astm.SpawnTagId = t.SpawnTagId
                                 join Item i ON istm.ItemId = i.ItemId 
                                 WHERE i.Name = '{Name.Replace("'", "''")}'";
 

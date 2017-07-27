@@ -6,7 +6,7 @@ using PoeCrafting.Entities;
 
 namespace PoeCrafting.Domain
 {
-    public class StatFactory
+    public static class StatFactory
     {
         public static void AddExplicit(IRandom random, Equipment item)
         {
@@ -35,7 +35,6 @@ namespace PoeCrafting.Domain
                 return;
             }
 
-
             var totalWeight = item.TotalWeight;
 
             List<Affix> pool = new List<Affix>();
@@ -43,16 +42,17 @@ namespace PoeCrafting.Domain
             if (item.Suffixes.Count < maxAffixCount/2)
             {
                 pool.AddRange(possibleAffixes.Where(x => x.Type == "suffix"));
-                totalWeight -= item.Stats.Where(x => x.Affix.Type == "suffix").Sum(x => x.Affix.GroupWeight);
+                totalWeight -= item.Suffixes.Sum(x => x.Affix.ModTypeWeight);
             }
             else
             {
                 totalWeight -= item.SuffixWeight;
             }
+
             if (item.Prefixes.Count < maxAffixCount/2)
             {
                 pool.AddRange(possibleAffixes.Where(x => x.Type == "prefix"));
-                totalWeight -= item.Stats.Where(x => x.Affix.Type == "prefix").Sum(x => x.Affix.GroupWeight);
+                totalWeight -= item.Prefixes.Sum(x => x.Affix.ModTypeWeight);
             }
             else
             {
@@ -82,11 +82,11 @@ namespace PoeCrafting.Domain
         private static Affix SelectAffixFromPool(IRandom random, List<Stat> current, List<Affix> pool, int totalWeight)
         {
 
-            var currentGroups = current.Select(x => x.Affix.Group).ToArray();
+            var currentModTypes = current.Select(x => x.Affix.ModType).ToArray();
             var filtered = new List<Affix>(pool);
             for (int i = filtered.Count - 1; i >= 0; i--)
             {
-                if (currentGroups.Contains(filtered[i].Group))
+                if (currentModTypes.Contains(filtered[i].ModType))
                 {
                     filtered.RemoveAt(i);
                 }

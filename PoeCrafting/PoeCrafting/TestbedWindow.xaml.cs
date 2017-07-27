@@ -33,9 +33,9 @@ namespace PoeCrafting.UI
 
         public ObservableCollection<string> ItemBases => ViewModel.BaseItemNames != null ? ToObservableCollection(ViewModel.BaseItemNames) : new ObservableCollection<string>();
 
-        public ObservableCollection<string> Prefixes => ViewModel.Equipment != null ? ToObservableCollection(ViewModel.Equipment.Prefixes.Select(x => x.Affix.ModName)) : new ObservableCollection<string>();
+        public ObservableCollection<string> Prefixes => ViewModel.Equipment != null ? ToObservableCollection(ViewModel.Equipment.Prefixes.Select(x => x.Affix.ModType)) : new ObservableCollection<string>();
 
-        public ObservableCollection<string> Suffixes => ViewModel.Equipment != null ? ToObservableCollection(ViewModel.Equipment.Suffixes.Select(x => x.Affix.ModName)) : new ObservableCollection<string>();
+        public ObservableCollection<string> Suffixes => ViewModel.Equipment != null ? ToObservableCollection(ViewModel.Equipment.Suffixes.Select(x => x.Affix.ModType)) : new ObservableCollection<string>();
 
         public ICurrency SelectedCurrency { get; set; }
 

@@ -8,7 +8,7 @@ namespace PoeCrafting.Entities
 {
     public class ConditionAffix
     {
-        public string Group;
+        public string ModType;
         public int? Min = 0;
         public int? Max;
     }

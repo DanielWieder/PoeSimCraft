@@ -19,13 +19,41 @@ using PoeCrafting.UI.Annotations;
 
 namespace PoeCrafting.UI.Controls
 {
+    public class BaseInfomation
+    {
+        public string SelectedBase { get; set; }
+        public string SelectedSubtype { get; set; }
+        public int ItemLevel { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+
+            var baseInfo = (BaseInfomation)obj;
+            return string.Equals(SelectedBase, baseInfo.SelectedBase) && string.Equals(SelectedSubtype, baseInfo.SelectedSubtype) && ItemLevel == baseInfo.ItemLevel;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = SelectedBase?.GetHashCode() ?? 0;
+                hashCode = (hashCode*397) ^ (SelectedSubtype?.GetHashCode() ?? 0);
+                hashCode = (hashCode*397) ^ ItemLevel;
+                return hashCode;
+            }
+        }
+    }
+
     /// <summary>
     /// Interaction logic for BaseSelectionControl.xaml
     /// </summary>
     public partial class BaseSelectionControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
         private string _selectedSubtype;
-
+        private string _selectedBase;
+        private Action _updateIsReady;
         private EquipmentFetch _fetch;
 
         public List<string> Subtypes { get; }
@@ -45,19 +73,32 @@ namespace PoeCrafting.UI.Controls
             }
         }
 
-        public string SelectedBase { get; set; }
+        public string SelectedBase
+        {
+            get { return _selectedBase; }
+            set
+            {
+                _selectedBase = value;
+                _updateIsReady();
+            }
+        }
 
         public int ItemLevel { get; set; } = 84;
 
-        public int Currency { get; set; } = 1000;
+        public BaseInfomation BaseInformation => new BaseInfomation
+        {
+            ItemLevel = ItemLevel,
+            SelectedBase = SelectedBase,
+            SelectedSubtype = SelectedSubtype
+        };
 
-        public bool IsReady()
+        public bool CanComplete()
         {
             return !string.IsNullOrEmpty(SelectedSubtype) &&
                    !string.IsNullOrEmpty(SelectedBase);
         }
 
-        public void Save()
+        public void OnClose()
         { }
 
         public BaseSelectionControl(EquipmentFetch fetch)
@@ -66,6 +107,11 @@ namespace PoeCrafting.UI.Controls
             Subtypes = fetch.FetchSubtypes().OrderBy(x => x).ToList();
             InitializeComponent();
             DataContext = this;
+        }
+
+        public void Initialize(Action updateIsReady)
+        {
+            _updateIsReady = updateIsReady;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

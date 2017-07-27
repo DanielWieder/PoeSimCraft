@@ -20,7 +20,6 @@ using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
 using PoeCrafting.UI.Models;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace PoeCrafting.UI.Controls
 {
@@ -29,21 +28,60 @@ namespace PoeCrafting.UI.Controls
     /// </summary>
     public partial class CraftingControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
-        private int _totalCurrency;
-        public int Progress { get; set; } = 0;
-        public string Message { get; set; } = "Crafting...";
-
-        public List<Equipment> EquipmentList = new List<Equipment>();
-
+        // dependencies
         private CraftingTree _craftingTree;
         private EquipmentFactory _factory;
         private List<ItemPrototypeModel> _itemPrototypes;
 
-        public Dictionary<ItemPrototypeModel, List<Equipment>> MatchingItems;
-        public int ItemCount = 0;
+        // generated
+        public List<Equipment> EquipmentList = new List<Equipment>();
+        public Dictionary<ItemPrototypeModel, List<Equipment>> MatchingItems = new Dictionary<ItemPrototypeModel, List<Equipment>>();
 
-        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        Task task;
+        // local
+        CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        Task _task;
+        private readonly TimeSpan _timeout = TimeSpan.FromSeconds(60);
+
+        public int Currency { get; set; } = 1000;
+
+        public Action OnCompletion { get; set; } = null;
+
+        // Output
+        private bool _isCrafting = false;
+
+        public bool IsCrafting
+        {
+            get { return _isCrafting; }
+            set
+            {
+                _isCrafting = value;
+                OnPropertyChanged(nameof(Message));
+                OnPropertyChanged(nameof(IsCrafting));
+            }
+        }
+
+        private bool _isCancelled = false;
+        public bool IsCancelled
+        {
+            get { return _isCancelled; }
+            set
+            {
+                _isCancelled = value;
+                OnPropertyChanged(nameof(Message));
+                OnPropertyChanged(nameof(IsCancelled));
+            }
+        }
+
+        public bool IsStarted => Progress >= 0;
+        public bool IsCompleted => Progress >= 100;
+        public string Message => IsCancelled ? "Cancelled" : 
+                                IsCrafting ? "Crafting..." :
+                                !IsCrafting && Progress >= 100 ? "Completed" : 
+                                "Waiting";
+
+        public Visibility MessageVisibility => IsStarted ? Visibility.Visible : Visibility.Hidden; 
+
+        public double Progress { get; set; }
 
         public CraftingControl()
         {
@@ -51,63 +89,62 @@ namespace PoeCrafting.UI.Controls
             DataContext = this;
         }
 
-        public void Initialize(CraftingTree craftingTree, EquipmentFactory factory, List<ItemPrototypeModel> itemPrototypes, int currency)
+        public void Initialize(CraftingTree craftingTree, EquipmentFactory factory, List<ItemPrototypeModel> itemPrototypes)
         {
-            _totalCurrency = currency;
             _craftingTree = craftingTree;
             _craftingTree.ClearCurrencySpent();
 
             _factory = factory;
             _itemPrototypes = itemPrototypes.OrderByDescending(x => x.Value).ThenBy(x => x.ItemName).ToList();
-            MatchingItems = new Dictionary<ItemPrototypeModel, List<Equipment>>();
+            MatchingItems.Clear();
+            EquipmentList.Clear();
+
             foreach (var prototype in _itemPrototypes)
             {
                 MatchingItems.Add(prototype, new List<Equipment>());
             }
 
-            if (task != null && task.Status == TaskStatus.Running)
+            if (_task != null && _task.Status == TaskStatus.Running)
             {
-                cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Cancel();
             }
 
-            ItemCount = 0;
-            Progress = 0;
-            Message = "Crafting...";
+            Progress = -1;
 
             OnPropertyChanged(nameof(Message));
             OnPropertyChanged(nameof(Progress));
-
-            RunTask();
+            OnPropertyChanged(nameof(MessageVisibility));
         }
 
-        public void RunTask()
+        public void Craft()
         {
-            cancellationTokenSource = new CancellationTokenSource();
-            var token = cancellationTokenSource.Token;
+            if (Progress >= 100)
+            {
+                return;
+            }
 
-            task = new Task(() => Run(token), token);
-            task.Start();
+            IsCrafting = true;
+            IsCancelled = false;
+            Progress = 0;
+
+            OnPropertyChanged(nameof(MessageVisibility));
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            _cancellationTokenSource.CancelAfter(_timeout);
+            var token = _cancellationTokenSource.Token;
+            token.Register(() => IsCancelled = true);
+
+            _task = new Task(() => Run(token), token);
+            _task.Start();
         }
 
         private void Run(CancellationToken ct)
         {
-            ct.ThrowIfCancellationRequested();
-
-            for (double currencySpent = 0; currencySpent < _totalCurrency; currencySpent =_craftingTree.GetCurrencySpent())
+            for (var progress = 0d; progress < 100; progress = _craftingTree.GetCurrencySpent() / Currency* 100)
             {
                 if (ct.IsCancellationRequested)
                 {
                     ct.ThrowIfCancellationRequested();
-                }
-
-                // If an item has been created and no currency was spent then no currency will ever be spent and it will cause an infinite loop
-                if (ItemCount == 1 && currencySpent <= 0)
-                {
-                    Progress = 100;
-                    Message = "Completed";
-                    OnPropertyChanged(nameof(Message));
-                    OnPropertyChanged(nameof(Progress));
-                    return;
                 }
 
                 var newItem = _factory.CreateEquipment();
@@ -122,33 +159,31 @@ namespace PoeCrafting.UI.Controls
                         break;
                     }
                 }
-
-                ItemCount++;
-
-                var newProgress = (int) (currencySpent/_totalCurrency*100);
-
-                if(newProgress != Progress)
-                {
-                    Progress = (int) (currencySpent/_totalCurrency*100);
-                    OnPropertyChanged(nameof(Progress));
-                }
+                Progress = progress;
+                OnPropertyChanged(nameof(Progress));
             }
-            Message = "Completed";
+
             Progress = 100;
+            IsCrafting = false;
             OnPropertyChanged(nameof(Progress));
-            OnPropertyChanged(nameof(Message));
-        }
 
-        public bool IsReady()
-        {
-            return Progress == 100;
-        }
 
-        public void Save()
-        {
-            if (task != null && task.Status == TaskStatus.Running)
+            App.Current.Dispatcher.Invoke((Action) delegate
             {
-                cancellationTokenSource.Cancel();
+                OnCompletion?.Invoke();
+            });
+        }
+
+        public bool CanComplete()
+        {
+            return !IsCancelled && IsCompleted;
+        }
+
+        public void OnClose()
+        {
+            if (_task != null && _task.Status == TaskStatus.Running)
+            {
+                _cancellationTokenSource.Cancel();
             }
         }
 
@@ -158,6 +193,11 @@ namespace PoeCrafting.UI.Controls
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void OnCraftClick(object sender, RoutedEventArgs e)
+        {
+            Craft();
         }
     }
 }

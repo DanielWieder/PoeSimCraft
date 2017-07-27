@@ -35,6 +35,8 @@ namespace PoeCrafting.UI.Controls
         public CraftingTreeViewModel Tree { get; set; }
         public ConditionControl Condition { get; set; }
 
+        private BaseInfomation _baseInfo = null;
+
         public CraftingTreeControl(CurrencyFactory factory)
         {
             CraftingTree = new CraftingTree(factory);
@@ -43,14 +45,20 @@ namespace PoeCrafting.UI.Controls
             DataContext = this;
         }
 
-        public void Initialize(List<Affix> affixes, ItemBase itemBase)
+        public void Initialize(List<Affix> affixes, ItemBase itemBase, BaseInfomation baseInfo)
         {
-            _itemBase = itemBase;
-            _affixes = new ObservableCollection<Affix>(affixes);
-            CraftingTree.ClearConditions();
-            Condition = null;
-
-            Tree.UpdateTree(CraftingTree, _selected);
+            if (_baseInfo == null || !_baseInfo.Equals(baseInfo))
+            {
+                _itemBase = itemBase;
+                _affixes = new ObservableCollection<Affix>(affixes);
+                CraftingTree.ClearConditions();
+                Condition = null;
+                _selected = Tree.Tree[0].Value;
+                Tree.UpdateTree(CraftingTree, _selected);
+                OnPropertyChanged(nameof(Condition));
+                OnPropertyChanged(nameof(Tree));
+                _baseInfo = baseInfo;
+            }
         }
 
         private void OnInsertOptionSelected(object sender, SelectionChangedEventArgs e)
@@ -120,12 +128,12 @@ namespace PoeCrafting.UI.Controls
             Tree.UpdateTree(CraftingTree, _selected);
         }
 
-        public bool IsReady()
+        public bool CanComplete()
         {
             return true;
         }
 
-        public void Save()
+        public void OnClose()
         {
             Condition?.Save();
         }
