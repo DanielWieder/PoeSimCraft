@@ -90,6 +90,7 @@ namespace PoeCrafting.UI
 
             SelectedStep = _controls[_currentControlIndex] as ContentControl;
             OnPropertyChanged(nameof(SelectedStep));
+            OnPropertyChanged(nameof(IsReady));
         }
 
         private void OnNextClick(object sender, RoutedEventArgs e)

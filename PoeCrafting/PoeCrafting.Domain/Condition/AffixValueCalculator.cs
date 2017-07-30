@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,46 @@ namespace PoeCrafting.Domain.Condition
 {
     public static class AffixValueCalculator
     {
+        private static readonly List<string> PercentDefenseAffixNames = new List<string>
+        {
+            "LocalIncreasedEvasionRatingPercent",
+            "LocalIncreasedEnergyShieldPercent",
+            "LocalIncreasedPhysicalDamageReductionRatingPercent",
+            "StrMasterArmourPercentCrafted",
+            "StrMasterEvasionPercentCrafted",
+            "LocalIncreasedArmourAndEvasion",
+            "LocalIncreasedEnergyShieldPercent",
+            "LocalIncreasedEvasionRatingPercent",
+            "LocalIncreasedArmourAndEnergyShield",
+            "StrMasterEnergyShieldPercentCrafted",
+            "LocalIncreasedEvasionAndEnergyShield",
+            "LocalIncreasedArmourEvasionEnergyShield",
+            "StrMasterArmourAndEvasionPercentCrafted",
+            "StrMasterArmourAndEnergyShieldPercentCrafted",
+            "StrMasterEvasionAndEnergyShieldPercentCrafted",
+            "LocalIncreasedPhysicalDamageReductionRatingPercent"
+        };
+
+        private static readonly List<string> HybridDefenseAffixNames = new List<string>
+        {
+            "LocalIncreasedArmourAndEvasionAndStunRecovery",
+            "LocalIncreasedEnergyShieldPercentAndStunRecovery",
+            "LocalIncreasedEvasionRatingPercentAndStunRecovery",
+            "LocalIncreasedArmourAndEnergyShieldAndStunRecovery",
+            "LocalIncreasedEvasionAndEnergyShieldAndStunRecovery",
+            "LocalIncreasedArmourEvasionEnergyShieldStunRecovery",
+            "LocalIncreasedPhysicalDamageReductionRatingPercentAndStunRecovery"
+        };
+
+        private static List<string> EnergyShieldPercentDefenseAffixNames => PercentDefenseAffixNames.Where(x => x.Contains("EnergyShield")).ToList();
+        private static List<string> EvasionPercentDefenseAffixNames => PercentDefenseAffixNames.Where(x => x.Contains("Evasion")).ToList();
+        private static List<string> ArmourPercentDefenseAffixNames => PercentDefenseAffixNames.Where(x => x.Contains("Armour") || x.Contains("PhysicalDamageReductionRating")).ToList();
+
+        private static List<string> HybridEnergyShieldPercentDefenseAffixNames => HybridDefenseAffixNames.Where(x => x.Contains("EnergyShield")).ToList();
+        private static List<string> HybridEvasionPercentDefenseAffixNames => HybridDefenseAffixNames.Where(x => x.Contains("Evasion")).ToList();
+        private static List<string> HybridArmourPercentDefenseAffixNames => HybridDefenseAffixNames.Where(x => x.Contains("Armour") || x.Contains("PhysicalDamageReductionRating")).ToList();
+
+
         private class ConditionContainer
         {
             public ItemBase ItemBase;
@@ -19,20 +60,20 @@ namespace PoeCrafting.Domain.Condition
         {
             public string ModType;
             public AffixType Type;
-            public int Value;
+            public List<int> Values;
         }
 
-        public static int GetAffixValue(string mod, Equipment item, AffixType type, SubconditionValueType valueType)
+        public static List<int> GetAffixValues(string mod, Equipment item, AffixType type, SubconditionValueType valueType)
         {
             var conditionItem = new ConditionContainer()
             {
                 ItemBase = item.ItemBase,
-                Affixes = item.Prefixes.Concat(item.Suffixes).Select(x => StatToCondition(x.Affix, valueType, x.Value1)).ToList()
+                Affixes = item.Prefixes.Concat(item.Suffixes).Select(x => StatToCondition(x.Affix, valueType, x.Values)).ToList()
             };
             return GetAffixValue(mod, type, conditionItem);
         }
 
-        public static int GetModMax(string modType, ItemBase itemBase, List<Affix> affixes, AffixType type)
+        public static List<int> GetModMax(string modType, ItemBase itemBase, List<Affix> affixes, AffixType type)
         {
             var max = SubconditionValueType.Max;
 
@@ -44,44 +85,44 @@ namespace PoeCrafting.Domain.Condition
             return GetAffixValue(modType, type, conditionItem);
         }
 
-        private static ItemProperty StatToCondition(Affix affix, SubconditionValueType valueType, int value = 0)
+        private static ItemProperty StatToCondition(Affix affix, SubconditionValueType valueType, List<int> values = null)
         {
             return new ItemProperty()
             {
                 ModType = affix.ModType,
-                Value = GetTypedValue(affix, valueType, value),
+                Values = GetTypedValue(affix, valueType, values),
                 Type = (AffixType)Enum.Parse(typeof(AffixType), affix.Type, true)
             };
         }
 
-        private static int GetTypedValue(Affix affix, SubconditionValueType valueType, int value = 0)
+        private static List<int> GetTypedValue(Affix affix, SubconditionValueType valueType, List<int> values = null)
         {
             switch (valueType)
             {
                 case SubconditionValueType.Flat:
-                    return value;
+                    return values;
                 case SubconditionValueType.Max:
-                    return affix.StatMax1;
+                    return affix.MaxStats;
                 case SubconditionValueType.Tier:
-                    return affix.Tier;
+                    return new List<int>(affix.Tier);
                 default:
                     throw new NotImplementedException("That subcondition value type does not exist");
             }
         }
 
-        private static int GetAffixValue(string mod, AffixType type, ConditionContainer a)
+        private static List<int> GetAffixValue(string mod, AffixType type, ConditionContainer a)
         {
             if (type == AffixType.Prefix)
             {
-                return a.Affixes.Where(x => x.Type == AffixType.Prefix).FirstOrDefault(x => x.ModType == mod)?.Value ?? -1;
+                return a.Affixes.Where(x => x.Type == AffixType.Prefix).FirstOrDefault(x => x.ModType == mod)?.Values ?? new List<int>();
             }
             if (type == AffixType.Suffix)
             {
-                return a.Affixes.Where(x => x.Type == AffixType.Suffix).FirstOrDefault(x => x.ModType == mod)?.Value ?? -1;
+                return a.Affixes.Where(x => x.Type == AffixType.Suffix).FirstOrDefault(x => x.ModType == mod)?.Values ?? new List<int>();
             }
             if (type == AffixType.Meta)
             {
-                return GetMetaConditionValue(mod, a);
+                return new List<int> { GetMetaConditionValue(mod, a)};
             }
 
             throw new NotImplementedException($"The affix type {Enum.GetName(typeof(AffixType), type)} is not recognized");
@@ -94,99 +135,96 @@ namespace PoeCrafting.Domain.Condition
 
             if (modType.Contains("OpenPrefix"))
             {
-                return 3 - prefixes.Count();
+                return prefixes.Count > 3 ? 3 : 3 - prefixes.Count;
             }
             if (modType.Contains("OpenSuffix"))
             {
-                return 3 - suffixes.Count();
+                return suffixes.Count > 3 ? 3 : 3 - suffixes.Count;
             }
             if (modType == "TotalEnergyShield")
             {
-                return GetDefenseConditionValue(a, "EnergyShield", "IncreasedEnergyShield", "EnergyShieldPercent");
+                return GetDefenseConditionValue(a, "EnergyShield", "LocalIncreasedEnergyShield", EnergyShieldPercentDefenseAffixNames, HybridEnergyShieldPercentDefenseAffixNames);
             }
             if (modType == "TotalArmour")
             {
-                return GetDefenseConditionValue(a, "Armour", "IncreasedPhysicalDamageReductionRating",
-                    "IncreasedPhysicalDamageReductionRatingPercent");
+                return GetDefenseConditionValue(a, "Armour", "IncreasedPhysicalDamageReductionRating", ArmourPercentDefenseAffixNames, HybridArmourPercentDefenseAffixNames);
             }
             if (modType == "TotalEvasion")
             {
-                return GetDefenseConditionValue(a, "Evasion", "IncreasedEvasionRating", "EvasionRatingPercent");
+                return GetDefenseConditionValue(a, "Evasion", "IncreasedEvasionRating", EvasionPercentDefenseAffixNames, HybridEvasionPercentDefenseAffixNames);
             }
             if (modType == "TotalResistances")
             {
-                var singleRes = suffixes
-                    .Where(x =>
-                       x.ModType == "ColdResistance" ||
-                       x.ModType == "FireResistance" ||
-                       x.ModType == "LightningResistance" ||
-                       x.ModType == "ChaosResistance")
-                    .ToList();
+                var coldRes = GetMaxOrZero(suffixes, "ColdResist");
+                var fireRes = GetMaxOrZero(suffixes, "FireResist");
+                var lightningRes = GetMaxOrZero(suffixes, "LightningResist");
+                var chaosRes = GetMaxOrZero(suffixes, "ChaosResist");
+                var allRes = GetMaxOrZero(suffixes, "AllResistances");
 
-                var allRes = suffixes
-                    .Where(x => x.ModType == "AllResistances")
-                    .ToList();
+                var resList = new List<int>
+                {
+                    coldRes,
+                    fireRes,
+                    lightningRes,
+                    chaosRes,
+                    allRes * 3
+                };
 
-                return singleRes.Sum(x => x.Value) +
-                    allRes.Sum(x => x.Value) * 3;
+                resList = resList.OrderByDescending(x => x).ToList();
+                resList = resList.Take(3).ToList();
+                return resList.Sum();
             }
             if (modType == "TotalElementalResistances")
             {
-                var singleRes = suffixes
-                    .Where(x =>
-                       x.ModType == "ColdResistance" ||
-                       x.ModType == "FireResistance" ||
-                       x.ModType == "LightningResistance")
-                    .ToList();
+                var coldRes = GetMaxOrZero(suffixes, "ColdResist");
+                var fireRes = GetMaxOrZero(suffixes, "FireResist");
+                var lightningRes = GetMaxOrZero(suffixes, "LightningResist");
+                var allRes = GetMaxOrZero(suffixes, "AllResistances");
 
-                var allRes = suffixes
-                    .Where(x => x.ModType == "AllResistances")
-                    .ToList();
+                var resList = new List<int>
+                {
+                    coldRes,
+                    fireRes,
+                    lightningRes,
+                    allRes * 3
+                };
 
-                return singleRes.Sum(x => x.Value) +
-                       allRes.Sum(x => x.Value) * 3;
-
+                resList = resList.OrderByDescending(x => x).ToList();
+                resList = resList.Take(3).ToList();
+                return resList.Sum();
             }
 
             throw new NotImplementedException($"The meta affix {modType} is not recognized");
         }
 
-        private static int GetDefenseConditionValue(ConditionContainer a, string propertyName, string flatName, string percentName)
+        private static int GetDefenseConditionValue(ConditionContainer a, string propertyName, string flatDefenseName, List<string> percentDefensesNames, List<string> hybridDefenseNames)
         {
             var prefixes = a.Affixes.Where(x => x.Type == AffixType.Prefix).ToList();
 
-            var totalDefense = a.ItemBase.Properties[propertyName];
+            var percentDefenses = prefixes.Where(x => percentDefensesNames.Contains(x.ModType)).ToList();
+            var hybridDefenses = prefixes.Where(x => hybridDefenseNames.Contains(x.ModType)).ToList();
 
-            var flatDefense = prefixes.Where(x => x.ModType == flatName).ToList();
-            if (flatDefense.Any())
+            var baseDefense = a.ItemBase.Properties[propertyName];
+            var flatDefense = GetMaxOrZero(prefixes, flatDefenseName);
+            var percentDefense = GetMaxOrZero(percentDefenses);
+            var hybridDefense = GetMaxOrZero(hybridDefenses);
+
+            return (int)((baseDefense + flatDefense) * (120 + percentDefense + hybridDefense) / 100);
+        }
+
+        private static int GetMaxOrZero(List<ItemProperty> items, string property, int index = 0)
+        {
+            var properties = items.Where(x => x.ModType == property).ToList();
+            return GetMaxOrZero(properties, index);
+        }
+
+        private static int GetMaxOrZero(List<ItemProperty> items, int index = 0)
+        {
+            if (!items.Any())
             {
-                totalDefense += flatDefense.First().Value;
+                return 0;
             }
-
-            var totalPercentDefense = 100;
-
-            // Quality bonus
-            totalPercentDefense += 20;
-
-            var percentDefense = prefixes.Where(x => x.ModType == percentName).ToList();
-            if (percentDefense.Any())
-            {
-                totalPercentDefense += percentDefense.First().Value;
-            }
-
-            var defenseHybrid = prefixes.Where(x => x.ModType == "DefencesPercent").ToList();
-            if (defenseHybrid.Any())
-            {
-                totalPercentDefense += defenseHybrid.First().Value;
-            }
-
-            var stunRecoveryHybrid = prefixes.Where(x => x.ModType == "DefencesPercentAndStunRecovery").ToList();
-            if (stunRecoveryHybrid.Any())
-            {
-                totalPercentDefense += stunRecoveryHybrid.First().Value;
-            }
-
-            return (int)(totalDefense * totalPercentDefense / 100);
+            return items.Max(x => x.Values[index]);
         }
     }
 }

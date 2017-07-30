@@ -32,6 +32,8 @@ namespace PoeSimCraftImporter
                     var js = new JsonSerializer();
                     IDictionary<string, object> u = js.Deserialize<ExpandoObject>(jr);
 
+                    StringBuilder builder = new StringBuilder();
+
                     foreach (string mod in u.Keys)
                     {
 
@@ -45,9 +47,8 @@ namespace PoeSimCraftImporter
                         {
                             var key = spawnTagKeys[i];
                             var weight = spawnTagWeights[i];
-                            StringBuilder builder = new StringBuilder();
                             builder.AppendLine("UPDATE astm");
-                            builder.AppendLine("SET Weight = " + weight);
+                            builder.AppendLine("SET Priority = " + i);
                             builder.AppendLine("FROM [dbo].[AffixSpawnTagMap] astm");
                             builder.AppendLine($"JOIN Affix a ON a.AffixId = astm.AffixId");
                             builder.AppendLine($"JOIN SpawnTag t ON t.SpawnTagId = astm.SpawnTagId");
@@ -55,13 +56,16 @@ namespace PoeSimCraftImporter
                             builder.Append($" a.Name = '{name}'");
                             builder.Append($" AND a.ModName = '{modName}'");
                             builder.Append($" AND t.Name = '{key}'");
-
-                            DbCommand command = new DbCommand();
-                             command.Execute(builder.ToString());
                         }
+
+                        builder.Append(Environment.NewLine);
                     }
+
+                    DbCommand command = new DbCommand();
+                    command.Execute(builder.ToString());
                 }
             }
+
             return mods;
         }
     }

@@ -115,8 +115,11 @@
     <Compile Include="Controls\Subcontrols\HintTextBlock.xaml.cs">
       <DependentUpon>HintTextBlock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Subcontrols\SubconditionSelectionControl.xaml.cs">
-      <DependentUpon>SubconditionSelectionControl.xaml</DependentUpon>
+    <Compile Include="Controls\Subcontrols\SubconditionAffixControl.xaml.cs">
+      <DependentUpon>SubconditionAffixControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Subcontrols\SubconditionAffixesControl.xaml.cs">
+      <DependentUpon>SubconditionAffixesControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Subcontrols\SubconditionControl.xaml.cs">
       <DependentUpon>SubconditionControl.xaml</DependentUpon>
@@ -155,7 +158,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Subcontrols\SubconditionSelectionControl.xaml">
+    <Page Include="Controls\Subcontrols\SubconditionAffixControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Subcontrols\SubconditionAffixesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

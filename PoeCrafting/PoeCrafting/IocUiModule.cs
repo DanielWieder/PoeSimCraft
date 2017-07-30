@@ -15,7 +15,8 @@ namespace PoeCrafting.UI
             Bind<ItemListControl>().ToSelf().InTransientScope();
             Bind<ConditionControl>().ToSelf().InTransientScope();
             Bind<SubconditionControl>().ToSelf().InTransientScope();
-            Bind<SubconditionSelectionControl>().ToSelf().InTransientScope();
+            Bind<SubconditionAffixesControl>().ToSelf().InTransientScope();
+            Bind<SubconditionAffixControl>().ToSelf().InTransientScope();
             Bind<BaseSelectionControl>().ToSelf().InTransientScope();
             Bind<CraftingTreeControl>().ToSelf().InTransientScope();
             Bind<ConditionControl>().ToSelf().InTransientScope();

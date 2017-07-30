@@ -9,7 +9,7 @@ namespace PoeSimCraftImporter
 {
     public class DbCommand
     {
-        const string connetionString = "Data Source=DESKTOP-HPIKISE;Initial Catalog=PoeSimCraft; Trusted_Connection=True;";
+        const string connetionString = "Persist Security Info=False;User ID=wiederd;Password=Hghghgg1;Initial Catalog=PoeSimCraft;Server=poesimcraftitem.czqfmqxgizhc.us-west-2.rds.amazonaws.com,1433";
         public void Execute(string command)
         {
             using (SqlConnection cnn = new SqlConnection(connetionString))

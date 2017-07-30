@@ -40,7 +40,7 @@ namespace PoeCrafting.Domain.Condition
                 .ToList();
 
             var matched = allResolutions.Count(x => x.IsMatch);
-            var sum = allResolutions.Sum(x => x.Value);
+            var sum = allResolutions.Where(x => x.IsPresent).Sum(x => x.Values.Sum());
 
             switch (AggregateType)
             {

@@ -17,7 +17,7 @@ namespace PoeSimCraftImporter
     {
         static void Main(string[] args)
         {
-            PoeModWeightImporter importer = new PoeModWeightImporter();
+            PoeModWeightPriorityImporter importer = new PoeModWeightPriorityImporter();
             importer.Execute();
         }
 

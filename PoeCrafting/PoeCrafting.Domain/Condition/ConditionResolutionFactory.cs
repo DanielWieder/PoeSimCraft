@@ -11,21 +11,35 @@ namespace PoeCrafting.Domain.Condition
     {
         public static ConditionResolution ResolveCondition(ConditionAffix affix, Equipment item, AffixType type, SubconditionValueType valueType)
         {
-            var value = AffixValueCalculator.GetAffixValue(affix.ModType, item, type, valueType);
+            var value = AffixValueCalculator.GetAffixValues(affix.ModType, item, type, valueType);
 
             return new ConditionResolution()
             {
-                IsPresent = value != -1,
-                IsMatch = value != -1 && IsValueWithinBounds(affix, value),
-                Value = value
+                IsPresent = value.Any(),
+                IsMatch = value.Any() && IsValueWithinBounds(affix, value),
+                Values = value
             };
         }
 
-        private static bool IsValueWithinBounds(ConditionAffix affix, int value)
+        private static bool IsValueWithinBounds(ConditionAffix affix, List<int> value)
         {
-            return
-                (!affix.Min.HasValue || value >= affix.Min.Value) &&
-                (!affix.Max.HasValue || value <= affix.Max.Value);
+            bool hasRequirement1 = affix.Min1.HasValue || affix.Max1.HasValue;
+            bool hasRequirement2 = affix.Min2.HasValue || affix.Max2.HasValue;
+            bool hasRequirement3 = affix.Min2.HasValue || affix.Max3.HasValue;
+
+            bool meetsRequirement1 = !hasRequirement1 || (value.Count >= 1 && 
+                        (!affix.Min1.HasValue || value[0] >= affix.Min1.Value) &&
+                        (!affix.Max1.HasValue || value[0] <= affix.Max1.Value));
+
+            bool meetsRequirement2 = !hasRequirement2 || (value.Count >= 2 &&
+                         (!affix.Min2.HasValue || value[1] >= affix.Min2.Value) &&
+                         (!affix.Max2.HasValue || value[1] <= affix.Max2.Value));
+
+            bool meetsRequirement3 = !hasRequirement3 || (value.Count >= 3 &&
+                         (!affix.Min3.HasValue || value[2] >= affix.Min3.Value) &&
+                         (!affix.Max3.HasValue || value[2] <= affix.Max3.Value));
+
+            return meetsRequirement1 && meetsRequirement2 && meetsRequirement3;
         }
     }
 }

@@ -10,6 +10,6 @@ namespace PoeCrafting.Entities
     {
         public bool IsPresent { get; set; }
         public bool IsMatch { get; set; }
-        public int Value { get; set; }
+        public List<int> Values { get; set; }
     }
 }

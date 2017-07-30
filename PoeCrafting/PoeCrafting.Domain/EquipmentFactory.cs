@@ -1,11 +1,7 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using PoeCrafting.Data;
 using PoeCrafting.Entities;
 
@@ -76,19 +72,27 @@ namespace PoeCrafting.Domain
             _fetchAffixesByItemName.Name = baseItemName;
             var affixes = _fetchAffixesByItemName.Execute();
 
+            affixes = affixes.GroupBy(x => x.ModName).Select(x => x.OrderBy(y => y.Priority).First()).ToList();
+
             foreach (var affix in affixes)
             {
                 affix.ModType = Regex.Replace(affix.ModName, "[0-9_]", "");
             }
 
-            affixes = affixes.GroupBy(x => x.Name)
-                .Select(x => x.Count() == 1 ? x : x.Where(y => y.SpawnTag != "default"))
-                .Where(x => x.Any())
-                .Select(x => x.First())
-                .ToList();
+            var modTiers = affixes.GroupBy(x => x.ModType);
+
+            foreach (var mods in modTiers)
+            {
+                var modList = mods.OrderByDescending(x => ParseInteger(x.ModName)).ToList();
+
+                for (int i = 0; i < modList.Count; i++)
+                {
+                    modList[i].Tier = i + 1;
+                }
+            }
 
             affixes = affixes.Where(x => x.ILvl <= itemLevel)
-                             .Where(x => x.Weight > 0 || x.Type == "meta")
+                             .Where(x => x.Type == "meta" || ((x.Type == "prefix" || x.Type == "suffix") && x.Weight > 0))
                              .ToList();
 
             var rollableAffixes = affixes.Where(x => x.Type == "prefix" || x.Type == "suffix").ToList();
@@ -96,7 +100,6 @@ namespace PoeCrafting.Domain
             var modTypeWeights = rollableAffixes
                 .GroupBy(x => x.ModType)
                 .ToDictionary(x => x.Key, x => x.Sum(y => y.Weight));
-
 
             foreach(var affix in rollableAffixes)
             {
@@ -112,6 +115,13 @@ namespace PoeCrafting.Domain
 
             _totalWeight = rollableAffixes.Sum(x => x.Weight);
 
+        }
+
+        private static int ParseInteger(string str)
+        {
+            var matchedString =  Regex.Match(str, "\\d+").Value;
+
+            return matchedString == string.Empty ? 0 : int.Parse(matchedString);
         }
 
         public ItemBase GetBaseItem()

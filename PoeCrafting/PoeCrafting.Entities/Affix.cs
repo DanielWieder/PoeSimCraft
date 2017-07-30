@@ -1,4 +1,6 @@
-﻿namespace PoeCrafting.Entities
+﻿using System.Collections.Generic;
+
+namespace PoeCrafting.Entities
 {
     public class Affix
     {
@@ -30,5 +32,28 @@
         public int StatMax3 { get; set; }
 
         public string SpawnTag { get; set; }
+
+        public  int Priority { get; set; }
+
+        public List<int> MaxStats
+        {
+            get
+            {
+                var list = new List<int>();
+                if (!string.IsNullOrEmpty(StatName1))
+                {
+                    list.Add(StatMax1);
+                }
+                if (!string.IsNullOrEmpty(StatName2))
+                {
+                    list.Add(StatMax2);
+                }
+                if (!string.IsNullOrEmpty(StatName3))
+                {
+                    list.Add(StatMax3);
+                }
+                return list;
+            }
+        }
     }
 }

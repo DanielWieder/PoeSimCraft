@@ -33,9 +33,9 @@ namespace PoeCrafting.UI.Controls
     /// </summary>
     public partial class SubconditionControl : UserControl, INotifyPropertyChanged
     {
-        public SubconditionSelectionControl PrefixConditions { get; set; }
-        public SubconditionSelectionControl SuffixConditions { get; set; }
-        public SubconditionSelectionControl MetaConditions { get; set; }
+        public SubconditionAffixesControl PrefixConditions { get; set; }
+        public SubconditionAffixesControl SuffixConditions { get; set; }
+        public SubconditionAffixesControl MetaConditions { get; set; }
 
         public CraftingSubcondition SubCondition;
 
@@ -59,6 +59,7 @@ namespace PoeCrafting.UI.Controls
             }
         }
 
+        public Visibility MetaConditionsVisibility => SelectedValueType != "Tier" ? Visibility.Visible : Visibility.Collapsed;
 
         private string _selectedAggregateType;
 
@@ -71,6 +72,26 @@ namespace PoeCrafting.UI.Controls
                 AggregateTypeDescription = GetAggregateTypeDescription();
                 OnPropertyChanged(nameof(AggregateTypeHasMinMax));
                 OnPropertyChanged(nameof(AggregateTypeDescription));
+            }
+        }
+
+        public List<string> ValueTypes => Enum.GetNames(typeof(SubconditionValueType)).ToList();
+
+        private string _selectedValueType;
+
+        public string SelectedValueType
+        {
+            get { return _selectedValueType; }
+            set
+            {
+                _selectedValueType = value;
+                var type = (SubconditionValueType)Enum.Parse(typeof(SubconditionValueType), value);
+
+                PrefixConditions.ValueType = type;
+                SuffixConditions.ValueType = type;
+                MetaConditions.ValueType = type;
+
+                OnPropertyChanged(nameof(MetaConditionsVisibility));
             }
         }
 
@@ -101,18 +122,20 @@ namespace PoeCrafting.UI.Controls
 
         public bool AggregateTypeHasMinMax => SelectedAggregateType == "Sum" || SelectedAggregateType == "Count";
 
-        public SubconditionControl(CraftingSubcondition subCondition, List<Affix> affixes, int index)
+        public SubconditionControl(CraftingSubcondition subCondition, List<Affix> affixes, int index, ItemBase itemBase)
         {
             SubconditionName = string.IsNullOrEmpty(subCondition.Name) ? "Subcondition " + index : subCondition.Name;
 
             Index = index;
             SubCondition = subCondition;
-            SelectedAggregateType =  subCondition.AggregateType.ToString();
             AggregateTypeMin = subCondition.AggregateMin;
             AggregateTypeMax = subCondition.AggregateMax;
-            PrefixConditions = new SubconditionSelectionControl(subCondition.PrefixConditions, affixes, AffixType.Prefix);
-            SuffixConditions = new SubconditionSelectionControl(subCondition.SuffixConditions, affixes, AffixType.Suffix);
-            MetaConditions = new SubconditionSelectionControl(subCondition.MetaConditions, affixes, AffixType.Meta);
+            PrefixConditions = new SubconditionAffixesControl(subCondition.PrefixConditions, affixes, AffixType.Prefix, itemBase, subCondition.ValueType);
+            SuffixConditions = new SubconditionAffixesControl(subCondition.SuffixConditions, affixes, AffixType.Suffix, itemBase, subCondition.ValueType);
+            MetaConditions = new SubconditionAffixesControl(subCondition.MetaConditions, affixes, AffixType.Meta, itemBase, subCondition.ValueType);
+            SelectedAggregateType = subCondition.AggregateType.ToString();
+            SelectedValueType = subCondition.ValueType.ToString();
+
             DataContext = this;
             InitializeComponent();
         }
@@ -120,7 +143,8 @@ namespace PoeCrafting.UI.Controls
         public CraftingSubcondition Save()
         {
             SubCondition.Name = _subconditionName;
-            SubCondition.ValueType = SubconditionValueType.Flat;
+            SubCondition.ValueType =
+                (SubconditionValueType)Enum.Parse(typeof(SubconditionValueType), SelectedValueType);
             SubCondition.AggregateType =
                 (SubconditionAggregateType) Enum.Parse(typeof(SubconditionAggregateType), SelectedAggregateType);
             SubCondition.AggregateMin = AggregateTypeMin;

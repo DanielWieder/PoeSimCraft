@@ -12,6 +12,7 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="Auto" MinHeight="50" />
             <RowDefinition Height="Auto" MinHeight="50"/>
             <RowDefinition Height="Auto" MinHeight="50"/>
@@ -26,6 +27,8 @@
             <Label Width="120">Subcondition Name</Label>
             <TextBox Text="{Binding SubconditionName}" Width="120"></TextBox>
         </StackPanel>
+
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding ValueTypes}" SelectedItem="{Binding SelectedValueType}" />
 
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
@@ -98,11 +101,26 @@
         </Grid>
         
         <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding AggregateTypeDescription}"></Label>
-        
-        <ContentControl Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding PrefixConditions}"/>
-        <ContentControl Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding SuffixConditions}"/>
-        <ContentControl Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding MetaConditions}"/>
-        <Button Grid.Column="1" Grid.Row="8" Click="OnDeleteClick">Delete</Button>
+
+        <Grid Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="360" />
+                <ColumnDefinition Width="50" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="50" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="1" HorizontalContentAlignment="Center">Min</Label>
+            <Label Grid.Column="3" HorizontalContentAlignment="Center">Max</Label>
+        </Grid>
+
+        <ContentControl Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding PrefixConditions}"/>
+        <ContentControl Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding SuffixConditions}"/>
+        <ContentControl Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding MetaConditions}" Visibility="{Binding MetaConditionsVisibility}"/>
+        <Button Grid.Column="1" Grid.Row="9" Click="OnDeleteClick">Delete</Button>
     </Grid>
 
 </UserControl>
