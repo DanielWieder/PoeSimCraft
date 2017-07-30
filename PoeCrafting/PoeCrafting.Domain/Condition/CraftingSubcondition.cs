@@ -13,7 +13,7 @@ namespace PoeCrafting.Domain.Condition
         public int? AggregateMin { get; set; }
         public int? AggregateMax { get; set; }
 
-        public SubconditionValueType ValueType { get; set; }
+        public StatValueType ValueType { get; set; }
 
         public List<ConditionAffix> PrefixConditions { get; set; } = new List<ConditionAffix>();
         public List<ConditionAffix> SuffixConditions { get; set; } = new List<ConditionAffix>();
@@ -24,15 +24,15 @@ namespace PoeCrafting.Domain.Condition
         {
             var prefixResolutions =
                 PrefixConditions.Select(
-                    x => ConditionResolutionFactory.ResolveCondition(x, item, AffixType.Prefix, ValueType));
+                    x => ConditionResolutionFactory.ResolveCondition(x, item, AffixType.Prefix, ValueType)).ToList();
 
             var suffixResolutions =
                 SuffixConditions.Select(
-                    x => ConditionResolutionFactory.ResolveCondition(x, item, AffixType.Suffix, ValueType));
+                    x => ConditionResolutionFactory.ResolveCondition(x, item, AffixType.Suffix, ValueType)).ToList();
 
             var metaResolutions =
                 MetaConditions.Select(
-                    x => ConditionResolutionFactory.ResolveCondition(x, item, AffixType.Meta, ValueType));
+                    x => ConditionResolutionFactory.ResolveCondition(x, item, AffixType.Meta, ValueType)).ToList();
 
             var allResolutions = prefixResolutions
                 .Concat(suffixResolutions)

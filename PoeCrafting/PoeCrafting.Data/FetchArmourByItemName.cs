@@ -38,7 +38,7 @@ namespace PoeCrafting.Data
                 Type = entity.Type
             };
             item.Properties.Add("Evasion", entity.Evasion);
-            item.Properties.Add("Armour", entity.Armor);
+            item.Properties.Add("Armour", entity.Armour);
             item.Properties.Add("Level", entity.Level);
             item.Properties.Add("EnergyShield", entity.EnergyShield);
             item.Properties.Add("Str", entity.Str);

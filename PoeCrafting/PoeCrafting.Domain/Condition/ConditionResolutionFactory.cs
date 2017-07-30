@@ -9,7 +9,7 @@ namespace PoeCrafting.Domain.Condition
 {
     public class ConditionResolutionFactory
     {
-        public static ConditionResolution ResolveCondition(ConditionAffix affix, Equipment item, AffixType type, SubconditionValueType valueType)
+        public static ConditionResolution ResolveCondition(ConditionAffix affix, Equipment item, AffixType type, StatValueType valueType)
         {
             var value = AffixValueCalculator.GetAffixValues(affix.ModType, item, type, valueType);
 
@@ -25,7 +25,7 @@ namespace PoeCrafting.Domain.Condition
         {
             bool hasRequirement1 = affix.Min1.HasValue || affix.Max1.HasValue;
             bool hasRequirement2 = affix.Min2.HasValue || affix.Max2.HasValue;
-            bool hasRequirement3 = affix.Min2.HasValue || affix.Max3.HasValue;
+            bool hasRequirement3 = affix.Min3.HasValue || affix.Max3.HasValue;
 
             bool meetsRequirement1 = !hasRequirement1 || (value.Count >= 1 && 
                         (!affix.Min1.HasValue || value[0] >= affix.Min1.Value) &&

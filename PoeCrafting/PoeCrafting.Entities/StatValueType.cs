@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PoeCrafting.Entities
 {
-    public enum SubconditionValueType
+    public enum StatValueType
     {
         Flat,
         Max,

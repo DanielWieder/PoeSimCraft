@@ -18,13 +18,13 @@
             <ColumnDefinition Width="50" />
         </Grid.ColumnDefinitions>
         <ComboBox Grid.Row="0" Grid.Column="0" SelectedValue="{Binding AffixName}" ItemsSource="{Binding ValidAffixes}"/>
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding FirstAffixMin}" Visibility="{Binding FirstAffixOneUserSelection}"/>
-        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding FirstAffixMax}" Visibility="{Binding FirstAffixOneUserSelection}"/>
+        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding FirstStatMin}" Visibility="{Binding FirstStatSelectionVisibility}"/>
+        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding FirstStatMax}" Visibility="{Binding FirstStatSelectionVisibility}"/>
 
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding SecondAffixMin}" Visibility="{Binding SecondAffixOneUserSelection}"/>
-        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SecondAffixMax}" Visibility="{Binding SecondAffixOneUserSelection}"/>
-        
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Visibility="{Binding TwoUserSelection}">
+        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding SecondStatMin}" Visibility="{Binding SecondStatSelectionVisibility}"/>
+        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SecondStatMax}" Visibility="{Binding SecondStatSelectionVisibility}"/>
+
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Visibility="{Binding DoubleStatSelectionVisibility}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
@@ -36,14 +36,13 @@
                 <ColumnDefinition Width="30" />
                 <ColumnDefinition Width="50" />
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" Content="{Binding FirstAffix}"/>
-            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding FirstAffixMin}"/>
-            <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding FirstAffixMax}"/>
+            <Label Grid.Row="0" Grid.Column="0" Content="{Binding FirstStatName}"/>
+            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding FirstStatMin}"/>
+            <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding FirstStatMax}"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Content="{Binding SecondAffix}"/>
-            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SecondAffixMin}"/>
-            <TextBox Grid.Row="1" Grid.Column="4" Text="{Binding SecondAffixMax}"/>
+            <Label Grid.Row="1" Grid.Column="0" Content="{Binding SecondStatName}"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SecondStatMin}"/>
+            <TextBox Grid.Row="1" Grid.Column="4" Text="{Binding SecondStatMax}"/>
         </Grid>
-        
     </Grid>
 </UserControl>

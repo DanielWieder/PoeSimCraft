@@ -63,7 +63,7 @@ namespace PoeCrafting.Domain.Condition
             public List<int> Values;
         }
 
-        public static List<int> GetAffixValues(string mod, Equipment item, AffixType type, SubconditionValueType valueType)
+        public static List<int> GetAffixValues(string mod, Equipment item, AffixType type, StatValueType valueType)
         {
             var conditionItem = new ConditionContainer()
             {
@@ -75,7 +75,7 @@ namespace PoeCrafting.Domain.Condition
 
         public static List<int> GetModMax(string modType, ItemBase itemBase, List<Affix> affixes, AffixType type)
         {
-            var max = SubconditionValueType.Max;
+            var max = StatValueType.Max;
 
             var conditionItem = new ConditionContainer
             {
@@ -85,7 +85,7 @@ namespace PoeCrafting.Domain.Condition
             return GetAffixValue(modType, type, conditionItem);
         }
 
-        private static ItemProperty StatToCondition(Affix affix, SubconditionValueType valueType, List<int> values = null)
+        private static ItemProperty StatToCondition(Affix affix, StatValueType valueType, List<int> values = null)
         {
             return new ItemProperty()
             {
@@ -95,16 +95,16 @@ namespace PoeCrafting.Domain.Condition
             };
         }
 
-        private static List<int> GetTypedValue(Affix affix, SubconditionValueType valueType, List<int> values = null)
+        private static List<int> GetTypedValue(Affix affix, StatValueType valueType, List<int> values = null)
         {
             switch (valueType)
             {
-                case SubconditionValueType.Flat:
+                case StatValueType.Flat:
                     return values;
-                case SubconditionValueType.Max:
+                case StatValueType.Max:
                     return affix.MaxStats;
-                case SubconditionValueType.Tier:
-                    return new List<int>(affix.Tier);
+                case StatValueType.Tier:
+                    return new List<int> { affix.Tier };
                 default:
                     throw new NotImplementedException("That subcondition value type does not exist");
             }
@@ -147,7 +147,7 @@ namespace PoeCrafting.Domain.Condition
             }
             if (modType == "TotalArmour")
             {
-                return GetDefenseConditionValue(a, "Armour", "IncreasedPhysicalDamageReductionRating", ArmourPercentDefenseAffixNames, HybridArmourPercentDefenseAffixNames);
+                return GetDefenseConditionValue(a, "Armour", "LocalIncreasedPhysicalDamageReductionRating", ArmourPercentDefenseAffixNames, HybridArmourPercentDefenseAffixNames);
             }
             if (modType == "TotalEvasion")
             {
@@ -204,7 +204,7 @@ namespace PoeCrafting.Domain.Condition
             var percentDefenses = prefixes.Where(x => percentDefensesNames.Contains(x.ModType)).ToList();
             var hybridDefenses = prefixes.Where(x => hybridDefenseNames.Contains(x.ModType)).ToList();
 
-            var baseDefense = a.ItemBase.Properties[propertyName];
+            var baseDefense = a.ItemBase.Properties.ContainsKey(propertyName) ? a.ItemBase.Properties[propertyName] : 0;
             var flatDefense = GetMaxOrZero(prefixes, flatDefenseName);
             var percentDefense = GetMaxOrZero(percentDefenses);
             var hybridDefense = GetMaxOrZero(hybridDefenses);

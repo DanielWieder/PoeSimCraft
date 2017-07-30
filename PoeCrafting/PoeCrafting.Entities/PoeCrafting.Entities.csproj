@@ -54,7 +54,7 @@
     <Compile Include="ITreeNavigation.cs" />
     <Compile Include="Stat.cs" />
     <Compile Include="SubconditionAggregateType.cs" />
-    <Compile Include="SubconditionValueType.cs" />
+    <Compile Include="StatValueType.cs" />
     <Compile Include="WeaponEntity.cs" />
   </ItemGroup>
   <ItemGroup>

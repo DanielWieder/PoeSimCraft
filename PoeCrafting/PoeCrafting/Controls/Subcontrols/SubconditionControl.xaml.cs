@@ -3,21 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using PoeCrafting.Domain.Condition;
 using PoeCrafting.Entities;
-using PoeCrafting.UI.Models;
-using PoeCrafting.Domain.Crafting;
 using PoeCrafting.UI.Annotations;
 
 namespace PoeCrafting.UI.Controls
@@ -75,7 +64,7 @@ namespace PoeCrafting.UI.Controls
             }
         }
 
-        public List<string> ValueTypes => Enum.GetNames(typeof(SubconditionValueType)).ToList();
+        public List<string> ValueTypes => Enum.GetNames(typeof(StatValueType)).ToList();
 
         private string _selectedValueType;
 
@@ -85,7 +74,7 @@ namespace PoeCrafting.UI.Controls
             set
             {
                 _selectedValueType = value;
-                var type = (SubconditionValueType)Enum.Parse(typeof(SubconditionValueType), value);
+                var type = (StatValueType)Enum.Parse(typeof(StatValueType), value);
 
                 PrefixConditions.ValueType = type;
                 SuffixConditions.ValueType = type;
@@ -144,7 +133,7 @@ namespace PoeCrafting.UI.Controls
         {
             SubCondition.Name = _subconditionName;
             SubCondition.ValueType =
-                (SubconditionValueType)Enum.Parse(typeof(SubconditionValueType), SelectedValueType);
+                (StatValueType)Enum.Parse(typeof(StatValueType), SelectedValueType);
             SubCondition.AggregateType =
                 (SubconditionAggregateType) Enum.Parse(typeof(SubconditionAggregateType), SelectedAggregateType);
             SubCondition.AggregateMin = AggregateTypeMin;

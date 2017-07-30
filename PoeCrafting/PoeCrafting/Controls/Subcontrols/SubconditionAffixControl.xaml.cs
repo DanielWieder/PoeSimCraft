@@ -28,59 +28,64 @@ namespace PoeCrafting.UI.Controls
     public partial class SubconditionAffixControl : UserControl, INotifyPropertyChanged
     {
         private readonly List<Affix> _affixes;
-
         private readonly AffixType _affixType;
-
         private readonly ItemBase _itemBase;
 
-        private int _statOneMin;
-        private int _statOneMax;
-        private int _statTwoMin;
-        private int _statTwoMax;
-        private int _statThreeMin;
-        private int _statThreeMax;
+        private int? _statOneMin;
+        private int? _statOneMax;
+        private int? _statTwoMin;
+        private int? _statTwoMax;
+        private int? _statThreeMin;
+        private int? _statThreeMax;
 
-        public string FirstAffix { get; set; }
-        public int FirstAffixMin { get; set; }
-        public int FirstAffixMax { get; set; }
+        private string _affixName;
+        private StatValueType _statValueType;
 
-        public string SecondAffix { get; set; }
-        public int SecondAffixMin { get; set; }
-        public int SecondAffixMax { get; set; }
+        public string FirstStatName { get; set; }
+        public int? FirstStatMin { get; set; }
+        public int? FirstStatMax { get; set; }
 
-        public string ThirdAffix { get; set; }
-        public int ThirdAffixMin { get; set; }
-        public int ThirdAffixMax { get; set; }
+        public string SecondStatName { get; set; }
+        public int? SecondStatMin { get; set; }
+        public int? SecondStatMax { get; set; }
 
-        // There are no relevant third affixes. All of them have their min/max values as equal
+        public string ThirdStatName { get; set; }
+        public int? ThirdStatMin { get; set; }
+        public int? ThirdStatMax { get; set; }
 
-        public bool HasFirstAffix => AffixName != null && !string.IsNullOrEmpty(FirstAffix) && _statOneMin != _statOneMax;
-        public bool HasSecondAffix => AffixName != null && !IsTier && !string.IsNullOrEmpty(SecondAffix) && _statTwoMin != _statThreeMax;
+        // There are no relevant third stats. All of them have their min/max values as equal
 
-        public bool HasOneAffix => (HasFirstAffix && !HasSecondAffix) || (!HasFirstAffix && HasSecondAffix);
-        private bool HasMetaAffix => (AffixName != null && _affixType == AffixType.Meta);
-        public bool IsTier => ValueType == SubconditionValueType.Tier;
+        public bool HasFirstStat => AffixName != null && !string.IsNullOrEmpty(FirstStatName) && _statOneMin != _statOneMax;
+        public bool HasSecondStat => AffixName != null && !IsTier && !string.IsNullOrEmpty(SecondStatName) && _statTwoMin != _statThreeMax;
 
-        public Visibility NoUserSelection => BoolToVisibility(!HasFirstAffix && !HasSecondAffix);
-        public Visibility OneUserSelection => BoolToVisibility(HasMetaAffix || HasOneAffix);
-        public Visibility TwoUserSelection => BoolToVisibility(!HasMetaAffix && (HasFirstAffix && HasSecondAffix));
-        public Visibility FirstAffixOneUserSelection => BoolToVisibility(HasMetaAffix || (HasOneAffix && HasFirstAffix));
-        public Visibility SecondAffixOneUserSelection => BoolToVisibility(!HasMetaAffix && (HasOneAffix && HasSecondAffix));
+        public bool HasOneStat => (HasFirstStat && !HasSecondStat) || (!HasFirstStat && HasSecondStat);
+        private bool IsMetaAffix => AffixName != null && _affixType == AffixType.Meta;
+        public bool IsTier => StatValueType == StatValueType.Tier;
+        
+        public Visibility DoubleStatSelectionVisibility => BoolToVisibility(!IsMetaAffix && (HasFirstStat && HasSecondStat));
+        public Visibility FirstStatSelectionVisibility => BoolToVisibility(IsMetaAffix || (HasOneStat && HasFirstStat));
+        public Visibility SecondStatSelectionVisibility => BoolToVisibility(!IsMetaAffix && (HasOneStat && HasSecondStat));
 
         public List<string> ValidAffixes => GetValidAffixes();
 
-        private SubconditionValueType _valueType { get; set; }
-        public SubconditionValueType ValueType {
-            get { return _valueType; }
+        public StatValueType StatValueType {
+            get { return _statValueType; }
             set
             {
-                if (_valueType == value)
+                if (_statValueType == value)
                 {
                     return;
                 }
 
-                _valueType = value;
-                OnPropertyChanged(nameof(ValueType));
+                _statValueType = value;
+                OnPropertyChanged(nameof(StatValueType));
+
+                if (_affixType == AffixType.Meta && _statValueType == StatValueType.Tier)
+                {
+                    ClearStats();
+                    return;
+                }
+
                 if (!string.IsNullOrEmpty(AffixName))
                 {
                     UpdateModMinMax();
@@ -88,7 +93,6 @@ namespace PoeCrafting.UI.Controls
             }
         }
 
-        private string _affixName { get; set; }
         public string AffixName
         {
             get { return _affixName; }
@@ -101,20 +105,7 @@ namespace PoeCrafting.UI.Controls
 
                 if (string.IsNullOrEmpty(value))
                 {
-                    _affixName = string.Empty;
-                    FirstAffix = string.Empty;
-                    SecondAffix = string.Empty;
-                    ThirdAffix = string.Empty;
-
-                    OnPropertyChanged(nameof(NoUserSelection));
-                    OnPropertyChanged(nameof(OneUserSelection));
-                    OnPropertyChanged(nameof(TwoUserSelection));
-                    OnPropertyChanged(nameof(FirstAffixOneUserSelection));
-                    OnPropertyChanged(nameof(SecondAffixOneUserSelection));
-                    OnPropertyChanged(nameof(FirstAffix));
-                    OnPropertyChanged(nameof(SecondAffix));
-                    OnPropertyChanged(nameof(ThirdAffix));
-
+                    ClearStats();
                     return;
                 }
 
@@ -124,49 +115,85 @@ namespace PoeCrafting.UI.Controls
 
                 var affix = _affixes.First(x => x.ModType == RemoveSpaces(AffixName));
 
-                FirstAffix = CapitalizeUnderscoreDelimited(affix.StatName1);
-                SecondAffix = CapitalizeUnderscoreDelimited(affix.StatName2);
-                ThirdAffix = CapitalizeUnderscoreDelimited(affix.StatName3);
+                FirstStatName = CapitalizeUnderscoreDelimited(affix.StatName1);
+                SecondStatName = CapitalizeUnderscoreDelimited(affix.StatName2);
+                ThirdStatName = CapitalizeUnderscoreDelimited(affix.StatName3);
 
-                OnPropertyChanged(nameof(FirstAffix));
-                OnPropertyChanged(nameof(SecondAffix));
-                OnPropertyChanged(nameof(ThirdAffix));
+                OnPropertyChanged(nameof(FirstStatName));
+                OnPropertyChanged(nameof(SecondStatName));
+                OnPropertyChanged(nameof(ThirdStatName));
 
                 UpdateModMinMax();
             }
         }
 
-        public SubconditionAffixControl(ConditionAffix condition, List<Affix> affixes, SubconditionValueType valueType, AffixType affixType, ItemBase itemBase)
+        private void ClearStats()
         {
-            _valueType = valueType;
+            _affixName = string.Empty;
+            FirstStatName = string.Empty;
+            SecondStatName = string.Empty;
+            ThirdStatName = string.Empty;
+
+            _statOneMin = null;
+            _statOneMax = null;
+            _statTwoMin = null;
+            _statTwoMax = null;
+            _statThreeMin = null;
+            _statThreeMax = null;
+
+            FirstStatMin = _statOneMin;
+            SecondStatMin = _statTwoMin;
+            ThirdStatMin = _statThreeMin;
+            FirstStatMax = _statOneMax;
+            SecondStatMax = _statTwoMax;
+            ThirdStatMax = _statThreeMax;
+
+            OnPropertyChanged(nameof(DoubleStatSelectionVisibility));
+            OnPropertyChanged(nameof(FirstStatSelectionVisibility));
+            OnPropertyChanged(nameof(SecondStatSelectionVisibility));
+            OnPropertyChanged(nameof(FirstStatName));
+            OnPropertyChanged(nameof(SecondStatName));
+            OnPropertyChanged(nameof(ThirdStatName));
+            OnPropertyChanged(nameof(FirstStatMin));
+            OnPropertyChanged(nameof(SecondStatMin));
+            OnPropertyChanged(nameof(SecondStatMin));
+            OnPropertyChanged(nameof(SecondStatMax));
+            OnPropertyChanged(nameof(ThirdStatMin));
+            OnPropertyChanged(nameof(ThirdStatMax));
+        }
+
+        public SubconditionAffixControl(ConditionAffix condition, List<Affix> affixes, StatValueType statValueType, AffixType affixType, ItemBase itemBase)
+        {
+            _statValueType = statValueType;
             _affixes = affixes;
             _affixType = affixType;
             _itemBase = itemBase;
 
             AffixName = condition.ModType;
+
             if (condition.Min1.HasValue)
             {
-                FirstAffixMin = condition.Min1.Value;
+                FirstStatMin = condition.Min1.Value;
             }
             if (condition.Max1.HasValue)
             {
-                FirstAffixMax = condition.Max1.Value;
+                FirstStatMax = condition.Max1.Value;
             }
             if (condition.Min2.HasValue)
             {
-                SecondAffixMin = condition.Min2.Value;
+                SecondStatMin = condition.Min2.Value;
             }
             if (condition.Max2.HasValue)
             {
-                SecondAffixMax = condition.Max2.Value;
+                SecondStatMax = condition.Max2.Value;
             }
             if (condition.Min3.HasValue)
             {
-                ThirdAffixMin = condition.Min3.Value;
+                ThirdStatMin = condition.Min3.Value;
             }
             if (condition.Max3.HasValue)
             {
-                ThirdAffixMax = condition.Max3.Value;
+                ThirdStatMax = condition.Max3.Value;
             }
 
             DataContext = this;
@@ -180,16 +207,18 @@ namespace PoeCrafting.UI.Controls
                 return null;
             }
 
-            return new ConditionAffix
-            {
-                ModType = RemoveSpaces(_affixName),
-                Min1 = FirstAffixMin,
-                Max1 = FirstAffixMax,
-                Min2 = SecondAffixMin,
-                Max2 = SecondAffixMax,
-                Min3 = ThirdAffixMin,
-                Max3 = ThirdAffixMax
-            };
+            var condition = new ConditionAffix();
+
+            condition.ModType = RemoveSpaces(_affixName);
+
+            condition.Min1 = FirstStatMin;
+            condition.Max1 = FirstStatMax;
+            condition.Min2 = SecondStatMin;
+            condition.Max2 = SecondStatMax;
+            condition.Min3 = ThirdStatMin;
+            condition.Max3 = ThirdStatMax;
+
+            return condition;
         }
 
         private void UpdateModMinMax()
@@ -199,67 +228,83 @@ namespace PoeCrafting.UI.Controls
             var lastTier = modAffixes.Last();
             var firstTier = modAffixes.First();
 
-            if (ValueType == SubconditionValueType.Tier)
+            if (StatValueType == StatValueType.Tier)
             {
                 _statOneMin = firstTier.Tier;
-                _statTwoMin = 0;
-                _statThreeMin = 0;
+                _statTwoMin = null;
+                _statThreeMin = null;
 
                 _statOneMax = lastTier.Tier;
-                _statTwoMax = 0;
-                _statThreeMax = 0;
+                _statTwoMax = null;
+                _statThreeMax = null;
             }
             else if (_affixType == AffixType.Meta)
             {
                 var max = AffixValueCalculator.GetModMax(RemoveSpaces(AffixName), _itemBase, _affixes, AffixType.Meta);
 
                 _statOneMin = 0;
-                _statTwoMin = 0;
-                _statThreeMin = 0;
+                _statTwoMin = null;
+                _statThreeMin = null;
 
                 _statOneMax = max.FirstOrDefault();
-                _statTwoMax = 0;
-                _statThreeMax = 0;
+                _statTwoMax = null;
+                _statThreeMax = null;
             }
             else
             {
-                _statOneMin = lastTier.StatMin1;
-                _statTwoMin = lastTier.StatMin2;
-                _statThreeMin = lastTier.StatMin3;
+                if (!string.IsNullOrEmpty(lastTier.StatName1))
+                {
+                    _statOneMin = lastTier.StatMin1;
+                }
+                if (!string.IsNullOrEmpty(lastTier.StatName2))
+                {
+                    _statTwoMin = lastTier.StatMin2;
+                }
+                if (!string.IsNullOrEmpty(lastTier.StatName3))
+                {
+                    _statThreeMin = lastTier.StatMin3;
+                }
 
-                _statOneMax = firstTier.StatMax1;
-                _statTwoMax = firstTier.StatMax2;
-                _statThreeMax = firstTier.StatMax3;
+                if (!string.IsNullOrEmpty(firstTier.StatName1))
+                {
+                    _statOneMax = firstTier.StatMax1;
+                }
+                if (!string.IsNullOrEmpty(firstTier.StatName2))
+                {
+                    _statTwoMax = firstTier.StatMax2;
+                }
+                if (!string.IsNullOrEmpty(firstTier.StatName3))
+                {
+                    _statThreeMax = firstTier.StatMax3;
+                }
             }
 
-            FirstAffixMin = _statOneMin;
-            SecondAffixMin = _statTwoMin;
-            ThirdAffixMin = _statThreeMin;
+            FirstStatMin = _statOneMin;
+            SecondStatMin = _statTwoMin;
+            ThirdStatMin = _statThreeMin;
 
-            FirstAffixMax = _statOneMax;
-            SecondAffixMax = _statTwoMax;
-            ThirdAffixMax = _statThreeMax;
+            FirstStatMax = _statOneMax;
+            SecondStatMax = _statTwoMax;
+            ThirdStatMax = _statThreeMax;
 
-            OnPropertyChanged(nameof(FirstAffixMin));
-            OnPropertyChanged(nameof(SecondAffixMin));
-            OnPropertyChanged(nameof(ThirdAffixMin));
+            OnPropertyChanged(nameof(FirstStatMin));
+            OnPropertyChanged(nameof(SecondStatMin));
+            OnPropertyChanged(nameof(ThirdStatMin));
 
-            OnPropertyChanged(nameof(FirstAffixMax));
-            OnPropertyChanged(nameof(SecondAffixMax));
-            OnPropertyChanged(nameof(ThirdAffixMax));
+            OnPropertyChanged(nameof(FirstStatMax));
+            OnPropertyChanged(nameof(SecondStatMax));
+            OnPropertyChanged(nameof(ThirdStatMax));
 
-            OnPropertyChanged(nameof(FirstAffixOneUserSelection));
-            OnPropertyChanged(nameof(SecondAffixOneUserSelection));
-            OnPropertyChanged(nameof(NoUserSelection));
-            OnPropertyChanged(nameof(OneUserSelection));
-            OnPropertyChanged(nameof(TwoUserSelection));
+            OnPropertyChanged(nameof(FirstStatSelectionVisibility));
+            OnPropertyChanged(nameof(SecondStatSelectionVisibility));
+            OnPropertyChanged(nameof(DoubleStatSelectionVisibility));
         }
 
         public List<string> GetValidAffixes()
         {
-            //       var unique = _affixes.Where(x => (FirstAffix == null || x.ModType != FirstAffix) &&
-            //                                           (SecondAffix == null || x.ModType != SecondAffix) &&
-            //                                           (ThirdAffix == null || x.ModType != ThirdAffix)).ToList();
+            //       var unique = _affixes.Where(x => (FirstStatName == null || x.ModType != FirstStatName) &&
+            //                                           (SecondStatName == null || x.ModType != SecondStatName) &&
+            //                                           (ThirdStatName == null || x.ModType != ThirdStatName)).ToList();
 
             var matching = _affixes.Where(x => x.Type == _affixType.ToString().ToLower()).ToList();
 

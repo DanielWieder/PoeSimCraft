@@ -30,16 +30,16 @@ namespace PoeCrafting.UI.Controls
 
         public string AffixTypeName => _affixType.ToString();
 
-        private SubconditionValueType _valueType;
-        public SubconditionValueType ValueType {
+        private StatValueType _valueType;
+        public StatValueType ValueType {
             get { return _valueType; }
             set
             {
                 if (_valueType == value) return;
                 _valueType = value;
-                FirstAffix.ValueType = value;
-                SecondAffix.ValueType = value;
-                ThirdAffix.ValueType = value;
+                FirstAffix.StatValueType = value;
+                SecondAffix.StatValueType = value;
+                ThirdAffix.StatValueType = value;
             } }
 
         public List<ConditionAffix> Conditions => GetConditions();
@@ -48,7 +48,7 @@ namespace PoeCrafting.UI.Controls
         public SubconditionAffixControl SecondAffix { get; set; }
         public SubconditionAffixControl ThirdAffix { get; set; }
 
-        public SubconditionAffixesControl(List<ConditionAffix> conditions, List<Affix> affixes, AffixType affixType, ItemBase itemBase, SubconditionValueType valueType)
+        public SubconditionAffixesControl(List<ConditionAffix> conditions, List<Affix> affixes, AffixType affixType, ItemBase itemBase, StatValueType valueType)
         {
             _affixType = affixType;
             Dispatcher.Invoke(() => Initialize(conditions, affixes, affixType, itemBase, valueType), DispatcherPriority.SystemIdle);
@@ -61,7 +61,7 @@ namespace PoeCrafting.UI.Controls
             OnPropertyChanged(nameof(ThirdAffix));
         }
 
-        private void Initialize(List<ConditionAffix> conditions, List<Affix> affixes, AffixType affixType, ItemBase itemBase, SubconditionValueType valueType)
+        private void Initialize(List<ConditionAffix> conditions, List<Affix> affixes, AffixType affixType, ItemBase itemBase, StatValueType valueType)
         {
             var firstCondition = conditions.Count >= 1 ? conditions[0] : new ConditionAffix();
             var secondCondition = conditions.Count >= 2 ? conditions[1] : new ConditionAffix();

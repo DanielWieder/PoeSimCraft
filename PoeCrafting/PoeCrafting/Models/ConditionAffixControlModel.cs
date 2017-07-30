@@ -13,13 +13,13 @@ namespace PoeCrafting.UI.Models
     {
         // The drop downs will show valid, unselected affixes
         // Invalid Min/SelectedMax values will be outlined in red and changed to their closest valid values
-        // If the SubconditionValueType is changed then all min/max values will automatically be transformed into the associated new value (If going from Tier -> Flat the MinValue will be used)
+        // If the StatValueType is changed then all min/max values will automatically be transformed into the associated new value (If going from Tier -> Flat the MinValue will be used)
         // If the ItemLevel is changed then invalid values will be outlined in red
 
         private readonly List<Affix> _affixes;
         public readonly AffixType AffixType;
 
-        public SubconditionValueType ValueType { get; set; }
+        public StatValueType ValueType { get; set; }
 
         public string FirstAffix { get; set; }
         public int? FirstAffixMin { get; set; }
@@ -52,9 +52,9 @@ namespace PoeCrafting.UI.Models
             }
         }
 
-        public ConditionAffixControlModel(SubconditionValueType subconditionValueType, List<Affix> affixes, AffixType affixType)
+        public ConditionAffixControlModel(StatValueType statValueType, List<Affix> affixes, AffixType affixType)
         {
-            ValueType = subconditionValueType;
+            ValueType = statValueType;
             _affixes = affixes;
             AffixType = affixType;
         }
