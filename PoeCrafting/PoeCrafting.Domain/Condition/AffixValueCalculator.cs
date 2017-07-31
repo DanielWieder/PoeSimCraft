@@ -49,7 +49,6 @@ namespace PoeCrafting.Domain.Condition
         private static List<string> HybridEvasionPercentDefenseAffixNames => HybridDefenseAffixNames.Where(x => x.Contains("Evasion")).ToList();
         private static List<string> HybridArmourPercentDefenseAffixNames => HybridDefenseAffixNames.Where(x => x.Contains("Armour") || x.Contains("PhysicalDamageReductionRating")).ToList();
 
-
         private class ConditionContainer
         {
             public ItemBase ItemBase;

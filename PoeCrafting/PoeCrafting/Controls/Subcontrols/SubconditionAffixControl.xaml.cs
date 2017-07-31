@@ -55,11 +55,11 @@ namespace PoeCrafting.UI.Controls
 
         // There are no relevant third stats. All of them have their min/max values as equal
 
-        public bool HasFirstStat => AffixName != null && !string.IsNullOrEmpty(FirstStatName) && _statOneMin != _statOneMax;
-        public bool HasSecondStat => AffixName != null && !IsTier && !string.IsNullOrEmpty(SecondStatName) && _statTwoMin != _statThreeMax;
+        public bool HasFirstStat => !string.IsNullOrEmpty(AffixName) && !string.IsNullOrEmpty(FirstStatName) && _statOneMin != _statOneMax;
+        public bool HasSecondStat => !string.IsNullOrEmpty(AffixName) && !IsTier && !string.IsNullOrEmpty(SecondStatName) && _statTwoMin != _statTwoMax;
 
         public bool HasOneStat => (HasFirstStat && !HasSecondStat) || (!HasFirstStat && HasSecondStat);
-        private bool IsMetaAffix => AffixName != null && _affixType == AffixType.Meta;
+        private bool IsMetaAffix => !string.IsNullOrEmpty(AffixName) && _affixType == AffixType.Meta;
         public bool IsTier => StatValueType == StatValueType.Tier;
         
         public Visibility DoubleStatSelectionVisibility => BoolToVisibility(!IsMetaAffix && (HasFirstStat && HasSecondStat));
@@ -80,7 +80,7 @@ namespace PoeCrafting.UI.Controls
                 _statValueType = value;
                 OnPropertyChanged(nameof(StatValueType));
 
-                if (_affixType == AffixType.Meta && _statValueType == StatValueType.Tier)
+                if (IsMetaAffix && IsTier)
                 {
                     ClearStats();
                     return;
@@ -136,18 +136,23 @@ namespace PoeCrafting.UI.Controls
 
             _statOneMin = null;
             _statOneMax = null;
+
             _statTwoMin = null;
             _statTwoMax = null;
+
             _statThreeMin = null;
             _statThreeMax = null;
 
             FirstStatMin = _statOneMin;
-            SecondStatMin = _statTwoMin;
-            ThirdStatMin = _statThreeMin;
             FirstStatMax = _statOneMax;
+
+            SecondStatMin = _statTwoMin;
             SecondStatMax = _statTwoMax;
+
+            ThirdStatMin = _statThreeMin;
             ThirdStatMax = _statThreeMax;
 
+            OnPropertyChanged(nameof(AffixName));
             OnPropertyChanged(nameof(DoubleStatSelectionVisibility));
             OnPropertyChanged(nameof(FirstStatSelectionVisibility));
             OnPropertyChanged(nameof(SecondStatSelectionVisibility));
@@ -155,7 +160,7 @@ namespace PoeCrafting.UI.Controls
             OnPropertyChanged(nameof(SecondStatName));
             OnPropertyChanged(nameof(ThirdStatName));
             OnPropertyChanged(nameof(FirstStatMin));
-            OnPropertyChanged(nameof(SecondStatMin));
+            OnPropertyChanged(nameof(FirstStatMax));
             OnPropertyChanged(nameof(SecondStatMin));
             OnPropertyChanged(nameof(SecondStatMax));
             OnPropertyChanged(nameof(ThirdStatMin));
@@ -202,21 +207,21 @@ namespace PoeCrafting.UI.Controls
 
         public ConditionAffix GetCondition()
         {
-            if (string.IsNullOrEmpty(_affixName))
+            if (string.IsNullOrEmpty(_affixName) || (IsMetaAffix && IsTier))
             {
                 return null;
             }
 
-            var condition = new ConditionAffix();
-
-            condition.ModType = RemoveSpaces(_affixName);
-
-            condition.Min1 = FirstStatMin;
-            condition.Max1 = FirstStatMax;
-            condition.Min2 = SecondStatMin;
-            condition.Max2 = SecondStatMax;
-            condition.Min3 = ThirdStatMin;
-            condition.Max3 = ThirdStatMax;
+            var condition = new ConditionAffix
+            {
+                ModType = RemoveSpaces(_affixName),
+                Min1 = FirstStatMin,
+                Max1 = FirstStatMax,
+                Min2 = SecondStatMin,
+                Max2 = SecondStatMax,
+                Min3 = ThirdStatMin,
+                Max3 = ThirdStatMax
+            };
 
             return condition;
         }
