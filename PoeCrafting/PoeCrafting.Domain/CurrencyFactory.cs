@@ -48,7 +48,7 @@ namespace PoeCrafting.Domain
                 vaal
             };
 
-            currencyValueFetch.League = "Legacy";
+            currencyValueFetch.League = "Standard";
             var data = currencyValueFetch.Execute();
             foreach (var currency in Currency)
             {

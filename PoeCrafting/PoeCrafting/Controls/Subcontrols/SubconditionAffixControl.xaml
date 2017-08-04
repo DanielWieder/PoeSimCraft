@@ -18,11 +18,11 @@
             <ColumnDefinition Width="50" />
         </Grid.ColumnDefinitions>
         <ComboBox Grid.Row="0" Grid.Column="0" SelectedValue="{Binding AffixName}" ItemsSource="{Binding ValidAffixes}"/>
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding FirstStatMin}" Visibility="{Binding FirstStatSelectionVisibility}"/>
-        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding FirstStatMax}" Visibility="{Binding FirstStatSelectionVisibility}"/>
+        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding FirstStatMin}" Visibility="{Binding FirstStatSelectionVisibility}" IsEnabled="{Binding IsFirstStatEnabled}"/>
+        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding FirstStatMax}" Visibility="{Binding FirstStatSelectionVisibility}" IsEnabled="{Binding IsFirstStatEnabled}"/>
 
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding SecondStatMin}" Visibility="{Binding SecondStatSelectionVisibility}"/>
-        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SecondStatMax}" Visibility="{Binding SecondStatSelectionVisibility}"/>
+        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding SecondStatMin}" Visibility="{Binding SecondStatSelectionVisibility}" IsEnabled="{Binding IsSecondStatEnabled}"/>
+        <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding SecondStatMax}" Visibility="{Binding SecondStatSelectionVisibility}" IsEnabled="{Binding IsSecondStatEnabled}"/>
 
         <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Visibility="{Binding DoubleStatSelectionVisibility}">
             <Grid.RowDefinitions>
@@ -37,12 +37,12 @@
                 <ColumnDefinition Width="50" />
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0" Content="{Binding FirstStatName}"/>
-            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding FirstStatMin}"/>
-            <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding FirstStatMax}"/>
+            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding FirstStatMin}" IsEnabled="{Binding IsFirstStatEnabled}"/>
+            <TextBox Grid.Row="0" Grid.Column="4" Text="{Binding FirstStatMax}" IsEnabled="{Binding IsFirstStatEnabled}"/>
 
             <Label Grid.Row="1" Grid.Column="0" Content="{Binding SecondStatName}"/>
-            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SecondStatMin}"/>
-            <TextBox Grid.Row="1" Grid.Column="4" Text="{Binding SecondStatMax}"/>
+            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding SecondStatMin}" IsEnabled="{Binding IsSecondStatEnabled}"/>
+            <TextBox Grid.Row="1" Grid.Column="4" Text="{Binding SecondStatMax}" IsEnabled="{Binding IsSecondStatEnabled}"/>
         </Grid>
     </Grid>
 </UserControl>

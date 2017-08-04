@@ -1,21 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using PoeCrafting.Domain.Condition;
 using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
@@ -55,8 +45,8 @@ namespace PoeCrafting.UI.Controls
 
         // There are no relevant third stats. All of them have their min/max values as equal
 
-        public bool HasFirstStat => !string.IsNullOrEmpty(AffixName) && !string.IsNullOrEmpty(FirstStatName) && _statOneMin != _statOneMax;
-        public bool HasSecondStat => !string.IsNullOrEmpty(AffixName) && !IsTier && !string.IsNullOrEmpty(SecondStatName) && _statTwoMin != _statTwoMax;
+        public bool HasFirstStat => !string.IsNullOrEmpty(AffixName) && !string.IsNullOrEmpty(FirstStatName) && !(_statOneMin == _statOneMax && _statOneMin == 0);
+        public bool HasSecondStat => !string.IsNullOrEmpty(AffixName) && !IsTier && !string.IsNullOrEmpty(SecondStatName) && !(_statTwoMin == _statTwoMax && _statTwoMin == 0);
 
         public bool HasOneStat => (HasFirstStat && !HasSecondStat) || (!HasFirstStat && HasSecondStat);
         private bool IsMetaAffix => !string.IsNullOrEmpty(AffixName) && _affixType == AffixType.Meta;
@@ -65,6 +55,9 @@ namespace PoeCrafting.UI.Controls
         public Visibility DoubleStatSelectionVisibility => BoolToVisibility(!IsMetaAffix && (HasFirstStat && HasSecondStat));
         public Visibility FirstStatSelectionVisibility => BoolToVisibility(IsMetaAffix || (HasOneStat && HasFirstStat));
         public Visibility SecondStatSelectionVisibility => BoolToVisibility(!IsMetaAffix && (HasOneStat && HasSecondStat));
+
+        public bool IsFirstStatEnabled => HasFirstStat && _statOneMin != _statOneMax;
+        public bool IsSecondStatEnabled => HasSecondStat && _statTwoMin != _statTwoMax;
 
         public List<string> ValidAffixes => GetValidAffixes();
 
@@ -165,6 +158,8 @@ namespace PoeCrafting.UI.Controls
             OnPropertyChanged(nameof(SecondStatMax));
             OnPropertyChanged(nameof(ThirdStatMin));
             OnPropertyChanged(nameof(ThirdStatMax));
+            OnPropertyChanged(nameof(IsFirstStatEnabled));
+            OnPropertyChanged(nameof(IsSecondStatEnabled));
         }
 
         public SubconditionAffixControl(ConditionAffix condition, List<Affix> affixes, StatValueType statValueType, AffixType affixType, ItemBase itemBase)
@@ -303,6 +298,9 @@ namespace PoeCrafting.UI.Controls
             OnPropertyChanged(nameof(FirstStatSelectionVisibility));
             OnPropertyChanged(nameof(SecondStatSelectionVisibility));
             OnPropertyChanged(nameof(DoubleStatSelectionVisibility));
+
+            OnPropertyChanged(nameof(IsFirstStatEnabled));
+            OnPropertyChanged(nameof(IsSecondStatEnabled));
         }
 
         public List<string> GetValidAffixes()
