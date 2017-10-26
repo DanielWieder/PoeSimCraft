@@ -24,6 +24,7 @@ namespace PoeCrafting.UI.Controls
         public string SelectedBase { get; set; }
         public string SelectedSubtype { get; set; }
         public int ItemLevel { get; set; }
+        public int ItemCost { get; set; }
 
         public override bool Equals(Object obj)
         {
@@ -85,11 +86,14 @@ namespace PoeCrafting.UI.Controls
 
         public int ItemLevel { get; set; } = 84;
 
+        public int ItemCost { get; set; } = 0;
+
         public BaseInfomation BaseInformation => new BaseInfomation
         {
             ItemLevel = ItemLevel,
             SelectedBase = SelectedBase,
-            SelectedSubtype = SelectedSubtype
+            SelectedSubtype = SelectedSubtype,
+            ItemCost = ItemCost
         };
 
         public bool CanComplete()

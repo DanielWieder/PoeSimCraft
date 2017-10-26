@@ -45,7 +45,7 @@ namespace PoeCrafting.UI.Controls
 
         // There are no relevant third stats. All of them have their min/max values as equal
 
-        public bool HasFirstStat => !string.IsNullOrEmpty(AffixName) && !string.IsNullOrEmpty(FirstStatName) && !(_statOneMin == _statOneMax && _statOneMin == 0);
+        public bool HasFirstStat => !string.IsNullOrEmpty(AffixName) && !(_statOneMin == _statOneMax && _statOneMin == 0);
         public bool HasSecondStat => !string.IsNullOrEmpty(AffixName) && !IsTier && !string.IsNullOrEmpty(SecondStatName) && !(_statTwoMin == _statTwoMax && _statTwoMin == 0);
 
         public bool HasOneStat => (HasFirstStat && !HasSecondStat) || (!HasFirstStat && HasSecondStat);
@@ -102,7 +102,7 @@ namespace PoeCrafting.UI.Controls
                     return;
                 }
 
-                _affixName = value;
+                _affixName = AddSpaces(value);
 
                 OnPropertyChanged(nameof(Affix));
 
@@ -112,6 +112,7 @@ namespace PoeCrafting.UI.Controls
                 SecondStatName = CapitalizeUnderscoreDelimited(affix.StatName2);
                 ThirdStatName = CapitalizeUnderscoreDelimited(affix.StatName3);
 
+                OnPropertyChanged(nameof(AffixName));
                 OnPropertyChanged(nameof(FirstStatName));
                 OnPropertyChanged(nameof(SecondStatName));
                 OnPropertyChanged(nameof(ThirdStatName));

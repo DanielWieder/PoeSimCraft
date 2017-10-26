@@ -44,21 +44,29 @@ namespace PoeCrafting.Domain.Crafting
             return equipment;
         }
 
-        public double GetCurrencySpent()
+        public double GetCurrencySpent(int scourCount, int baseItemCount, double baseItemCost)
         {
-            double total = 0;
+            double totalCraftingCost = 0;
             Action<ICraftingStep, int, IList<ICraftingStep>> action = (current, index, list) =>
             {
                 if (current is CurrencyCraftingStep)
                 {
                     var currencyCraftingStep = current as CurrencyCraftingStep;
-                    total += currencyCraftingStep.Value*currencyCraftingStep.Tracker.SuccessfulUsesCount;
+                    totalCraftingCost += currencyCraftingStep.Value*currencyCraftingStep.Tracker.SuccessfulUsesCount;
                 }
             };
 
             IterateSteps(action, CraftingSteps);
 
-            return total;
+            var totalScourCost = scourCount * _factory.Currency.First(x => x.Name == "Orb of Scouring").Value;
+            var totalBaseCost = baseItemCost * baseItemCount;
+
+            return totalCraftingCost + totalScourCost + totalBaseCost;
+        }
+
+        public double GetScourCost()
+        {
+            return _factory.Currency.First(x => x.Name == "Orb of Scouring").Value;
         }
 
         public double ClearCurrencySpent()

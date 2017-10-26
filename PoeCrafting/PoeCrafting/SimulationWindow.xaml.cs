@@ -127,11 +127,12 @@ namespace PoeCrafting.UI
                 var craftingTree = CraftingTree.CraftingTree;
                 var itemList = ItemList.ItemPrototypes.ToList();
 
-                Crafting.Initialize(craftingTree, _factory, itemList);
+                Crafting.Initialize(craftingTree, _factory, itemList, BaseSelection.ItemCost);
             }
             else if (_controls[_currentControlIndex] == Results)
             {
-                Results.Initialize(Crafting.MatchingItems);
+                var currencySpent = CraftingTree.CraftingTree.GetCurrencySpent(Crafting.ScourCount, BaseSelection.ItemCost, Crafting.BaseItemCount);
+                Results.Initialize(Crafting.MatchingItems, currencySpent);
             }
 
             OnPropertyChanged(nameof(IsReady));

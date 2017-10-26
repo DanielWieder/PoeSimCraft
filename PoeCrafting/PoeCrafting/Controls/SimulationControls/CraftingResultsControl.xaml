@@ -8,6 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
             <RowDefinition Height="*" MinHeight="100" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -15,8 +16,10 @@
             <ColumnDefinition Width="*" MinWidth="200" />
         </Grid.ColumnDefinitions>
 
-        <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Path=ItemPrototypes}" DisplayMemberPath="ItemName" SelectedValue="{Binding SelectedItem}" SelectionChanged="OnItemSelected"></ListBox>
-        <ScrollViewer Grid.Row="0" Grid.Column="1">
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=CurrencyResults}" />
+        <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Path=ItemPrototypes}" DisplayMemberPath="ItemName" SelectedValue="{Binding SelectedItem}" SelectionChanged="OnItemSelected"></ListBox>
+        <ScrollViewer Grid.Row="1" Grid.Column="1">
             <TextBlock ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Text="{Binding ItemResults}"/>
         </ScrollViewer>
     </Grid>

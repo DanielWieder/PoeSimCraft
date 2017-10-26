@@ -44,6 +44,12 @@ namespace PoeCrafting.UI.Controls
 
         public int Currency { get; set; } = 1000;
 
+        public int ScourCount { get; set; }
+
+        public int BaseItemCount { get; set; }
+
+        public double BaseItemCost { get; set; }
+
         public Action OnCompletion { get; set; } = null;
 
         // Output
@@ -89,7 +95,7 @@ namespace PoeCrafting.UI.Controls
             DataContext = this;
         }
 
-        public void Initialize(CraftingTree craftingTree, EquipmentFactory factory, List<ItemPrototypeModel> itemPrototypes)
+        public void Initialize(CraftingTree craftingTree, EquipmentFactory factory, List<ItemPrototypeModel> itemPrototypes, double baseItemCost)
         {
             _craftingTree = craftingTree;
             _craftingTree.ClearCurrencySpent();
@@ -110,6 +116,9 @@ namespace PoeCrafting.UI.Controls
             }
 
             Progress = -1;
+            ScourCount = 0;
+            BaseItemCount = 0;
+            BaseItemCost = baseItemCost;
 
             OnPropertyChanged(nameof(Message));
             OnPropertyChanged(nameof(Progress));
@@ -140,7 +149,9 @@ namespace PoeCrafting.UI.Controls
 
         private void Run(CancellationToken ct)
         {
-            for (var progress = 0d; progress < 100; progress = _craftingTree.GetCurrencySpent() / Currency* 100)
+            var scourCost = _craftingTree.GetScourCost();
+
+            for (var progress = 0d; progress < 100; progress = _craftingTree.GetCurrencySpent(ScourCount, BaseItemCount, BaseItemCost) / Currency* 100)
             {
                 if (ct.IsCancellationRequested)
                 {
@@ -151,14 +162,36 @@ namespace PoeCrafting.UI.Controls
                 var result = _craftingTree.Craft(newItem, ct);
                 EquipmentList.Add(result);
 
+                if (!result.Corrupted && result.Rarity == EquipmentRarity.Normal)
+                {
+                    continue;
+                }
+
+                bool added = false;
+
                 foreach (var prototype in _itemPrototypes)
                 {
                     if (prototype.Condition.IsValid(result))
                     {
                         MatchingItems[prototype].Add(result);
+                        added = true;
+                        BaseItemCount++;
                         break;
                     }
                 }
+
+                if (!added)
+                {
+                    if (!result.Corrupted && result.Rarity != EquipmentRarity.Normal && scourCost < BaseItemCost)
+                    {
+                        ScourCount++;
+                    }
+                    else
+                    {
+                        BaseItemCount++;
+                    }
+                }
+
                 Progress = progress;
                 OnPropertyChanged(nameof(Progress));
             }

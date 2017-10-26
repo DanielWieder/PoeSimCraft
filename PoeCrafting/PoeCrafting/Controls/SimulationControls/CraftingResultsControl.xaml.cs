@@ -35,24 +35,33 @@ namespace PoeCrafting.UI.Controls
 
         public string ItemResults { get; set; }
 
+        public string CurrencyResults { get; set; }
+
         public CraftingResultsControl()
         {
             InitializeComponent();
             DataContext = this;
         }
 
-        public void Initialize(Dictionary<ItemPrototypeModel, List<Equipment>> items)
+        public void Initialize(Dictionary<ItemPrototypeModel, List<Equipment>> items, double currencySpent)
         {
             ItemResults = string.Empty;
             OnPropertyChanged(nameof(ItemResults));
 
             ItemDictionary = items;
             ItemPrototypes.Clear();
-            foreach (var itemPrototype in ItemDictionary.Keys)
+
+            var itemCount = items.Where(x => x.Key.Value > 0).Sum(x => x.Value.Count);
+            var itemsValue = items.Sum(x => x.Key.Value * x.Value.Count);
+
+            CurrencyResults = String.Format("You spent {0} chaos crafting {1} items worth a total of {2} chaos", currencySpent, itemCount, itemsValue);
+
+            foreach (var itemPrototype in ItemDictionary)
             {
-                ItemPrototypes.Add(itemPrototype);
+                ItemPrototypes.Add(itemPrototype.Key);
             }
 
+            OnPropertyChanged(nameof(CurrencyResults));
             OnPropertyChanged(nameof(ItemPrototypes));
         }
 
@@ -88,6 +97,12 @@ namespace PoeCrafting.UI.Controls
                 builder.Append(Environment.NewLine);
             }
 
+            builder.Append("Condition: " + SelectedItem.ItemName);
+            builder.Append(Environment.NewLine);
+            builder.Append("Value Per Item (C): " + SelectedItem.Value);
+            builder.Append(Environment.NewLine);
+            builder.Append("Value (C): " + SelectedItem.Value * list.Count);
+            builder.Append(Environment.NewLine);
             builder.Append("Count: " + list.Count);
 
             if (list.Count > 50)
