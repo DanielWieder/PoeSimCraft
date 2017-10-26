@@ -32,7 +32,7 @@ namespace PoeCrafting.UI.Controls
                 return false;
 
             var baseInfo = (BaseInfomation)obj;
-            return string.Equals(SelectedBase, baseInfo.SelectedBase) && string.Equals(SelectedSubtype, baseInfo.SelectedSubtype) && ItemLevel == baseInfo.ItemLevel;
+            return string.Equals(SelectedBase, baseInfo.SelectedBase) && string.Equals(SelectedSubtype, baseInfo.SelectedSubtype) && ItemLevel == baseInfo.ItemLevel && ItemCost == baseInfo.ItemCost;
         }
 
         public override int GetHashCode()
@@ -42,6 +42,7 @@ namespace PoeCrafting.UI.Controls
                 var hashCode = SelectedBase?.GetHashCode() ?? 0;
                 hashCode = (hashCode*397) ^ (SelectedSubtype?.GetHashCode() ?? 0);
                 hashCode = (hashCode*397) ^ ItemLevel;
+                hashCode = (hashCode * 397) ^ ItemCost;
                 return hashCode;
             }
         }
