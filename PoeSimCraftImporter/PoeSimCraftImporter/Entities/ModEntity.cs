@@ -14,7 +14,7 @@ namespace PoeSimCraftImporter.Entities
         public string Domain;
         public string Group;
         public string LevelReq;
-        public List<SpawnTag> SpawnTags;
+        public List<SpawnWeight> SpawnTags;
         public List<Stat> Stats;
         public List<string> Tags;
     }
@@ -27,9 +27,10 @@ namespace PoeSimCraftImporter.Entities
 
     }
 
-    public class SpawnTag
+    public class SpawnWeight
     {
         public string Name;
-        public bool Value;
+        public int Weight;
+        public int Priority { get; set; }
     }
 }

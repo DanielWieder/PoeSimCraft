@@ -49,20 +49,29 @@
   <ItemGroup>
     <Compile Include="DbCommand.cs" />
     <Compile Include="Entities\ModEntity.cs" />
-    <Compile Include="ModPriorityImporter.cs" />
-    <Compile Include="PoeItemBasesImporter.cs" />
-    <Compile Include="PoeModWeightImporter.cs" />
+    <Compile Include="ImportItemData.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="RePoeModImporter.cs" />
+    <Compile Include="ImportModData.cs" />
+    <Compile Include="Entities\Items.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="Json\Basetypes.json" />
-    <None Include="Json\mods.json" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Input\mods.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Input\Items.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -17,10 +17,24 @@ namespace PoeSimCraftImporter
     {
         static void Main(string[] args)
         {
-            PoeModWeightPriorityImporter importer = new PoeModWeightPriorityImporter();
-            importer.Execute();
+            WipeData();
+
+            ImportItemData itemImport = new ImportItemData();
+            itemImport.Execute();
+
+            ImportModData modImport = new ImportModData();
+            modImport.Execute();
         }
 
+        private static void WipeData()
+        {
+            var deleteCommand =
+                "TRUNCATE TABLE [dbo].[Affix]\r\nTRUNCATE TABLE [dbo].[AffixSpawnTagMap]\r\nTRUNCATE TABLE [dbo].[Armour]\r\nTRUNCATE TABLE [dbo].[Item]\r\nTRUNCATE TABLE [dbo].[ItemSpawnTagMap]\r\nTRUNCATE TABLE [dbo].[ItemSubType]\r\nTRUNCATE TABLE [dbo].[ItemType]\r\nTRUNCATE TABLE [dbo].[SpawnTag]\r\nTRUNCATE TABLE [dbo].[Weapon]";
+
+            DbCommand command = new DbCommand();
+            command.Execute(deleteCommand);
+            command.Cleanup();
+        }
     }
 
 }
