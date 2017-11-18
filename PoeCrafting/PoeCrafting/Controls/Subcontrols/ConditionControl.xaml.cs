@@ -40,6 +40,7 @@ namespace PoeCrafting.UI.Controls
             get { return _selectedSubcondition; }
             set
             {
+                _selectedSubcondition?.Save();
                 _selectedSubcondition = value;
                 OnPropertyChanged(nameof(SelectedSubcondition));
             }

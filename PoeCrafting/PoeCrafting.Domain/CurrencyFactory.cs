@@ -28,7 +28,8 @@ namespace PoeCrafting.Domain
             [Named("Exalted")] ICurrency exalted,
         //    [Named("MasterCraft")] ICurrency masterCraft,
             [Named("Scouring")] ICurrency scouring,
-            [Named("Vaal")] ICurrency vaal
+            [Named("Vaal")] ICurrency vaal,
+            [Named("Anullment")] ICurrency anull
         )
         {
             Currency = new List<ICurrency>
@@ -45,7 +46,8 @@ namespace PoeCrafting.Domain
                 exalted,
                 // masterCraft,
                 scouring,
-                vaal
+                vaal,
+                anull
             };
 
             _currencyFetch = currencyValueFetch;

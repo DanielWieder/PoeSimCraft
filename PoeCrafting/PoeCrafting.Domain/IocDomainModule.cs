@@ -31,6 +31,7 @@ namespace PoeCrafting.UI
             Bind<ICurrency>().To<ScouringOrb>().Named("Scouring");
             Bind<ICurrency>().To<TransmutationOrb>().Named("Transmutation");
             Bind<ICurrency>().To<VaalOrb>().Named("Vaal");
+            Bind<ICurrency>().To<AnullmentOrb>().Named("Anullment");
         }
     }
 }

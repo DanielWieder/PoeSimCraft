@@ -13,14 +13,15 @@ namespace PoeCrafting.Domain.Condition
 
         public bool IsValid(Equipment item)
         {
+            int validCount = 0;
             for (int i = CraftingSubConditions.Count - 1; i >= 0; i--)
             {
-                if (!CraftingSubConditions[i].IsValid(item))
+                if (CraftingSubConditions[i].IsValid(item))
                 {
-                    return false;
+                    validCount++;
                 }
             }
-            return true;
+            return validCount == CraftingSubConditions.Count;
         }
     }
 }

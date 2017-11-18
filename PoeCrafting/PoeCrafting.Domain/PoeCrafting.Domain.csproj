@@ -71,6 +71,7 @@
     <Compile Include="Currency\ChaosOrb.cs" />
     <Compile Include="Currency\MasterCraft.cs" />
     <Compile Include="Currency\RegalOrb.cs" />
+    <Compile Include="Currency\AnullmentOrb.cs" />
     <Compile Include="Currency\ScouringOrb.cs" />
     <Compile Include="Currency\TransmutationOrb.cs" />
     <Compile Include="Currency\VaalOrb.cs" />
