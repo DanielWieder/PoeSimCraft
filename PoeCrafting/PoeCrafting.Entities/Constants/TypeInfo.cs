@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PoeCrafting.Entities
+namespace PoeCrafting.Entities.Constants
 {
-    public class Constants
+    public static class TypeInfo
     {
         public const string AffixTypePrefix = "Prefix";
 
@@ -14,12 +14,12 @@ namespace PoeCrafting.Entities
 
         public const string AffixTypeMeta = "Meta";
 
+        public const string AffixTypeCorrupted = "Corrupted";
+
         public const string ItemTypeArmour = "Armour";
 
         public const string ItemTypeJewelry = "Jewelry";
 
         public const string ItemTypeWeapon = "Weapon";
-
-        public const string ScouringOrb = "Orb of Scouring";
     }
 }

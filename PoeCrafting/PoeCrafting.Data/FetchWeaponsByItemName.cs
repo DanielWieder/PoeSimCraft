@@ -20,6 +20,7 @@ namespace PoeCrafting.Data
                                     a.MaxDamage,
                                     a.APS,
                                     a.DPS,
+                                    a.Crit,
                                     a.Str,
                                     a.Dex,
                                     a.Int,
@@ -45,6 +46,7 @@ namespace PoeCrafting.Data
             item.Properties.Add("Str", entity.Str);
             item.Properties.Add("Dex", entity.Dex);
             item.Properties.Add("Int", entity.Int);
+            item.Properties.Add("Crit", entity.Crit);
 
             return item;
         }

@@ -13,6 +13,14 @@ namespace PoeCrafting.Data
 {
     public class FetchCurrencyValues : IFetchCurrencyValues
     {
+        private Dictionary<string, string> leagueLookup = new Dictionary<string, string>
+        {
+            {"Standard", "standard"},
+            {"Hardcore", "hardcore"},
+            {"Harbinger", "tmpstandard"},
+            {"HC Harbinger", "tmphardcore"},
+        };
+
         public string url = @"http://poe.ninja/api/Data/GetCurrencyOverview?league=";
 
         public string League { get; set; }
@@ -23,7 +31,7 @@ namespace PoeCrafting.Data
 
             using (WebClient wc = new WebClient())
             {
-                string json = wc.DownloadString(url + League);
+                string json = wc.DownloadString(url + leagueLookup[League]);
                 using (var sr = new StringReader(json))
                 {
                     using (var jr = new JsonTextReader(sr))

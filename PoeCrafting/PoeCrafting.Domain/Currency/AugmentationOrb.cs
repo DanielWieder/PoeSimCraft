@@ -6,6 +6,7 @@ using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
 using PoeCrafting.Domain.Currency;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Domain.Currency
 {
@@ -13,7 +14,7 @@ namespace PoeCrafting.Domain.Currency
     {
         private IRandom Random { get; set; }
 
-        public string Name => "Orb of Augmentation";
+        public string Name => CurrencyNames.AugmentationOrb;
         public double Value { get; set; }
 
         public AugmentationOrb(IRandom random)

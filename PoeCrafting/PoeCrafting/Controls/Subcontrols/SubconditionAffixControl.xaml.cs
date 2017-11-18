@@ -241,7 +241,8 @@ namespace PoeCrafting.UI.Controls
             }
             else if (_affixType == AffixType.Meta)
             {
-                var max = AffixValueCalculator.GetModMax(AffixName, _itemBase, _affixes, AffixType.Meta);
+                AffixValueCalculator calculator = new AffixValueCalculator();
+                var max = calculator.GetModMax(AffixName, _itemBase, _affixes, AffixType.Meta);
 
                 _statOneMin = 0;
                 _statTwoMin = null;

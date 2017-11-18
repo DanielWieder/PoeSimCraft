@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PoeCrafting.Entities;
 using PoeCrafting.Domain.Currency;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Domain.Crafting
 {
@@ -22,7 +23,6 @@ namespace PoeCrafting.Domain.Crafting
         public CraftingTree(CurrencyFactory factory)
         {
             _factory = factory;
-
             CraftingSteps = new List<ICraftingStep>();
 
             var start = new StartCraftingStep();
@@ -31,6 +31,11 @@ namespace PoeCrafting.Domain.Crafting
             CraftingSteps.Add(end);
 
             Select(start);
+        }
+
+        public void SetLeague(string leagueName)
+        {
+            _factory.UpdateValues(leagueName);
         }
 
         public Equipment Craft(Equipment equipment, CancellationToken ct)
@@ -58,7 +63,7 @@ namespace PoeCrafting.Domain.Crafting
 
             IterateSteps(action, CraftingSteps);
 
-            var totalScourCost = scourCount * _factory.Currency.First(x => x.Name == Constants.ScouringOrb).Value;
+            var totalScourCost = scourCount * _factory.Currency.First(x => x.Name == CurrencyNames.ScouringOrb).Value;
             var totalBaseCost = baseItemCost * baseItemCount;
 
             return totalCraftingCost + totalScourCost + totalBaseCost;
@@ -66,7 +71,7 @@ namespace PoeCrafting.Domain.Crafting
 
         public double GetScourCost()
         {
-            return _factory.Currency.First(x => x.Name == Constants.ScouringOrb).Value;
+            return _factory.Currency.First(x => x.Name == CurrencyNames.ScouringOrb).Value;
         }
 
         public double ClearCurrencySpent()

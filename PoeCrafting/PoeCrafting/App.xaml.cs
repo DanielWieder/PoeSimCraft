@@ -33,7 +33,7 @@ namespace PoeCrafting.UI
                 }
             );
 
-            var window = kernel.Get<HomeWindow>();
+            var window = kernel.Get<SimulationWindow>();
             window.Show();
         }
 

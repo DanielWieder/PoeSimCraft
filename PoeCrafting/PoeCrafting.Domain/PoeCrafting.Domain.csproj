@@ -48,6 +48,7 @@
     <Compile Include="Condition\AffixValueCalculator.cs" />
     <Compile Include="Condition\CraftingCondition.cs" />
     <Compile Include="Condition\CraftingSubcondition.cs" />
+    <Compile Include="Condition\MetaAffixValueCalculator.cs" />
     <Compile Include="Crafting\CurrencyCraftingStep.cs" />
     <Compile Include="Crafting\EndCraftingStep.cs" />
     <Compile Include="Crafting\ICraftingStep.cs" />

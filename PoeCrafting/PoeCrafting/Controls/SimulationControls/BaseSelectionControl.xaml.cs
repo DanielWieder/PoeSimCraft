@@ -25,6 +25,7 @@ namespace PoeCrafting.UI.Controls
         public string SelectedSubtype { get; set; }
         public int ItemLevel { get; set; }
         public int ItemCost { get; set; }
+        public string League { get; set; }
 
         public override bool Equals(Object obj)
         {
@@ -32,7 +33,7 @@ namespace PoeCrafting.UI.Controls
                 return false;
 
             var baseInfo = (BaseInfomation)obj;
-            return string.Equals(SelectedBase, baseInfo.SelectedBase) && string.Equals(SelectedSubtype, baseInfo.SelectedSubtype) && ItemLevel == baseInfo.ItemLevel && ItemCost == baseInfo.ItemCost;
+            return string.Equals(SelectedBase, baseInfo.SelectedBase) && string.Equals(SelectedSubtype, baseInfo.SelectedSubtype) && ItemLevel == baseInfo.ItemLevel && ItemCost == baseInfo.ItemCost && League == baseInfo.League;
         }
 
         public override int GetHashCode()
@@ -43,6 +44,7 @@ namespace PoeCrafting.UI.Controls
                 hashCode = (hashCode*397) ^ (SelectedSubtype?.GetHashCode() ?? 0);
                 hashCode = (hashCode*397) ^ ItemLevel;
                 hashCode = (hashCode * 397) ^ ItemCost;
+                hashCode = (hashCode * 397) ^ League.GetHashCode();
                 return hashCode;
             }
         }
@@ -53,8 +55,19 @@ namespace PoeCrafting.UI.Controls
     /// </summary>
     public partial class BaseSelectionControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
+        private readonly List<string> _leagues = new List<string>
+        {
+            "Harbinger",
+            "HC Harbinger",
+            "Standard",
+            "Hardcore"
+        };
+
+        public List<string> Leagues => _leagues;
+
         private string _selectedSubtype;
         private string _selectedBase;
+        private string _selectedLeague;
         private Action _updateIsReady;
         private EquipmentFetch _fetch;
 
@@ -85,6 +98,15 @@ namespace PoeCrafting.UI.Controls
             }
         }
 
+        public string SelectedLeague
+        {
+            get { return _selectedLeague; }
+            set
+            {
+                _selectedLeague = value;
+            }
+        }
+
         public int ItemLevel { get; set; } = 84;
 
         public int ItemCost { get; set; } = 0;
@@ -94,7 +116,8 @@ namespace PoeCrafting.UI.Controls
             ItemLevel = ItemLevel,
             SelectedBase = SelectedBase,
             SelectedSubtype = SelectedSubtype,
-            ItemCost = ItemCost
+            ItemCost = ItemCost,
+            League = SelectedLeague
         };
 
         public bool CanComplete()
@@ -110,6 +133,8 @@ namespace PoeCrafting.UI.Controls
         {
             _fetch = fetch;
             Subtypes = fetch.FetchSubtypes().OrderBy(x => x).ToList();
+            SelectedLeague = Leagues[0];
+            OnPropertyChanged(nameof(SelectedLeague));
             InitializeComponent();
             DataContext = this;
         }

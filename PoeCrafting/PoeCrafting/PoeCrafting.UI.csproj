@@ -135,9 +135,6 @@
     </Compile>
     <Compile Include="Models\ConditionAffixControlModel.cs" />
     <Compile Include="Models\CraftingTreeViewModel.cs" />
-    <Compile Include="HomeWindow.xaml.cs">
-      <DependentUpon>HomeWindow.xaml</DependentUpon>
-    </Compile>
     <Page Include="Controls\SimulationControls\BaseSelectionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -206,10 +203,6 @@
       <DependentUpon>TestbedWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="HomeWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\Resources.Designer.cs">

@@ -9,6 +9,7 @@ namespace PoeCrafting.Entities
         public string Name { get; set; }
         public string Subtype { get; set; }
         public string Type { get; set; }
+        public int Level { get; set; }
 
         public Dictionary<string, double> Properties = new Dictionary<string, double>();
 

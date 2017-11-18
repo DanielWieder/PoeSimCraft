@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PoeCrafting.Domain.Condition;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Constants;
 using PoeCrafting.UI.Annotations;
 using PoeCrafting.UI.Models;
 
@@ -110,7 +111,7 @@ namespace PoeCrafting.UI.Controls
                 builder.Append(Environment.NewLine);
                 builder.Append("Showing the first 50 items");
             }
-
+            AffixValueCalculator calculator = new AffixValueCalculator();
             foreach (var item in list.Take(50))
             {
                 builder.Append(Environment.NewLine);
@@ -121,27 +122,31 @@ namespace PoeCrafting.UI.Controls
                 builder.Append(Environment.NewLine);
 
 
-                if (item.ItemBase.Properties.ContainsKey("Energy Shield") && item.ItemBase.Properties["Energy Shield"] > 0)
+                if (item.ItemBase.Properties.ContainsKey(ItemProperties.EnergyShield) && item.ItemBase.Properties[ItemProperties.EnergyShield] > 0)
                 {
-                    var totalEs = AffixValueCalculator.GetAffixValues("Total Energy Shield", item, AffixType.Meta, StatValueType.Flat);
-                    var maxEs = AffixValueCalculator.GetAffixValues("Total Energy Shield", item, AffixType.Meta, StatValueType.Max);
+                    var totalEs = calculator.GetAffixValues(AffixNames.TotalEnergyShield, item, AffixType.Meta, StatValueType.Flat);
                     builder.Append("Total ES: " + totalEs[0]);
                     builder.Append(Environment.NewLine);
                 }
 
-                if (item.ItemBase.Properties.ContainsKey("Armour") && item.ItemBase.Properties["Armour"] > 0)
+                if (item.ItemBase.Properties.ContainsKey(ItemProperties.Armour) && item.ItemBase.Properties[ItemProperties.Armour] > 0)
                 {
-                    var totalArmour = AffixValueCalculator.GetAffixValues("Total Armour", item, AffixType.Meta, StatValueType.Flat);
-                    var maxArmour = AffixValueCalculator.GetAffixValues("Total Armour", item, AffixType.Meta, StatValueType.Max);
+                    var totalArmour = calculator.GetAffixValues(AffixNames.TotalArmor, item, AffixType.Meta, StatValueType.Flat);
                     builder.Append("Total Armour: " + totalArmour[0]);
                     builder.Append(Environment.NewLine);
                 }
 
-                if (item.ItemBase.Properties.ContainsKey("Evasion") && item.ItemBase.Properties["Evasion"] > 0)
+                if (item.ItemBase.Properties.ContainsKey(ItemProperties.Evasion) && item.ItemBase.Properties[ItemProperties.Evasion] > 0)
                 {
-                    var totalEvasion = AffixValueCalculator.GetAffixValues("Total Evasion", item, AffixType.Meta, StatValueType.Flat);
-                    var maxEvasion = AffixValueCalculator.GetAffixValues("Total Evasion", item, AffixType.Meta, StatValueType.Max);
+                    var totalEvasion = calculator.GetAffixValues(AffixNames.TotalEvasion, item, AffixType.Meta, StatValueType.Flat);
                     builder.Append("Total Evasion: " + totalEvasion[0]);
+                    builder.Append(Environment.NewLine);
+                }
+
+                if (item.ItemBase.Properties.ContainsKey(ItemProperties.DPS))
+                {
+                    var totalEvasion = calculator.GetAffixValues(AffixNames.TotalDps, item, AffixType.Meta, StatValueType.Flat);
+                    builder.Append("Total Damage: " + totalEvasion[0]);
                     builder.Append(Environment.NewLine);
                 }
 
@@ -149,20 +154,18 @@ namespace PoeCrafting.UI.Controls
                 builder.Append(Environment.NewLine);
                 foreach (var prefix in item.Prefixes)
                 {
-                    builder.Append("\t");
-                    builder.Append(AddSpaces(prefix.Affix.ModType) + ": " + prefix.Value1);
-                    builder.Append(Environment.NewLine);
+                    WriteAffix(prefix, builder);
                 }
+                builder.Append(Environment.NewLine);
 
                 builder.Append("Suffixes");
                 builder.Append(Environment.NewLine);
                 foreach (var suffix in item.Suffixes)
                 {
-                    builder.Append("\t");
-                    builder.Append(AddSpaces(suffix.Affix.ModType) + ": " + suffix.Value1);
-                    builder.Append(Environment.NewLine);
+                    WriteAffix(suffix, builder);
                 }
 
+                builder.Append(Environment.NewLine);
                 if (item.Corrupted)
                 {
                     builder.Append("\t");
@@ -176,9 +179,20 @@ namespace PoeCrafting.UI.Controls
             OnPropertyChanged(nameof(ItemResults));
         }
 
-        private static string AddSpaces(string x)
+        private static void WriteAffix(Stat prefix, StringBuilder builder)
         {
-            return string.Concat(x.Select(y => Char.IsUpper(y) ? " " + y : y.ToString())).TrimStart(' ');
+            if (prefix.Affix.StatName3 != null)
+            {
+                builder.AppendLine($"\t {prefix.Affix.ModType} : {prefix.Value1}, {prefix.Value2}, {prefix.Value3}");
+            }
+            else if (prefix.Affix.StatName2 != null)
+            {
+                builder.AppendLine($"\t {prefix.Affix.ModType} : {prefix.Value1}, {prefix.Value2}");
+            }
+            else
+            {
+                builder.AppendLine("\t" + prefix.Affix.ModType + ": " + prefix.Value1);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

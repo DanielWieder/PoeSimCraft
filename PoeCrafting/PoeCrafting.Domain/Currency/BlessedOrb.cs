@@ -6,6 +6,7 @@ using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
 using PoeCrafting.Domain.Currency;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Domain.Currency
 {
@@ -13,7 +14,7 @@ namespace PoeCrafting.Domain.Currency
     {
         private IRandom Random { get; }
 
-        public string Name => "Blessed Orb";
+        public string Name => CurrencyNames.BlessedOrb;
         public double Value { get; set; }
 
         public BlessedOrb(IRandom random)

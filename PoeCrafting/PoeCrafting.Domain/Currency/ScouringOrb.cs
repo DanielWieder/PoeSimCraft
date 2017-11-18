@@ -6,12 +6,13 @@ using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
 using PoeCrafting.Domain.Currency;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Domain.Currency
 {
     public class ScouringOrb : ICurrency
     {
-        public string Name => Constants.ScouringOrb;
+        public string Name => CurrencyNames.ScouringOrb;
         public double Value { get; set; }
 
         public ScouringOrb(IRandom random)

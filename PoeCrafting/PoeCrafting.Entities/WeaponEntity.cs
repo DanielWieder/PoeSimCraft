@@ -6,19 +6,15 @@ using System.Threading.Tasks;
 
 namespace PoeCrafting.Entities
 {
-    public class WeaponEntity
+    public class WeaponEntity : ItemBase
     {
-        public int Level;
-        public int Int;
-        public int Dex;
-        public int Str;
-        public int MinDamage;
-        public int MaxDamage;
-        public double APS;
-        public double CritChance;
-        public double DPS;
-        public string Name { get; set; }
-        public string Subtype { get; set; }
-        public string Type { get; set; }
+        public int Int { get; set; }
+        public int Dex { get; set; }
+        public int Str { get; set; }
+        public int MinDamage { get; set; }
+        public int MaxDamage { get; set; }
+        public double APS { get; set; }
+        public double Crit { get; set; }
+        public double DPS { get; set; }
     }
 }

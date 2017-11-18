@@ -11,7 +11,8 @@ namespace PoeCrafting.Domain.Condition
     {
         public static ConditionResolution ResolveCondition(ConditionAffix affix, Equipment item, AffixType type, StatValueType valueType)
         {
-            var value = AffixValueCalculator.GetAffixValues(affix.ModType, item, type, valueType);
+            AffixValueCalculator calculator = new AffixValueCalculator();
+            var value = calculator.GetAffixValues(affix.ModType, item, type, valueType);
 
             return new ConditionResolution()
             {

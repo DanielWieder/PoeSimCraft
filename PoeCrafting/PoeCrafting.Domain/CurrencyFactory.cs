@@ -13,7 +13,7 @@ namespace PoeCrafting.Domain
     public class CurrencyFactory
     {
         public readonly List<ICurrency> Currency;
-
+        private readonly IFetchCurrencyValues _currencyFetch;
         public CurrencyFactory(
             IFetchCurrencyValues currencyValueFetch,
             [Named("Transmutation")] ICurrency transmutation,
@@ -48,8 +48,13 @@ namespace PoeCrafting.Domain
                 vaal
             };
 
-            currencyValueFetch.League = "Standard";
-            var data = currencyValueFetch.Execute();
+            _currencyFetch = currencyValueFetch;
+        }
+
+        public void UpdateValues(string leagueName)
+        {
+            _currencyFetch.League = leagueName;
+            var data = _currencyFetch.Execute();
             foreach (var currency in Currency)
             {
                 if (data.ContainsKey(currency.Name))

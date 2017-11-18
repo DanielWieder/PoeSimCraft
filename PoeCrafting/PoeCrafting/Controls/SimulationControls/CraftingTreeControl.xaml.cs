@@ -58,6 +58,7 @@ namespace PoeCrafting.UI.Controls
                 OnPropertyChanged(nameof(Condition));
                 OnPropertyChanged(nameof(Tree));
                 _baseInfo = baseInfo;
+                CraftingTree.SetLeague(baseInfo.League);
             }
         }
 

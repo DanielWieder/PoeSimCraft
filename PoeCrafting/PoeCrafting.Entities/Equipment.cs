@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Entities
 {
@@ -14,8 +15,8 @@ namespace PoeCrafting.Entities
         public List<Affix> PossibleSuffixes { get; set; }
 
         public List<Stat> Stats { get; set; } = new List<Stat>();
-        public List<Stat> Prefixes => Stats.Where(x => x.Affix.Type == Constants.AffixTypePrefix).ToList();
-        public List<Stat> Suffixes => Stats.Where(x => x.Affix.Type == Constants.AffixTypeSuffix).ToList();
+        public List<Stat> Prefixes => Stats.Where(x => x.Affix.Type == TypeInfo.AffixTypePrefix).ToList();
+        public List<Stat> Suffixes => Stats.Where(x => x.Affix.Type == TypeInfo.AffixTypeSuffix).ToList();
 
         public Stat Implicit { get; set; } = null;
 

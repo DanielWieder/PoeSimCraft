@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Constants;
 
 
 namespace PoeCrafting.Domain.Currency
@@ -28,12 +29,12 @@ namespace PoeCrafting.Domain.Currency
                 return false;
             }
 
-            if (Affix.Type == Constants.AffixTypePrefix)
+            if (Affix.Type == TypeInfo.AffixTypePrefix)
             {
                 return AddAffix(item, Random, Affix, item.PossiblePrefixes, item.Prefixes);
             }
 
-            if (Affix.Type == Constants.AffixTypeSuffix)
+            if (Affix.Type == TypeInfo.AffixTypeSuffix)
             {
                 return AddAffix(item, Random, Affix, item.PossiblePrefixes, item.Suffixes);
             }
@@ -60,12 +61,12 @@ namespace PoeCrafting.Domain.Currency
 
         public bool IsWarning(ItemStatus status)
         {
-            if (Affix.Type.Contains(Constants.AffixTypePrefix))
+            if (Affix.Type.Contains(TypeInfo.AffixTypePrefix))
             {
                 return status.Rarity == EquipmentRarity.Magic && status.MaxPrefixes == 1 ||
                     status.Rarity == EquipmentRarity.Rare && status.MaxPrefixes == 3;
             }
-            if (Affix.Type.Contains(Constants.AffixTypeSuffix))
+            if (Affix.Type.Contains(TypeInfo.AffixTypeSuffix))
             {
                 return status.Rarity == EquipmentRarity.Magic && status.MaxSuffixes == 1 ||
                     status.Rarity == EquipmentRarity.Rare && status.MaxSuffixes == 3;
@@ -80,12 +81,12 @@ namespace PoeCrafting.Domain.Currency
             {
                 return true;
             }
-            if (Affix != null && Affix.Type.Contains(Constants.AffixTypePrefix))
+            if (Affix != null && Affix.Type.Contains(TypeInfo.AffixTypePrefix))
             {
                 return status.Rarity == EquipmentRarity.Magic && status.MinPrefixes == 1 ||
                     status.Rarity == EquipmentRarity.Rare && status.MinPrefixes == 3;
             }
-            if (Affix != null && Affix.Type.Contains(Constants.AffixTypeSuffix))
+            if (Affix != null && Affix.Type.Contains(TypeInfo.AffixTypeSuffix))
             {
                 return status.Rarity == EquipmentRarity.Magic && status.MinSuffixes == 1 ||
                     status.Rarity == EquipmentRarity.Rare && status.MinSuffixes == 3;
@@ -99,12 +100,12 @@ namespace PoeCrafting.Domain.Currency
             if (IsError(status))
                 return status;
 
-            if (Affix.Type.Contains(Constants.AffixTypePrefix))
+            if (Affix.Type.Contains(TypeInfo.AffixTypePrefix))
             {
                 status.MinPrefixes = Math.Min(status.MinPrefixes + 1, 3);
                 status.MaxPrefixes = Math.Max(status.MinPrefixes, status.MaxPrefixes);
             }
-            if (Affix.Type.Contains(Constants.AffixTypeSuffix))
+            if (Affix.Type.Contains(TypeInfo.AffixTypeSuffix))
             {
                 status.MinSuffixes = Math.Min(status.MinSuffixes + 1, 3);
                 status.MaxSuffixes = Math.Max(status.MinSuffixes, status.MaxSuffixes);

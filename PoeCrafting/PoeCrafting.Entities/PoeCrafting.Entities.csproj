@@ -41,17 +41,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessoryEntity.cs" />
+    <Compile Include="Constants\AffixGroupings.cs" />
+    <Compile Include="Constants\AffixNames.cs" />
     <Compile Include="AffixType.cs" />
     <Compile Include="ArmourEntity.cs" />
     <Compile Include="ConditionAffix.cs" />
+    <Compile Include="ConditionContainer.cs" />
     <Compile Include="ConditionResolution.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Constants\CurrencyNames.cs" />
+    <Compile Include="Constants\TypeInfo.cs" />
+    <Compile Include="Constants\ItemProperties.cs" />
     <Compile Include="CraftingStepStatus.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="EquipmentRarity.cs" />
     <Compile Include="EquipmentType.cs" />
     <Compile Include="ItemBase.cs" />
     <Compile Include="Affix.cs" />
+    <Compile Include="ItemProperty.cs" />
     <Compile Include="ITreeNavigation.cs" />
     <Compile Include="Stat.cs" />
     <Compile Include="SubconditionAggregateType.cs" />

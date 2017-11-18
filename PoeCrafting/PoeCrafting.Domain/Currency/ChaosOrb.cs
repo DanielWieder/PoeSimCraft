@@ -2,6 +2,7 @@
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Domain.Currency
 {
@@ -9,7 +10,7 @@ namespace PoeCrafting.Domain.Currency
     {
         private IRandom Random { get; }
 
-        public string Name => "Chaos Orb";
+        public string Name => CurrencyNames.ChaosOrb;
         public double Value { get; set; }
 
         public ChaosOrb(IRandom random)

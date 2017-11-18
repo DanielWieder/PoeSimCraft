@@ -19,6 +19,7 @@ namespace PoeCrafting.Data
                                     a.Armour,
                                     a.Evasion,
                                     a.EnergyShield,
+                                    a.Block,
                                     a.Str,
                                     a.Dex,
                                     a.Int,
@@ -44,6 +45,7 @@ namespace PoeCrafting.Data
             item.Properties.Add("Str", entity.Str);
             item.Properties.Add("Dex", entity.Dex);
             item.Properties.Add("Int", entity.Int);
+            item.Properties.Add("Block", entity.Block);
 
             return item;
         }

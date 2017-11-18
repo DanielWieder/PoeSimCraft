@@ -1,6 +1,7 @@
 ﻿using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Domain.Currency
 {
@@ -8,7 +9,7 @@ namespace PoeCrafting.Domain.Currency
     {
         private ICurrency Chaos { get; }
 
-        public string Name => "Orb of Alchemy";
+        public string Name => CurrencyNames.AlchemyOrb;
         public double Value { get; set; }
 
 

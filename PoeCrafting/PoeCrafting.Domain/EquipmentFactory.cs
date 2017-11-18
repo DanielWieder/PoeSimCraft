@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using PoeCrafting.Data;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Constants;
 
 
 namespace PoeCrafting.Domain
@@ -48,17 +49,17 @@ namespace PoeCrafting.Domain
             _fetchTypeByItemName.Name = baseItemName;
             var type = _fetchTypeByItemName.Execute();
 
-            if (type.Contains(Constants.ItemTypeArmour))
+            if (type.Contains(TypeInfo.ItemTypeArmour))
             {
                 _fetchArmorByItemName.Name = baseItemName;
                 _baseItem = _fetchArmorByItemName.Execute();
             }
-            else if (type.Contains(Constants.ItemTypeJewelry))
+            else if (type.Contains(TypeInfo.ItemTypeJewelry))
             {
                 _fetchAccessoriesByName.Name = baseItemName;
                 _baseItem = _fetchAccessoriesByName.Execute();
             }
-            else if (type.Contains(Constants.ItemTypeWeapon))
+            else if (type.Contains(TypeInfo.ItemTypeWeapon))
             {
                 _fetchWeaponsByName.Name = baseItemName;
                 _baseItem = _fetchWeaponsByName.Execute();
@@ -92,10 +93,10 @@ namespace PoeCrafting.Domain
             }
 
             affixes = affixes.Where(x => x.ILvl <= itemLevel)
-                             .Where(x => x.Type == Constants.AffixTypeMeta || ((x.Type == Constants.AffixTypePrefix || x.Type == Constants.AffixTypeSuffix) && x.Weight > 0))
+                             .Where(x => x.Type == TypeInfo.AffixTypeMeta || ((x.Type == TypeInfo.AffixTypePrefix || x.Type == TypeInfo.AffixTypeSuffix) && x.Weight > 0))
                              .ToList();
 
-            var rollableAffixes = affixes.Where(x => x.Type == Constants.AffixTypePrefix || x.Type == Constants.AffixTypeSuffix).ToList();
+            var rollableAffixes = affixes.Where(x => x.Type == TypeInfo.AffixTypePrefix || x.Type == TypeInfo.AffixTypeSuffix).ToList();
 
             var modTypeWeights = rollableAffixes
                 .GroupBy(x => x.ModType)
@@ -107,8 +108,8 @@ namespace PoeCrafting.Domain
             }
 
             _affixes = affixes.ToList();
-            _prefixes = affixes.Where(x => x.Type == Constants.AffixTypePrefix).ToList();
-            _suffixes = affixes.Where(x => x.Type == Constants.AffixTypeSuffix).ToList();
+            _prefixes = affixes.Where(x => x.Type == TypeInfo.AffixTypePrefix).ToList();
+            _suffixes = affixes.Where(x => x.Type == TypeInfo.AffixTypeSuffix).ToList();
 
             _suffixWeight = this._suffixes.Sum(x => x.Weight);
             _prefixWeight = this._prefixes.Sum(x => x.Weight);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PoeCrafting.Data;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Domain
 {
@@ -41,7 +42,7 @@ namespace PoeCrafting.Domain
 
             if (item.Suffixes.Count < maxAffixCount/2)
             {
-                pool.AddRange(possibleAffixes.Where(x => x.Type == Constants.AffixTypeSuffix));
+                pool.AddRange(possibleAffixes.Where(x => x.Type == TypeInfo.AffixTypeSuffix));
                 totalWeight -= item.Suffixes.Sum(x => x.Affix.ModTypeWeight);
             }
             else
@@ -51,7 +52,7 @@ namespace PoeCrafting.Domain
 
             if (item.Prefixes.Count < maxAffixCount/2)
             {
-                pool.AddRange(possibleAffixes.Where(x => x.Type == Constants.AffixTypePrefix));
+                pool.AddRange(possibleAffixes.Where(x => x.Type == TypeInfo.AffixTypePrefix));
                 totalWeight -= item.Prefixes.Sum(x => x.Affix.ModTypeWeight);
             }
             else
@@ -72,7 +73,7 @@ namespace PoeCrafting.Domain
 
         public static void SetImplicit(IRandom random, Equipment item)
         {
-            var pool = item.PossibleAffixes.Where(x => x.Type == "corrupted").ToList();
+            var pool = item.PossibleAffixes.Where(x => x.Type == TypeInfo.AffixTypeCorrupted).ToList();
             var affix = SelectAffixFromPool(random, new List<Stat>(), pool, item.TotalWeight);
             var stat = AffixToStat(random, affix);
 

@@ -14,24 +14,26 @@ INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
         FROM Affix
         WHERE [Group] ='Total Energy Shield'
     ),
-	t.SpawnTagId,
+	astm.SpawnTagId, 
 	0
-FROM [AffixSpawnTagMap] t
-JOIN Affix i ON t.AffixId = i.AffixId
-WHERE i.[Group] ='Increased Energy Shield'
+FROM [AffixSpawnTagMap] astm
+JOIN SpawnTag t On astm.SpawnTagId = t.SpawnTagId
+WHERE t.Name LIKE '%Int%' AND Name != 'Not Int'
+
 
 INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
 	SELECT DISTINCT 
 	(
         SELECT AffixId
         FROM Affix
-        WHERE [Group] ='TotalArmour'
+        WHERE [Group] ='Total Armour'
     ),
-	t.SpawnTagId, 
+	astm.SpawnTagId, 
 	0
-FROM [AffixSpawnTagMap] t
-JOIN Affix i ON t.AffixId = i.AffixId
-WHERE i.[Group] ='Increased Physical Damage Reduction Rating'
+FROM [AffixSpawnTagMap] astm
+JOIN SpawnTag t On astm.SpawnTagId = t.SpawnTagId
+WHERE t.Name LIKE '%Str%' AND Name != 'Not Str'
+
 
 INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
 	SELECT DISTINCT 
@@ -40,24 +42,11 @@ INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
         FROM Affix
         WHERE [Group] ='Total Evasion'
     ),
-	t.SpawnTagId, 
+	astm.SpawnTagId, 
 	0
-FROM [AffixSpawnTagMap] t
-JOIN Affix i ON t.AffixId = i.AffixId
-WHERE i.[Group] ='Increased Evasion Rating'
-
-INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
-	SELECT DISTINCT 
-	(
-        SELECT AffixId
-        FROM Affix
-        WHERE [Group] ='Evasion'
-    ),
-	t.SpawnTagId, 
-	0
-FROM [AffixSpawnTagMap] t
-JOIN Affix i ON t.AffixId = i.AffixId
-WHERE i.[Group] ='Increased Evasion Rating'
+FROM [AffixSpawnTagMap] astm
+JOIN SpawnTag t On astm.SpawnTagId = t.SpawnTagId
+WHERE t.Name LIKE '%Dex%' AND Name != 'Not Dex'
 
 INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
 	SELECT DISTINCT 
@@ -103,9 +92,9 @@ FROM Item i
 
 -------------------------------------- Open Prefixes/Suffixes --------------------------------------
 
-INSERT INTO Affix (Domain, GenerationType, [Name], ModName, [Group], StatMin1, StatMax1)
-VALUES  ('Item','Meta', '', 'Open Prefix', 'Open Prefix', 1, 3),
-        ('Item','Meta', '', 'Open Prefix', 'Open Suffix', 1, 3)
+INSERT INTO Affix (Domain, GenerationType, [Name], ModName, [Group], ILvl, StatMin1, StatMax1)
+VALUES  ('Item','Meta', '', 'Open Prefix', 'Open Prefix', 1, 1, 3),
+        ('Item','Meta', '', 'Open Prefix', 'Open Suffix', 1, 1, 3)
 
 INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
 VALUES(
@@ -138,3 +127,54 @@ VALUES(
 )
 
 
+-------------------------------------- Total DPS --------------------------------------
+
+INSERT INTO Affix (Domain, GenerationType, [Name], ModName, [Group], Ilvl)
+VALUES  ('Item','Meta', '', 'Total DPS', 'Total DPS', 1),
+		('Item','Meta', '', 'Total Elemental DPS', 'Total Elemental DPS', 1),
+		('Item','Meta', '', 'Total Physical DPS', 'Total Physical DPS', 1)
+
+INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
+VALUES(
+	(
+        SELECT AffixId
+        FROM Affix
+        WHERE [Group] ='Total DPS'
+    ),
+	(
+		SELECT SpawnTagId
+		FROM SpawnTag
+		WHERE [Name] ='Weapon'
+	), 
+	0
+)
+
+INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
+VALUES(
+	(
+        SELECT AffixId
+        FROM Affix
+        WHERE [Group] ='Total Elemental DPS'
+    ),
+	(
+		SELECT SpawnTagId
+		FROM SpawnTag
+		WHERE [Name] ='Weapon'
+	), 
+	0
+)
+
+INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
+VALUES(
+	(
+        SELECT AffixId
+        FROM Affix
+        WHERE [Group] ='Total Physical DPS'
+    ),
+	(
+		SELECT SpawnTagId
+		FROM SpawnTag
+		WHERE [Name] ='Weapon'
+	), 
+	0
+)

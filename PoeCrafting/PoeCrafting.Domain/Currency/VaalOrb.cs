@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Domain.Currency
 {
@@ -11,7 +12,7 @@ namespace PoeCrafting.Domain.Currency
         private IRandom Random { get; }
         private ICurrency Chaos { get; }
 
-        public string Name => "Vaal Orb";
+        public string Name => CurrencyNames.VaalOrb;
         public double Value { get; set; }
 
         public VaalOrb(IRandom random)
