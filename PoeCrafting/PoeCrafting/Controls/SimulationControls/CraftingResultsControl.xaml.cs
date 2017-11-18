@@ -121,33 +121,27 @@ namespace PoeCrafting.UI.Controls
                 builder.Append(Environment.NewLine);
 
 
-                if (item.ItemBase.Properties.ContainsKey("EnergyShield") && item.ItemBase.Properties["EnergyShield"] > 0)
+                if (item.ItemBase.Properties.ContainsKey("Energy Shield") && item.ItemBase.Properties["Energy Shield"] > 0)
                 {
-                    var totalEs = AffixValueCalculator.GetAffixValues("TotalEnergyShield", item, AffixType.Meta, StatValueType.Flat);
-                    var maxEs = AffixValueCalculator.GetAffixValues("TotalEnergyShield", item, AffixType.Meta, StatValueType.Max);
+                    var totalEs = AffixValueCalculator.GetAffixValues("Total Energy Shield", item, AffixType.Meta, StatValueType.Flat);
+                    var maxEs = AffixValueCalculator.GetAffixValues("Total Energy Shield", item, AffixType.Meta, StatValueType.Max);
                     builder.Append("Total ES: " + totalEs[0]);
-                    builder.Append(Environment.NewLine);
-                    builder.Append("Max ES: " + maxEs[0]);
                     builder.Append(Environment.NewLine);
                 }
 
                 if (item.ItemBase.Properties.ContainsKey("Armour") && item.ItemBase.Properties["Armour"] > 0)
                 {
-                    var totalArmour = AffixValueCalculator.GetAffixValues("TotalArmour", item, AffixType.Meta, StatValueType.Flat);
-                    var maxArmour = AffixValueCalculator.GetAffixValues("TotalArmour", item, AffixType.Meta, StatValueType.Max);
+                    var totalArmour = AffixValueCalculator.GetAffixValues("Total Armour", item, AffixType.Meta, StatValueType.Flat);
+                    var maxArmour = AffixValueCalculator.GetAffixValues("Total Armour", item, AffixType.Meta, StatValueType.Max);
                     builder.Append("Total Armour: " + totalArmour[0]);
-                    builder.Append(Environment.NewLine);
-                    builder.Append("Max Armour: " + maxArmour[0]);
                     builder.Append(Environment.NewLine);
                 }
 
                 if (item.ItemBase.Properties.ContainsKey("Evasion") && item.ItemBase.Properties["Evasion"] > 0)
                 {
-                    var totalEvasion = AffixValueCalculator.GetAffixValues("TotalEvasion", item, AffixType.Meta, StatValueType.Flat);
-                    var maxEvasion = AffixValueCalculator.GetAffixValues("TotalEvasion", item, AffixType.Meta, StatValueType.Max);
+                    var totalEvasion = AffixValueCalculator.GetAffixValues("Total Evasion", item, AffixType.Meta, StatValueType.Flat);
+                    var maxEvasion = AffixValueCalculator.GetAffixValues("Total Evasion", item, AffixType.Meta, StatValueType.Max);
                     builder.Append("Total Evasion: " + totalEvasion[0]);
-                    builder.Append(Environment.NewLine);
-                    builder.Append("Max Evasion: " + maxEvasion[0]);
                     builder.Append(Environment.NewLine);
                 }
 

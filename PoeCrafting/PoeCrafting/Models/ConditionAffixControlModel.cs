@@ -41,7 +41,7 @@ namespace PoeCrafting.UI.Models
                                                   (SecondAffix == null || x.ModType != SecondAffix) &&
                                                   (ThirdAffix == null || x.ModType != ThirdAffix)).ToList();
 
-                var matching = unique.Where(x => x.Type == AffixType.ToString().ToLower()).ToList();
+                var matching = unique.Where(x => x.Type == AffixType.ToString()).ToList();
 
                 var mods = matching.Select(x => x.ModType).ToList();
 

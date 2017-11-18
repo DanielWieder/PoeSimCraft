@@ -41,7 +41,7 @@ namespace PoeCrafting.Domain
 
             if (item.Suffixes.Count < maxAffixCount/2)
             {
-                pool.AddRange(possibleAffixes.Where(x => x.Type == "suffix"));
+                pool.AddRange(possibleAffixes.Where(x => x.Type == Constants.AffixTypeSuffix));
                 totalWeight -= item.Suffixes.Sum(x => x.Affix.ModTypeWeight);
             }
             else
@@ -51,7 +51,7 @@ namespace PoeCrafting.Domain
 
             if (item.Prefixes.Count < maxAffixCount/2)
             {
-                pool.AddRange(possibleAffixes.Where(x => x.Type == "prefix"));
+                pool.AddRange(possibleAffixes.Where(x => x.Type == Constants.AffixTypePrefix));
                 totalWeight -= item.Prefixes.Sum(x => x.Affix.ModTypeWeight);
             }
             else

@@ -14,8 +14,8 @@ namespace PoeCrafting.Entities
         public List<Affix> PossibleSuffixes { get; set; }
 
         public List<Stat> Stats { get; set; } = new List<Stat>();
-        public List<Stat> Prefixes => Stats.Where(x => x.Affix.Type == "prefix").ToList();
-        public List<Stat> Suffixes => Stats.Where(x => x.Affix.Type == "suffix").ToList();
+        public List<Stat> Prefixes => Stats.Where(x => x.Affix.Type == Constants.AffixTypePrefix).ToList();
+        public List<Stat> Suffixes => Stats.Where(x => x.Affix.Type == Constants.AffixTypeSuffix).ToList();
 
         public Stat Implicit { get; set; } = null;
 

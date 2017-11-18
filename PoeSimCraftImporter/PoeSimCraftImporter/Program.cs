@@ -24,6 +24,11 @@ namespace PoeSimCraftImporter
 
             ImportModData modImport = new ImportModData();
             modImport.Execute();
+
+            var file = File.ReadAllText("Input/CustomScripts.sql");
+            DbCommand command = new DbCommand();
+            command.Execute(file);
+            command.Cleanup();
         }
 
         private static void WipeData()
@@ -38,3 +43,6 @@ namespace PoeSimCraftImporter
     }
 
 }
+
+
+

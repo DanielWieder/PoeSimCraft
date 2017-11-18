@@ -58,7 +58,7 @@ namespace PoeCrafting.Domain.Crafting
 
             IterateSteps(action, CraftingSteps);
 
-            var totalScourCost = scourCount * _factory.Currency.First(x => x.Name == "Orb of Scouring").Value;
+            var totalScourCost = scourCount * _factory.Currency.First(x => x.Name == Constants.ScouringOrb).Value;
             var totalBaseCost = baseItemCost * baseItemCount;
 
             return totalCraftingCost + totalScourCost + totalBaseCost;
@@ -66,7 +66,7 @@ namespace PoeCrafting.Domain.Crafting
 
         public double GetScourCost()
         {
-            return _factory.Currency.First(x => x.Name == "Orb of Scouring").Value;
+            return _factory.Currency.First(x => x.Name == Constants.ScouringOrb).Value;
         }
 
         public double ClearCurrencySpent()

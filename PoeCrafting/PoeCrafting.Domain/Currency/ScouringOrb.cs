@@ -11,7 +11,7 @@ namespace PoeCrafting.Domain.Currency
 {
     public class ScouringOrb : ICurrency
     {
-        public string Name => "Orb of Scouring";
+        public string Name => Constants.ScouringOrb;
         public double Value { get; set; }
 
         public ScouringOrb(IRandom random)

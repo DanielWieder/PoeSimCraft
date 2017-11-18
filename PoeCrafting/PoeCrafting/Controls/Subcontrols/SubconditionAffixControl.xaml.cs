@@ -102,15 +102,15 @@ namespace PoeCrafting.UI.Controls
                     return;
                 }
 
-                _affixName = AddSpaces(value);
+                _affixName = value;
 
                 OnPropertyChanged(nameof(Affix));
 
-                var affix = _affixes.First(x => x.ModType == RemoveSpaces(AffixName));
+                var affix = _affixes.First(x => x.ModType == AffixName);
 
-                FirstStatName = CapitalizeUnderscoreDelimited(affix.StatName1);
-                SecondStatName = CapitalizeUnderscoreDelimited(affix.StatName2);
-                ThirdStatName = CapitalizeUnderscoreDelimited(affix.StatName3);
+                FirstStatName = affix.StatName1;
+                SecondStatName = affix.StatName2;
+                ThirdStatName = affix.StatName3;
 
                 OnPropertyChanged(nameof(AffixName));
                 OnPropertyChanged(nameof(FirstStatName));
@@ -210,7 +210,7 @@ namespace PoeCrafting.UI.Controls
 
             var condition = new ConditionAffix
             {
-                ModType = RemoveSpaces(_affixName),
+                ModType = _affixName,
                 Min1 = FirstStatMin,
                 Max1 = FirstStatMax,
                 Min2 = SecondStatMin,
@@ -224,7 +224,7 @@ namespace PoeCrafting.UI.Controls
 
         private void UpdateModMinMax()
         {
-            var modAffixes = _affixes.Where(x => x.ModType == RemoveSpaces(AffixName)).OrderBy(x => x.Tier);
+            var modAffixes = _affixes.Where(x => x.ModType == AffixName).OrderBy(x => x.Tier);
 
             var lastTier = modAffixes.Last();
             var firstTier = modAffixes.First();
@@ -241,7 +241,7 @@ namespace PoeCrafting.UI.Controls
             }
             else if (_affixType == AffixType.Meta)
             {
-                var max = AffixValueCalculator.GetModMax(RemoveSpaces(AffixName), _itemBase, _affixes, AffixType.Meta);
+                var max = AffixValueCalculator.GetModMax(AffixName, _itemBase, _affixes, AffixType.Meta);
 
                 _statOneMin = 0;
                 _statTwoMin = null;
@@ -310,46 +310,15 @@ namespace PoeCrafting.UI.Controls
             //                                           (SecondStatName == null || x.ModType != SecondStatName) &&
             //                                           (ThirdStatName == null || x.ModType != ThirdStatName)).ToList();
 
-            var matching = _affixes.Where(x => x.Type == _affixType.ToString().ToLower()).ToList();
+            var matching = _affixes.Where(x => x.Type == _affixType.ToString()).ToList();
 
             var mods = matching.Select(x => x.ModType).ToList();
 
             var distinct =
-                mods.Distinct()
-                    .Select(AddSpaces)
-                    .ToList();
+                mods.Distinct().ToList();
 
             distinct.Insert(0, string.Empty);
             return distinct.ToList();
-        }
-
-        private static string CapitalizeUnderscoreDelimited(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return string.Empty;
-            }
-
-            string pattern = "_\\w";
-            Regex regex = new Regex(pattern);
-            MatchEvaluator evaluator = x => x.Value.ToUpper().Replace("_", " ");
-            text = regex.Replace(text, evaluator);
-            return char.ToUpper(text[0]) + text.Substring(1);
-        }
-
-        private static string AddSpaces(string x)
-        {
-            if (string.IsNullOrEmpty(x))
-            {
-                return string.Empty;
-            }
-
-            return string.Concat(x.Select(y => Char.IsUpper(y) ? " " + y : y.ToString())).TrimStart(' ');
-        }
-
-        private static string RemoveSpaces(string x)
-        {
-            return x.Replace(" ", "");
         }
 
         private Visibility BoolToVisibility(bool boolean)

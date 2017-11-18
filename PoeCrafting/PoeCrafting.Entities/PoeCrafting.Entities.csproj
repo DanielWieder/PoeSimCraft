@@ -45,6 +45,7 @@
     <Compile Include="ArmourEntity.cs" />
     <Compile Include="ConditionAffix.cs" />
     <Compile Include="ConditionResolution.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="CraftingStepStatus.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="EquipmentRarity.cs" />

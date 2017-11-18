@@ -12,42 +12,42 @@ namespace PoeCrafting.Domain.Condition
     {
         private static readonly List<string> PercentDefenseAffixNames = new List<string>
         {
-            "LocalIncreasedEvasionRatingPercent",
-            "LocalIncreasedEnergyShieldPercent",
-            "LocalIncreasedPhysicalDamageReductionRatingPercent",
-            "StrMasterArmourPercentCrafted",
-            "StrMasterEvasionPercentCrafted",
-            "LocalIncreasedArmourAndEvasion",
-            "LocalIncreasedEnergyShieldPercent",
-            "LocalIncreasedEvasionRatingPercent",
-            "LocalIncreasedArmourAndEnergyShield",
-            "StrMasterEnergyShieldPercentCrafted",
-            "LocalIncreasedEvasionAndEnergyShield",
-            "LocalIncreasedArmourEvasionEnergyShield",
-            "StrMasterArmourAndEvasionPercentCrafted",
-            "StrMasterArmourAndEnergyShieldPercentCrafted",
-            "StrMasterEvasionAndEnergyShieldPercentCrafted",
-            "LocalIncreasedPhysicalDamageReductionRatingPercent"
+            "Local Increased Evasion Rating Percent",
+            "Local Increased Energy Shield Percent",
+            "Local Increased Physical Damage Reduction Rating Percent",
+            "Str Master Armour Percent Crafted",
+            "Str Master Evasion Percent Crafted",
+            "Local Increased Armour And Evasion",
+            "Local Increased Energy Shield Percent",
+            "Local Increased Evasion Rating Percent",
+            "Local Increased Armour And Energy Shield",
+            "Str Master Energy Shield Percent Crafted",
+            "Local Increased Evasion And Energy Shield",
+            "Local Increased Armour Evasion Energy Shield",
+            "Str Master Armour And Evasion Percent Crafted",
+            "Str Master Armour And Energy Shield Percent Crafted",
+            "Str Master Evasion And Energy Shield Percent Crafted",
+            "Local Increased Physical Damage Reduction Rating Percent"
         };
 
         private static readonly List<string> HybridDefenseAffixNames = new List<string>
         {
-            "LocalIncreasedArmourAndEvasionAndStunRecovery",
-            "LocalIncreasedEnergyShieldPercentAndStunRecovery",
-            "LocalIncreasedEvasionRatingPercentAndStunRecovery",
-            "LocalIncreasedArmourAndEnergyShieldAndStunRecovery",
-            "LocalIncreasedEvasionAndEnergyShieldAndStunRecovery",
-            "LocalIncreasedArmourEvasionEnergyShieldStunRecovery",
-            "LocalIncreasedPhysicalDamageReductionRatingPercentAndStunRecovery"
+            "Local Increased Armour And Evasion And Stun Recovery",
+            "Local Increased Energy Shield Percent And Stun Recovery",
+            "Local Increased Evasion Rating Percent And Stun Recovery",
+            "Local Increased Armour And Energy Shield And Stun Recovery",
+            "Local Increased Evasion And Energy Shield And Stun Recovery",
+            "Local Increased Armour Evasion Energy Shield Stun Recovery",
+            "Local Increased Physical Damage Reduction Rating Percent And Stun Recovery"
         };
 
-        private static List<string> EnergyShieldPercentDefenseAffixNames => PercentDefenseAffixNames.Where(x => x.Contains("EnergyShield")).ToList();
+        private static List<string> EnergyShieldPercentDefenseAffixNames => PercentDefenseAffixNames.Where(x => x.Contains("Energy Shield")).ToList();
         private static List<string> EvasionPercentDefenseAffixNames => PercentDefenseAffixNames.Where(x => x.Contains("Evasion")).ToList();
-        private static List<string> ArmourPercentDefenseAffixNames => PercentDefenseAffixNames.Where(x => x.Contains("Armour") || x.Contains("PhysicalDamageReductionRating")).ToList();
+        private static List<string> ArmourPercentDefenseAffixNames => PercentDefenseAffixNames.Where(x => x.Contains("Armour") || x.Contains("Physical Damage Reduction Rating")).ToList();
 
         private static List<string> HybridEnergyShieldPercentDefenseAffixNames => HybridDefenseAffixNames.Where(x => x.Contains("EnergyShield")).ToList();
         private static List<string> HybridEvasionPercentDefenseAffixNames => HybridDefenseAffixNames.Where(x => x.Contains("Evasion")).ToList();
-        private static List<string> HybridArmourPercentDefenseAffixNames => HybridDefenseAffixNames.Where(x => x.Contains("Armour") || x.Contains("PhysicalDamageReductionRating")).ToList();
+        private static List<string> HybridArmourPercentDefenseAffixNames => HybridDefenseAffixNames.Where(x => x.Contains("Armour") || x.Contains("Physical Damage Reduction Rating")).ToList();
 
         private class ConditionContainer
         {
@@ -132,33 +132,33 @@ namespace PoeCrafting.Domain.Condition
             var prefixes = a.Affixes.Where(x => x.Type == AffixType.Prefix).ToList();
             var suffixes = a.Affixes.Where(x => x.Type == AffixType.Suffix).ToList();
 
-            if (modType.Contains("OpenPrefix"))
+            if (modType.Contains("Open Prefix"))
             {
                 return prefixes.Count > 3 ? 3 : 3 - prefixes.Count;
             }
-            if (modType.Contains("OpenSuffix"))
+            if (modType.Contains("Open Suffix"))
             {
                 return suffixes.Count > 3 ? 3 : 3 - suffixes.Count;
             }
-            if (modType == "TotalEnergyShield")
+            if (modType == "Total Energy Shield")
             {
-                return GetDefenseConditionValue(a, "EnergyShield", "LocalIncreasedEnergyShield", EnergyShieldPercentDefenseAffixNames, HybridEnergyShieldPercentDefenseAffixNames);
+                return GetDefenseConditionValue(a, "Energy Shield", "Local Increased Energy Shield", EnergyShieldPercentDefenseAffixNames, HybridEnergyShieldPercentDefenseAffixNames);
             }
-            if (modType == "TotalArmour")
+            if (modType == "Total Armour")
             {
-                return GetDefenseConditionValue(a, "Armour", "LocalIncreasedPhysicalDamageReductionRating", ArmourPercentDefenseAffixNames, HybridArmourPercentDefenseAffixNames);
+                return GetDefenseConditionValue(a, "Armour", "Local Increased Physical Damage Reduction Rating", ArmourPercentDefenseAffixNames, HybridArmourPercentDefenseAffixNames);
             }
-            if (modType == "TotalEvasion")
+            if (modType == "Total Evasion")
             {
-                return GetDefenseConditionValue(a, "Evasion", "IncreasedEvasionRating", EvasionPercentDefenseAffixNames, HybridEvasionPercentDefenseAffixNames);
+                return GetDefenseConditionValue(a, "Evasion", "Increased Evasion Rating", EvasionPercentDefenseAffixNames, HybridEvasionPercentDefenseAffixNames);
             }
-            if (modType == "TotalResistances")
+            if (modType == "Total Resistances")
             {
-                var coldRes = GetMaxOrZero(suffixes, "ColdResist");
-                var fireRes = GetMaxOrZero(suffixes, "FireResist");
-                var lightningRes = GetMaxOrZero(suffixes, "LightningResist");
-                var chaosRes = GetMaxOrZero(suffixes, "ChaosResist");
-                var allRes = GetMaxOrZero(suffixes, "AllResistances");
+                var coldRes = GetMaxOrZero(suffixes, "Cold Resist");
+                var fireRes = GetMaxOrZero(suffixes, "Fire Resist");
+                var lightningRes = GetMaxOrZero(suffixes, "Lightning Resist");
+                var chaosRes = GetMaxOrZero(suffixes, "Chaos Resist");
+                var allRes = GetMaxOrZero(suffixes, "All Resistances");
 
                 var resList = new List<int>
                 {
@@ -173,12 +173,12 @@ namespace PoeCrafting.Domain.Condition
                 resList = resList.Take(3).ToList();
                 return resList.Sum();
             }
-            if (modType == "TotalElementalResistances")
+            if (modType == "Total Elemental Resistances")
             {
-                var coldRes = GetMaxOrZero(suffixes, "ColdResist");
-                var fireRes = GetMaxOrZero(suffixes, "FireResist");
-                var lightningRes = GetMaxOrZero(suffixes, "LightningResist");
-                var allRes = GetMaxOrZero(suffixes, "AllResistances");
+                var coldRes = GetMaxOrZero(suffixes, "Cold Resist");
+                var fireRes = GetMaxOrZero(suffixes, "Fire Resist");
+                var lightningRes = GetMaxOrZero(suffixes, "Lightning Resist");
+                var allRes = GetMaxOrZero(suffixes, "All Resistances");
 
                 var resList = new List<int>
                 {

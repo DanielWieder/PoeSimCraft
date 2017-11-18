@@ -33,9 +33,6 @@ namespace PoeSimCraftImporter
                 text = text.Replace("  ", " ");
             }
 
-            // Remove all leading and trailing white space
-            text = text.Trim();
-
             // Remove white space after hyphin
             text = text.Replace("- ", "-");
 
@@ -50,6 +47,9 @@ namespace PoeSimCraftImporter
 
             text = text.Replace(" +", "+");
             text = text.Replace(" %", "%");
+
+            // Remove all leading and trailing white space
+            text = text.Trim();
 
             for (int i = 0; i < trailingUnderscoreCount; i++)
             {
