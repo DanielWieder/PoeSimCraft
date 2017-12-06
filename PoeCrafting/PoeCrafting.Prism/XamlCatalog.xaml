@@ -1,0 +1,12 @@
+﻿<modularity:ModuleCatalog xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:PoeCrafting.Prism"
+                    xmlns:modularity="clr-namespace:Prism.Modularity;assembly=Prism.Wpf"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <modularity:ModuleInfo Ref="file://MainWindowModule.dll" ModuleName="MainWindowModule" ModuleType="MainWindowModule.MainWindowModule, MainWindowModule, Version=1.0.0.0" InitializationMode="WhenAvailable">
+        <modularity:ModuleInfo.DependsOn>
+            <system:String>WorkspacesModule</system:String>
+        </modularity:ModuleInfo.DependsOn>
+    </modularity:ModuleInfo>
+    <modularity:ModuleInfo Ref="file://WorkspacesModule.dll" ModuleName="WorkspacesModule" ModuleType="WorkspacesModule.WorkspacesModule, WorkspacesModule, Version=1.0.0.0" InitializationMode="WhenAvailable"/>
+</modularity:ModuleCatalog>
