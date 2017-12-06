@@ -77,34 +77,6 @@ namespace PoeCrafting.Test
         }
 
         [TestMethod]
-        public void CraftingTreeCraft()
-        {
-            var equipment = CreateRegalia();
-
-            Mock<ICraftingSubcondition> mockCraftingCondition = new Mock<ICraftingSubcondition>();
-            mockCraftingCondition
-                .Setup(x => x.IsValid(It.IsAny<Equipment>()))
-                .Returns<Equipment>(x => x.Prefixes.Count + x.Suffixes.Count != 6);
-
-            var tree = _container.Get<CraftingTree>();
-            tree.Replace(tree.AfterSelected, "Orb of Transmutation");
-            tree.Replace(tree.AfterSelected, "Orb of Augmentation");
-            tree.Replace(tree.AfterSelected, "Regal Orb");
-            tree.Replace(tree.AfterSelected, "While");
-
-     //       var craftingStep = tree.CraftingSteps[tree.CraftingSteps.Count - 2] as WhileCraftingStep;
-     //       craftingStep.Condition.CraftingSubConditions.Add(mockCraftingCondition.Object);
-
-            tree.Replace(tree.InsideSelected, "Exalted Orb");
-
-            tree.Craft(equipment, default(CancellationToken));
-
-            Assert.AreEqual(3, equipment.Suffixes.Count);
-            Assert.AreEqual(3, equipment.Prefixes.Count);
-            mockCraftingCondition.Verify(x => x.IsValid(It.IsAny<Equipment>()), Times.Exactly(4));
-        }
-
-        [TestMethod]
         public void CraftingTreeCollapseRarityStatus()
         {
             var tree = _container.Get<CraftingTree>();

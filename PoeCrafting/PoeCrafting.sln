@@ -1,31 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoeCrafting.UI", "PoeCrafting\PoeCrafting.UI.csproj", "{9DD4EE97-17F6-427C-A517-7B40500AF699}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoeCrafting.Domain", "PoeCrafting.Domain\PoeCrafting.Domain.csproj", "{F222175A-5DBA-43FD-A47F-771D2D0AA2AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoeCrafting.Data", "PoeCrafting.Data\PoeCrafting.Data.csproj", "{7E67E2A6-DA5F-46A0-824C-A537DB11B3AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoeCrafting.Entities", "PoeCrafting.Entities\PoeCrafting.Entities.csproj", "{2F3E944E-78E3-40C6-85B2-197CF43429AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoeCrafting.Test", "PoeCrafting.Test\PoeCrafting.Test.csproj", "{53F2E903-4119-48F3-BD21-0E2C975B7C24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoeCrafting.Prism", "PoeCrafting.Prism\PoeCrafting.Prism.csproj", "{F3602BD7-C957-47BE-8BC6-900296A5F78A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{884AF8F5-65E3-4063-A033-98A3612C8AAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoeCrafting.Infrastructure", "PoeCrafting.Infrastructure\PoeCrafting.Infrastructure.csproj", "{D99F5A61-D937-45F7-A9A2-A8898729D0D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainWindowModule", "MainWindowModule\MainWindowModule.csproj", "{13F652DF-7BD8-4EE8-A6E1-085B36B4B5CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkspacesModule", "WorkspacesModule\WorkspacesModule.csproj", "{02A8D457-311E-48BB-9C55-EC4AB4F67034}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9DD4EE97-17F6-427C-A517-7B40500AF699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9DD4EE97-17F6-427C-A517-7B40500AF699}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9DD4EE97-17F6-427C-A517-7B40500AF699}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9DD4EE97-17F6-427C-A517-7B40500AF699}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F222175A-5DBA-43FD-A47F-771D2D0AA2AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F222175A-5DBA-43FD-A47F-771D2D0AA2AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F222175A-5DBA-43FD-A47F-771D2D0AA2AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,12 +37,28 @@ Global
 		{2F3E944E-78E3-40C6-85B2-197CF43429AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F3E944E-78E3-40C6-85B2-197CF43429AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F3E944E-78E3-40C6-85B2-197CF43429AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53F2E903-4119-48F3-BD21-0E2C975B7C24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53F2E903-4119-48F3-BD21-0E2C975B7C24}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53F2E903-4119-48F3-BD21-0E2C975B7C24}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53F2E903-4119-48F3-BD21-0E2C975B7C24}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3602BD7-C957-47BE-8BC6-900296A5F78A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3602BD7-C957-47BE-8BC6-900296A5F78A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3602BD7-C957-47BE-8BC6-900296A5F78A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3602BD7-C957-47BE-8BC6-900296A5F78A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D99F5A61-D937-45F7-A9A2-A8898729D0D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D99F5A61-D937-45F7-A9A2-A8898729D0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D99F5A61-D937-45F7-A9A2-A8898729D0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D99F5A61-D937-45F7-A9A2-A8898729D0D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13F652DF-7BD8-4EE8-A6E1-085B36B4B5CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13F652DF-7BD8-4EE8-A6E1-085B36B4B5CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13F652DF-7BD8-4EE8-A6E1-085B36B4B5CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13F652DF-7BD8-4EE8-A6E1-085B36B4B5CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02A8D457-311E-48BB-9C55-EC4AB4F67034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02A8D457-311E-48BB-9C55-EC4AB4F67034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02A8D457-311E-48BB-9C55-EC4AB4F67034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02A8D457-311E-48BB-9C55-EC4AB4F67034}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{13F652DF-7BD8-4EE8-A6E1-085B36B4B5CD} = {884AF8F5-65E3-4063-A033-98A3612C8AAB}
+		{02A8D457-311E-48BB-9C55-EC4AB4F67034} = {884AF8F5-65E3-4063-A033-98A3612C8AAB}
 	EndGlobalSection
 EndGlobal

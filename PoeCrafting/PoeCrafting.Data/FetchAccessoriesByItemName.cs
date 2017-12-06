@@ -16,7 +16,7 @@ namespace PoeCrafting.Data
             string command = $@"SELECT
                                     i.Name,
                                     i.Level,
-                                    ist.Name as Subtype,
+                                    ist.Name as ItemType,
                                     it.Name as Type
                                 FROM Item i
                                 JOIN ItemSubType ist ON ist.ItemSubtypeId = i.ItemSubtypeId

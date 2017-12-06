@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace PoeCrafting.Entities
 {
@@ -9,14 +10,20 @@ namespace PoeCrafting.Entities
         public string ModName { get; set; }
         public string ModType { get; set; }
         public int ILvl { get; set; }
+
+        [JsonIgnore]
         public int Weight { get; set; }
 
+        [JsonIgnore]
         public int CraftingOrb { get; set; }
+
+        [JsonIgnore]
         public int CraftingCost { get; set; }
 
         public string Type { get; set; }
         public string Group { get; set; }
 
+        [JsonIgnore]
         public int ModTypeWeight { get; set; }
 
         public string StatName1 { get; set; }
@@ -31,10 +38,13 @@ namespace PoeCrafting.Entities
         public int StatMin3 { get; set; }
         public int StatMax3 { get; set; }
 
+        [JsonIgnore]
         public string SpawnTag { get; set; }
 
+        [JsonIgnore]
         public  int Priority { get; set; }
 
+        [JsonIgnore]
         public List<int> MaxStats
         {
             get

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ninject;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Currency;
@@ -16,20 +12,20 @@ namespace PoeCrafting.Domain
         private readonly IFetchCurrencyValues _currencyFetch;
         public CurrencyFactory(
             IFetchCurrencyValues currencyValueFetch,
-            [Named("Transmutation")] ICurrency transmutation,
-            [Named("Alteration")] ICurrency alteration,
-            [Named("Augmentation")] ICurrency augmentation,
-            [Named("Alchemy")] ICurrency alchemy,
-            [Named("Chaos")] ICurrency chaos,
-            [Named("Regal")] ICurrency regal,
+            TransmutationOrb transmutation,
+            AlterationOrb alteration,
+            AugmentationOrb augmentation,
+            AlchemyOrb alchemy,
+            ChaosOrb chaos,
+            RegalOrb regal,
         //    [Named("Blessed")] ICurrency blessed,
-            [Named("Chance")] ICurrency chance,
-            [Named("Divine")] ICurrency divine,
-            [Named("Exalted")] ICurrency exalted,
+            ChanceOrb chance,
+            DivineOrb divine,
+            ExaltedOrb exalted,
         //    [Named("MasterCraft")] ICurrency masterCraft,
-            [Named("Scouring")] ICurrency scouring,
-            [Named("Vaal")] ICurrency vaal,
-            [Named("Anullment")] ICurrency anull
+            ScouringOrb scouring,
+            VaalOrb vaal,
+            AnullmentOrb anull
         )
         {
             Currency = new List<ICurrency>

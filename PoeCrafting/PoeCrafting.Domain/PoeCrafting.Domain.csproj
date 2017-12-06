@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ninject, Version=4.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.4.0.0-beta-0134\lib\net45\Ninject.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -44,10 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Condition\ConditionResolutionFactory.cs" />
+    <Compile Include="Condition\ConditionResolver.cs" />
     <Compile Include="Condition\AffixValueCalculator.cs" />
-    <Compile Include="Condition\CraftingCondition.cs" />
-    <Compile Include="Condition\CraftingSubcondition.cs" />
     <Compile Include="Condition\MetaAffixValueCalculator.cs" />
     <Compile Include="Crafting\CurrencyCraftingStep.cs" />
     <Compile Include="Crafting\EndCraftingStep.cs" />
@@ -57,6 +55,9 @@
     <Compile Include="Crafting\InsertCraftingStep.cs" />
     <Compile Include="Crafting\StartCraftingStep.cs" />
     <Compile Include="Crafting\WhileCraftingStep.cs" />
+    <Compile Include="IItemConfigRepository.cs" />
+    <Compile Include="DataRepository.cs" />
+    <Compile Include="Simulation.cs" />
     <Compile Include="CraftTracker.cs" />
     <Compile Include="CurrencyFactory.cs" />
     <Compile Include="Currency\ItemStatus.cs" />
@@ -77,7 +78,7 @@
     <Compile Include="Currency\VaalOrb.cs" />
     <Compile Include="EquipmentFactory.cs" />
     <Compile Include="EquipmentFetch.cs" />
-    <Compile Include="IocDomainModule.cs" />
+    <Compile Include="LoadSavedData.cs" />
     <Compile Include="StatFactory.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
@@ -92,10 +93,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,6 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessoryEntity.cs" />
+    <Compile Include="ConfigUpdatedEventArgs.cs" />
+    <Compile Include="CraftingConfig.cs" />
+    <Compile Include="ItemConfig.cs" />
     <Compile Include="Constants\AffixGroupings.cs" />
     <Compile Include="Constants\AffixNames.cs" />
     <Compile Include="AffixType.cs" />
@@ -51,14 +58,18 @@
     <Compile Include="Constants\CurrencyNames.cs" />
     <Compile Include="Constants\TypeInfo.cs" />
     <Compile Include="Constants\ItemProperties.cs" />
+    <Compile Include="CraftingCondition.cs" />
     <Compile Include="CraftingStepStatus.cs" />
+    <Compile Include="CraftingSubcondition.cs" />
     <Compile Include="Equipment.cs" />
     <Compile Include="EquipmentRarity.cs" />
     <Compile Include="EquipmentType.cs" />
     <Compile Include="ItemBase.cs" />
     <Compile Include="Affix.cs" />
     <Compile Include="ItemProperty.cs" />
+    <Compile Include="ItemPrototype.cs" />
     <Compile Include="ITreeNavigation.cs" />
+    <Compile Include="Persistance\SimulationJson.cs" />
     <Compile Include="Stat.cs" />
     <Compile Include="SubconditionAggregateType.cs" />
     <Compile Include="StatValueType.cs" />
@@ -66,6 +77,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

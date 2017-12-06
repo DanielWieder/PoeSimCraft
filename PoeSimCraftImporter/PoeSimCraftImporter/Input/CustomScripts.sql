@@ -90,11 +90,27 @@ SELECT i.ItemId, (SELECT SpawnTagId
 	WHERE [Name] ='Global')
 FROM Item i
 
+
+-------------------------------------- Default Spawn Tag --------------------------------------
+
+INSERT INTO SpawnTag (Name)
+VALUES ('Default')
+
+INSERT ItemSpawnTagMap
+(
+    ItemId, SpawnTagId
+)
+SELECT i.ItemId, (SELECT SpawnTagId
+	FROM SpawnTag
+	WHERE [Name] ='Default')
+FROM Item i
+
+
 -------------------------------------- Open Prefixes/Suffixes --------------------------------------
 
 INSERT INTO Affix (Domain, GenerationType, [Name], ModName, [Group], ILvl, StatMin1, StatMax1)
 VALUES  ('Item','Meta', '', 'Open Prefix', 'Open Prefix', 1, 1, 3),
-        ('Item','Meta', '', 'Open Prefix', 'Open Suffix', 1, 1, 3)
+        ('Item','Meta', '', 'Open Suffix', 'Open Suffix', 1, 1, 3)
 
 INSERT INTO AffixSpawnTagMap (AffixId, SpawnTagId, [Weight])
 VALUES(
@@ -116,7 +132,7 @@ VALUES(
 	(
         SELECT AffixId
         FROM Affix
-        WHERE [Group] ='OpenSuffix'
+        WHERE [Group] ='Open Suffix'
     ),
 	(
 		SELECT SpawnTagId

@@ -20,6 +20,8 @@ namespace PoeCrafting.Domain.Crafting
         public CraftingCondition Condition { get; } = new CraftingCondition();
         public List<string> Options => null;
 
+        ConditionResolver _conditionResolution = new ConditionResolver();
+
         public void ClearStatus()
         {
             _initialized = false;
@@ -82,7 +84,7 @@ namespace PoeCrafting.Domain.Crafting
             if (Children.Count > 0)
             {
                 var first = Children.First();
-                while (Condition.IsValid(equipment))
+                while (_conditionResolution.IsValid(Condition, equipment))
                 {
                     if (ct.IsCancellationRequested)
                     {

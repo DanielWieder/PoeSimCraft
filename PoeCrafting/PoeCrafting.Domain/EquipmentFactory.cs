@@ -84,7 +84,7 @@ namespace PoeCrafting.Domain
 
             foreach (var mods in modTiers)
             {
-                var modList = mods.OrderByDescending(x => ParseInteger(x.ModName)).ToList();
+                var modList = mods.Where(x => x.Weight > 0).OrderByDescending(x => ParseInteger(x.ModName)).ToList();
 
                 for (int i = 0; i < modList.Count; i++)
                 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using PoeCrafting.Entities;
 using PoeCrafting.Domain.Currency;
 using PoeCrafting.Entities.Constants;
@@ -14,8 +15,11 @@ namespace PoeCrafting.Domain.Crafting
     {
         private readonly CurrencyFactory _factory;
 
+        [JsonIgnore]
         public InsertCraftingStep BeforeSelected { get; set; }
+        [JsonIgnore]
         public InsertCraftingStep AfterSelected { get; set; }
+        [JsonIgnore]
         public InsertCraftingStep InsideSelected { get; set; }
 
         public List<ICraftingStep> CraftingSteps { get; set; }
@@ -33,9 +37,10 @@ namespace PoeCrafting.Domain.Crafting
             Select(start);
         }
 
-        public void SetLeague(string leagueName)
+        public void Initialize()
         {
-            _factory.UpdateValues(leagueName);
+            ClearConditions();
+            ClearCurrencySpent();
         }
 
         public Equipment Craft(Equipment equipment, CancellationToken ct)
@@ -295,6 +300,17 @@ namespace PoeCrafting.Domain.Crafting
                     IterateSteps(action, craftingSteps[i].Children);
                 }
             }
+        }
+
+        /// <summary>
+        /// Raised when this workspace should be removed from the UI.
+        /// </summary>
+        public event EventHandler RequestClose;
+
+        void OnRequestClose()
+        {
+            EventHandler handler = this.RequestClose;
+            handler?.Invoke(this, EventArgs.Empty);
         }
     }
 }

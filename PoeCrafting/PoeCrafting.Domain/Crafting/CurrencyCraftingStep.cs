@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using PoeCrafting.Domain.Condition;
 using PoeCrafting.Domain.Currency;
 using PoeCrafting.Entities;
@@ -16,11 +17,19 @@ namespace PoeCrafting.Domain.Crafting
         private ItemStatus _status = new ItemStatus();
         public string Name => _currency.Name;
 
+        [JsonIgnore]
         public List<string> Options => null;
+
+        [JsonIgnore]
         public List<ICraftingStep> Children => null;
+
+        [JsonIgnore]
         public CraftingCondition Condition => null;
 
+        [JsonIgnore]
         public CraftTracker Tracker = new CraftTracker();
+
+        [JsonIgnore]
         public double Value => _currency.Value;
 
         public CraftingStepStatus Status

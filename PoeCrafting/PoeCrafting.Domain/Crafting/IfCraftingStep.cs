@@ -20,6 +20,8 @@ namespace PoeCrafting.Domain.Crafting
         public CraftingCondition Condition { get; set; } = new CraftingCondition();
         public List<string> Options => null;
 
+        ConditionResolver _conditionResolution = new ConditionResolver();
+
         public void ClearStatus()
         {
             _initialized = false;
@@ -54,7 +56,7 @@ namespace PoeCrafting.Domain.Crafting
         {
             if (equipment.Completed) return equipment;
 
-            if (Children.Count > 0 && Condition.IsValid(equipment))
+            if (Children.Count > 0 && _conditionResolution.IsValid(Condition, equipment))
             {
                 var first = Children.First();
                 var nextSteps = Children.ToList();

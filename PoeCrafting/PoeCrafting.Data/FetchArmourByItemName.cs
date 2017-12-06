@@ -23,7 +23,7 @@ namespace PoeCrafting.Data
                                     a.Str,
                                     a.Dex,
                                     a.Int,
-                                    ist.Name as Subtype,
+                                    ist.Name as ItemType,
                                     it.Name as Type
                                 FROM Item i
                                 JOIN Armour a ON i.ItemId = a.ItemId

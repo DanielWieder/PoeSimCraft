@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Ninject;
-
 using PoeCrafting.Data;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
-using PoeCrafting.Domain.Currency;
 using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Domain.Currency
