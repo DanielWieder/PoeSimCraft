@@ -23,7 +23,7 @@
 
         <Label Grid.Column="0" Grid.Row="0">JsonSubconditions</Label>
         <ComboBox Grid.Column="1" Grid.Row="0" SelectedItem="{Binding SelectedSubcondition, Mode=TwoWay}" ItemsSource="{Binding SubconditionControls}" DisplayMemberPath="JsonSubconditionName"/>
-        <Button Grid.Column="2" Grid.Row="0" Content="Add JsonSubcondition" Click="OnAddClick"/>
+        <Button Grid.Column="2" Grid.Row="0" Content="Add JsonSubcondition" Command="{Binding Path=AddCommand}"/>
         <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" BorderThickness="0 1 0 1" BorderBrush="Black">
             <ScrollViewer>
                 <ContentControl ScrollViewer.VerticalScrollBarVisibility="Auto" Content="{Binding SelectedSubcondition, Mode=TwoWay }"/>

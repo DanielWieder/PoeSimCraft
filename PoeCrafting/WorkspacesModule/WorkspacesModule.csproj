@@ -120,7 +120,6 @@
       <DependentUpon>SubconditionControlView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Condition\SubconditionControlViewModel.cs" />
-    <Compile Include="CraftingProcess\CraftingProcessViewModel.cs" />
     <Compile Include="CraftingProcess\CraftingProcessView.xaml.cs">
       <DependentUpon>CraftingProcessView.xaml</DependentUpon>
     </Compile>

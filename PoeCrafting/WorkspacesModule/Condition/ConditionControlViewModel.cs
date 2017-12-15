@@ -2,8 +2,10 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using PoeCrafting.Entities;
 using PoeCrafting.Infrastructure;
+using Prism.Commands;
 
 namespace WorkspacesModule.Condition
 {
@@ -13,6 +15,8 @@ namespace WorkspacesModule.Condition
         private readonly PoeCrafting.Entities.ItemBase _itemBase;
         private readonly List<Affix> _affixes;
         private readonly CraftingCondition _craftingCondition;
+
+        public ICommand AddCommand => new DelegateCommand(AddSubcondition);
 
         public ObservableCollection<SubconditionControlView> SubconditionControls { get; set; }
 
@@ -95,11 +99,6 @@ namespace WorkspacesModule.Condition
 
             OnPropertyChanged(nameof(SelectedSubcondition));
             OnPropertyChanged(nameof(SubconditionControls));
-        }
-
-        public void OnAddClick(object sender, RoutedEventArgs e)
-        {
-            AddSubcondition();
         }
 
         public void Save()

@@ -30,7 +30,7 @@ namespace PoeCrafting.Domain
 
         public ItemConfig GetItemConfig()
         {
-            return _config;
+            return (ItemConfig)_config.Clone();
         }
 
 

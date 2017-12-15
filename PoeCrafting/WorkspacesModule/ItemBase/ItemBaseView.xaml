@@ -94,12 +94,12 @@
 
         <!-- SAVE BUTTON -->
         <Button 
-      Grid.Row="6" Grid.Column="2"
-      Command="{Binding Path=SaveCommand}"
-      Content="_Save"
-      HorizontalAlignment="Right"
-      Margin="4,2" 
-      MinWidth="60" 
+          Grid.Row="6" Grid.Column="2"
+          Command="{Binding Path=SaveCommand}"
+          Content="_Save"
+          HorizontalAlignment="Right"
+          Margin="4,2" 
+          MinWidth="60" 
       />
     </Grid>
 </UserControl>

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using PoeCrafting.Domain.Condition;
+using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
 
 namespace PoeCrafting.UI.Models

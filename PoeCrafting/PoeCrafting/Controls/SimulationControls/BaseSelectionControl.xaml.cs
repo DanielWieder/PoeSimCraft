@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PoeCrafting.Domain;
+using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
 
 namespace PoeCrafting.UI.Controls
@@ -26,6 +27,7 @@ namespace PoeCrafting.UI.Controls
         public int ItemLevel { get; set; }
         public int ItemCost { get; set; }
         public string League { get; set; }
+        public int Category { get; set; }
 
         public override bool Equals(Object obj)
         {
@@ -33,7 +35,7 @@ namespace PoeCrafting.UI.Controls
                 return false;
 
             var baseInfo = (BaseInfomation)obj;
-            return string.Equals(SelectedBase, baseInfo.SelectedBase) && string.Equals(SelectedSubtype, baseInfo.SelectedSubtype) && ItemLevel == baseInfo.ItemLevel && ItemCost == baseInfo.ItemCost && League == baseInfo.League;
+            return string.Equals(SelectedBase, baseInfo.SelectedBase) && string.Equals(SelectedSubtype, baseInfo.SelectedSubtype) && ItemLevel == baseInfo.ItemLevel && ItemCost == baseInfo.ItemCost && League == baseInfo.League && Category == baseInfo.Category;
         }
 
         public override int GetHashCode()
@@ -45,6 +47,7 @@ namespace PoeCrafting.UI.Controls
                 hashCode = (hashCode*397) ^ ItemLevel;
                 hashCode = (hashCode * 397) ^ ItemCost;
                 hashCode = (hashCode * 397) ^ League.GetHashCode();
+                hashCode = (hashCode * 397) ^ Category.GetHashCode();
                 return hashCode;
             }
         }
@@ -57,8 +60,8 @@ namespace PoeCrafting.UI.Controls
     {
         private readonly List<string> _leagues = new List<string>
         {
-            "Harbinger",
-            "HC Harbinger",
+            "Abyss",
+            "HC Abyss",
             "Standard",
             "Hardcore"
         };
@@ -70,9 +73,12 @@ namespace PoeCrafting.UI.Controls
         private string _selectedLeague;
         private Action _updateIsReady;
         private EquipmentFetch _fetch;
+        private readonly EquipmentFactory _factory;
+        private int _itemLevel;
 
         public List<string> Subtypes { get; }
         public List<string> Bases { get; set; }
+        public string AffixDescriptions { get; set; }
 
         public bool HasSubtype => !string.IsNullOrEmpty(_selectedSubtype);
 
@@ -94,8 +100,53 @@ namespace PoeCrafting.UI.Controls
             set
             {
                 _selectedBase = value;
+                UpdateAffixDescriptions();
                 _updateIsReady();
             }
+        }
+
+        private void UpdateAffixDescriptions()
+        {
+            if (SelectedBase == null)
+            {
+                return;
+            }
+
+            StringBuilder builder = new StringBuilder();
+
+            _factory.Initialize(SelectedBase, 1, ItemLevel);
+
+            var affixes = _factory.GetPossibleAffixes();
+            var types = affixes.GroupBy(x => x.Type);
+            var totalWeight = affixes.Sum(x => x.Weight);
+
+            foreach (var type in types)
+            {
+                if (type.Key == "Meta")
+                {
+                    continue;
+                }
+                builder.AppendLine(type.Key);
+
+                var groups = type.GroupBy(x => x.Group);
+
+                foreach (var group in groups)
+                {
+                    builder.AppendLine("\t" + group.Key);
+
+                    var items = group.ToList();
+
+                    foreach (var item in items)
+                    {
+                        var chance = item.Weight / (float)totalWeight * 100;
+                        builder.AppendLine("\t\tT" + item.Tier + "\t\t" + chance.ToString("0.###") + "%");
+                    }
+
+                }
+            }
+
+            AffixDescriptions = builder.ToString();
+            OnPropertyChanged(nameof(AffixDescriptions));
         }
 
         public string SelectedLeague
@@ -107,7 +158,14 @@ namespace PoeCrafting.UI.Controls
             }
         }
 
-        public int ItemLevel { get; set; } = 84;
+        public int ItemLevel {
+            get { return _itemLevel; }
+            set
+            {
+                _itemLevel = value;
+                UpdateAffixDescriptions();
+            }
+        }
 
         public int ItemCost { get; set; } = 0;
 
@@ -117,7 +175,8 @@ namespace PoeCrafting.UI.Controls
             SelectedBase = SelectedBase,
             SelectedSubtype = SelectedSubtype,
             ItemCost = ItemCost,
-            League = SelectedLeague
+            League = SelectedLeague,
+            Category = 1
         };
 
         public bool CanComplete()
@@ -129,9 +188,11 @@ namespace PoeCrafting.UI.Controls
         public void OnClose()
         { }
 
-        public BaseSelectionControl(EquipmentFetch fetch)
+        public BaseSelectionControl(EquipmentFetch fetch, EquipmentFactory factory)
         {
+            _itemLevel = 84;
             _fetch = fetch;
+            _factory = factory;
             Subtypes = fetch.FetchSubtypes().OrderBy(x => x).ToList();
             SelectedLeague = Leagues[0];
             OnPropertyChanged(nameof(SelectedLeague));

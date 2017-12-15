@@ -30,6 +30,7 @@ namespace PoeCrafting.Data
 	                                a.StatName3,
 	                                a.StatMin3,
 	                                a.StatMax3,
+                                    a.Category,
                                     t.Name as SpawnTag
                                 FROM Affix a
                                 JOIN AffixSpawnTagMap astm ON astm.AffixId = a.AffixId

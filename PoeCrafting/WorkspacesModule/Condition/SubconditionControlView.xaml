@@ -120,7 +120,7 @@
         <ContentControl Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding PrefixConditions}"/>
         <ContentControl Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding SuffixConditions}"/>
         <ContentControl Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="0, 5" Content="{Binding MetaConditions}" Visibility="{Binding MetaConditionsVisibility}"/>
-        <Button Grid.Column="1" Grid.Row="9" Click="OnDeleteClick">Delete</Button>
+        <Button Grid.Column="1" Grid.Row="9" Command="{Binding Path=DeleteCommand}">Delete</Button>
     </Grid>
 
 </UserControl>

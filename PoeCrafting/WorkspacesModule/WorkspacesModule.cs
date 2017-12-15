@@ -2,6 +2,7 @@
 using PoeCrafting.Infrastructure;
 using Prism.Modularity;
 using Prism.Regions;
+using WorkspacesModule.CraftingProcess;
 using WorkspacesModule.ItemBase;
 
 namespace WorkspacesModule
@@ -24,8 +25,12 @@ namespace WorkspacesModule
             _regionManager.RegisterViewWithRegion(RegionNames.WorkspaceRegion, typeof(ItemBaseView));
 
             _container.RegisterType(typeof(IWorkspaceFactory), typeof(WorkspaceFactory));
-            _container.RegisterType<object, ItemBaseView>(typeof(ItemBaseView).FullName);
+
             _container.RegisterType(typeof(ItemBaseViewModel));
+            _container.RegisterType(typeof(CraftingProcessView));
+
+            _container.RegisterType<object, ItemBaseView>(typeof(ItemBaseView).FullName);
+            _container.RegisterType<object, CraftingProcessView>(typeof(CraftingProcessView).FullName);
         }
     }
 }

@@ -100,8 +100,6 @@ namespace WorkspacesModule.Condition
 
                 _affixName = value;
 
-                OnPropertyChanged(nameof(Affix));
-
                 var affix = _affixes.First(x => x.ModType == AffixName);
 
                 FirstStatName = affix.StatName1;

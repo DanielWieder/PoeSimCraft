@@ -9,11 +9,12 @@ using Newtonsoft.Json;
 
 namespace PoeCrafting.Entities
 {
-    public class ItemConfig : IDataErrorInfo
+    public class ItemConfig : IDataErrorInfo, ICloneable
     {
         public string ItemBase { get; set; } = string.Empty;
         public string ItemType { get; set; } = string.Empty;
         public int ItemLevel { get; set; } = 84;
+        public int Category { get; set; } = 1;
 
         public override bool Equals(Object obj)
         {
@@ -21,7 +22,7 @@ namespace PoeCrafting.Entities
                 return false;
 
             var baseInfo = (ItemConfig)obj;
-            return string.Equals(ItemBase, baseInfo.ItemBase) && string.Equals(ItemType, baseInfo.ItemType) && ItemLevel == baseInfo.ItemLevel;
+            return string.Equals(ItemBase, baseInfo.ItemBase) && string.Equals(ItemType, baseInfo.ItemType) && ItemLevel == baseInfo.ItemLevel && Category == baseInfo.Category;
         }
 
         public override int GetHashCode()
@@ -31,8 +32,20 @@ namespace PoeCrafting.Entities
                 var hashCode = ItemBase?.GetHashCode() ?? 0;
                 hashCode = (hashCode * 397) ^ (ItemType?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ ItemLevel;
+                hashCode = (hashCode * 397) ^ Category.GetHashCode();
                 return hashCode;
             }
+        }
+
+        public object Clone()
+        {
+            return new ItemConfig
+            {
+                ItemLevel = this.ItemLevel,
+                ItemBase = this.ItemBase,
+                ItemType = this.ItemType,
+                Category = this.Category
+            };
         }
 
         [JsonIgnore]
@@ -52,7 +65,7 @@ namespace PoeCrafting.Entities
         {
             "ItemBase",
             "ItemType",
-            "ItemLevel",
+            "ItemLevel"
         };
 
         string GetValidationError(string propertyName)

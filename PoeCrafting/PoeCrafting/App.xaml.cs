@@ -12,6 +12,7 @@ using PoeCrafting.Domain;
 using PoeCrafting.Domain.Currency;
 
 using PoeCrafting.UI;
+using Unity;
 
 namespace PoeCrafting.UI
 {
@@ -24,16 +25,13 @@ namespace PoeCrafting.UI
         {
             base.OnStartup(e);
 
-            var kernel = new StandardKernel();
-            kernel.Load(new INinjectModule[]
-                {
-                    new IocDataModule(),
-                    new IocDomainModule(),
-                    new IocUiModule()
-                }
-            );
+            var container = new UnityContainer();
 
-            var window = kernel.Get<SimulationWindow>();
+            container.AddNewExtension<IocUiModule>();
+            container.AddNewExtension<IocDomainModule>();
+            container.AddNewExtension<IocDataModule>();
+
+            var window = container.Resolve<SimulationWindow>();
             window.Show();
         }
 

@@ -7,16 +7,44 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ComboBox HorizontalAlignment="Left" Margin="131,86,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Subtypes}" SelectedItem="{Binding SelectedSubtype}"/>
-        <ComboBox HorizontalAlignment="Left" Margin="131,122,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Bases}" SelectedItem="{Binding SelectedBase}" IsEnabled="{Binding HasSubtype}"/>
-        <Label Content="Type" HorizontalAlignment="Left" Margin="48,82,0,0" VerticalAlignment="Top"/>
-        <Label Content="Item Base" HorizontalAlignment="Left" Margin="47,122,0,0" VerticalAlignment="Top"/>
-        <Label Content="Level" HorizontalAlignment="Left" Margin="46,161,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="130,165,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding Path=ItemLevel}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Label Content="Base Cost (C)" HorizontalAlignment="Left" Margin="46,201,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="131,204,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="{Binding Path=ItemCost}"/>
-        <Label Content="League" HorizontalAlignment="Left" Margin="48,42,0,0" VerticalAlignment="Top"/>
-        <ComboBox HorizontalAlignment="Left" Margin="130,46,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Leagues}" SelectedItem="{Binding SelectedLeague}"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Type"/>
+        <ComboBox Grid.Column="2" Grid.Row="1" ItemsSource="{Binding Subtypes}" SelectedItem="{Binding SelectedSubtype}"/>
+
+        <Label Grid.Column="0" Grid.Row="3" Content="Item Base"/>
+        <ComboBox Grid.Column="2" Grid.Row="3" ItemsSource="{Binding Bases}" SelectedItem="{Binding SelectedBase}" IsEnabled="{Binding HasSubtype}"/>
+
+        <Label Grid.Column="0" Grid.Row="5" Content="Level"/>
+        <TextBox Grid.Column="2" Grid.Row="5" Text="{Binding Path=ItemLevel}"/>
+
+        <Label Grid.Column="0" Grid.Row="7" Content="Base Cost (C)"/>
+        <TextBox Grid.Column="2" Grid.Row="7" Text="{Binding Path=ItemCost}"/>
+
+        <Label Grid.Column="0" Grid.Row="9" Content="League"/>
+        <ComboBox Grid.Column="2" Grid.Row="9" ItemsSource="{Binding Leagues}" SelectedItem="{Binding SelectedLeague}"/>
+
+        <ScrollViewer Grid.Column="4" Grid.Row="0" Grid.RowSpan="11" >
+            <TextBlock Text="{Binding AffixDescriptions}" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

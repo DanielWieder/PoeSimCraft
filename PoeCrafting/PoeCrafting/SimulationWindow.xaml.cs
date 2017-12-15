@@ -109,7 +109,7 @@ namespace PoeCrafting.UI
             if (_controls[_currentControlIndex] == CraftingTree)
             {
                 var baseInfo = BaseSelection.BaseInformation;
-                _factory.Initialize(baseInfo.SelectedBase, baseInfo.ItemLevel);
+                _factory.Initialize(baseInfo.SelectedBase, baseInfo.Category, baseInfo.ItemLevel);
                 var affixes = _factory.GetPossibleAffixes();
                 var baseItem = _factory.GetBaseItem();
                 CraftingTree.Initialize(affixes, baseItem, baseInfo);

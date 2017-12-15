@@ -38,6 +38,8 @@ namespace PoeCrafting.Entities
         public int StatMin3 { get; set; }
         public int StatMax3 { get; set; }
 
+        public int Category { get; set; }
+
         [JsonIgnore]
         public string SpawnTag { get; set; }
 

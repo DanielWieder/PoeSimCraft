@@ -5,6 +5,7 @@ using PoeCrafting.Domain;
 using PoeCrafting.Infrastructure;
 using Prism.Commands;
 using Prism.Regions;
+using WorkspacesModule.CraftingProcess;
 using WorkspacesModule.ItemBase;
 
 namespace WorkspacesModule
@@ -43,22 +44,22 @@ namespace WorkspacesModule
 
             _craftingProcess = new CommandViewModel(
                 "Crafting Process",
-                new DelegateCommand(() => ActivateWorkspace(CreateCraftingProcess())),
+                new DelegateCommand(() => Navigate(typeof(CraftingProcessView).FullName)),
                 () => _configRepository.GetItemConfig().IsValid);
 
             _itemSelection = new CommandViewModel(
                 "Item Selection",
-                new DelegateCommand(() => ActivateWorkspace(CreateItemSelection())),
+                new DelegateCommand(() => Navigate(typeof(ItemBaseView).FullName)),
                 () => _configRepository.GetItemConfig().IsValid);
 
             _craftItems = new CommandViewModel(
                 "Craft Items",
-                new DelegateCommand(() => ActivateWorkspace(CreateCraftItems())),
+                new DelegateCommand(() => Navigate(typeof(ItemBaseView).FullName)),
                 () => false);
 
             _viewResults = new CommandViewModel(
                 "View Results",
-                new DelegateCommand(() => ActivateWorkspace(CreateViewResults())),
+                new DelegateCommand(() => Navigate(typeof(ItemBaseView).FullName)),
                 () => false);
 
             Workspaces = new List<CommandViewModel>
@@ -69,6 +70,9 @@ namespace WorkspacesModule
                 _craftItems,
                 _viewResults
             };
+
+            _configRepository.ConfigChanged += (x, y) => _itemInput.UpdateIsEnabled();
+            _configRepository.ConfigChanged += (x, y) => _craftingProcess.UpdateIsEnabled();
         }
 
         private void Navigate(object navigatePath)
@@ -77,42 +81,6 @@ namespace WorkspacesModule
             {
                 _regionManager.RequestNavigate(RegionNames.WorkspaceRegion, navigatePath.ToString());
             }
-        }
-
-        public void SubscribeConfigChanged(EventHandler configChanged)
-        {
-            configChanged += (x, y) => _itemInput.UpdateIsEnabled();
-            configChanged += (x, y) => _craftingProcess.UpdateIsEnabled();
-        }
-
-        WorkspaceViewModel CreateInputItemInfo()
-        {
-            return new ItemBaseViewModel(_configRepository, _equipmentFetch, _configRepository.GetItemConfig());
-        }
-
-        WorkspaceViewModel CreateCraftingProcess()
-        {
-            MessageBoxResult result = MessageBox.Show("Create the crafting process here");
-            return null;
-            //new CraftingProcessViewModel(_currencyFactory);
-        }
-
-        WorkspaceViewModel CreateItemSelection()
-        {
-            MessageBoxResult result = MessageBox.Show("Select items here");
-            return null;
-        }
-
-        WorkspaceViewModel CreateCraftItems()
-        {
-            MessageBoxResult result = MessageBox.Show("Craft items here");
-            return null;
-        }
-
-        WorkspaceViewModel CreateViewResults()
-        {
-            MessageBoxResult result = MessageBox.Show("View results here");
-            return null;
         }
     }
 }

@@ -13,11 +13,29 @@ namespace PoeCrafting.Prism
         }
     }
 
+    public class IocDataModule : UnityContainerExtension
+    {
+        protected override void Initialize()
+        {
+            Container.RegisterType(typeof(IRandom), typeof(PoeRandom), new ContainerControlledLifetimeManager());
+            Container.RegisterType(typeof(IFetchCurrencyValues), typeof(FetchCurrencyValues));
+            Container.RegisterType(typeof(IFetchAffixesByItemName), typeof(FetchAffixesByItemName));
+            Container.RegisterType(typeof(IFetchArmourByItemName), typeof(FetchArmourByItemName));
+            Container.RegisterType(typeof(IFetchAccessoriesByItemName), typeof(FetchAccessoriesByItemName));
+            Container.RegisterType(typeof(IFetchWeaponsByItemName), typeof(FetchWeaponsByItemName));
+            Container.RegisterType(typeof(IFetchItemNamesBySubtype), typeof(FetchItemNamesBySubtype));
+            Container.RegisterType(typeof(IFetchTypeByItemName), typeof(FetchTypeByItemName));
+            Container.RegisterType(typeof(IFetchSubtypes), typeof(FetchSubtypes));
+
+        }
+    }
+
     public class IocDomainModule : UnityContainerExtension
     {
         protected override void Initialize()
         {
             Container.RegisterType(typeof(IItemConfigRepository), typeof(DataRepository), new ContainerControlledLifetimeManager());
+            Container.RegisterType(typeof(EquipmentFactory), new ContainerControlledLifetimeManager());
 
             Container.RegisterType(typeof(CraftingCondition));
             Container.RegisterType(typeof(CraftingSubcondition));
@@ -39,23 +57,6 @@ namespace PoeCrafting.Prism
             Container.RegisterType(typeof(ICurrency), typeof(TransmutationOrb), "Transmutation");
             Container.RegisterType(typeof(ICurrency), typeof(VaalOrb), "Vaal");
             Container.RegisterType(typeof(ICurrency), typeof(AnullmentOrb), "Anullment");
-        }
-    }
-
-    public class IocDataModule : UnityContainerExtension
-    {
-        protected override void Initialize()
-        {
-            Container.RegisterType(typeof(IRandom), typeof(PoeRandom), new ContainerControlledLifetimeManager());
-            Container.RegisterType(typeof(IFetchCurrencyValues), typeof(FetchCurrencyValues));
-            Container.RegisterType(typeof(IFetchAffixesByItemName), typeof(FetchAffixesByItemName));
-            Container.RegisterType(typeof(IFetchArmourByItemName), typeof(FetchArmourByItemName));
-            Container.RegisterType(typeof(IFetchAccessoriesByItemName), typeof(FetchAccessoriesByItemName));
-            Container.RegisterType(typeof(IFetchWeaponsByItemName), typeof(FetchWeaponsByItemName));
-            Container.RegisterType(typeof(IFetchItemNamesBySubtype), typeof(FetchItemNamesBySubtype));
-            Container.RegisterType(typeof(IFetchTypeByItemName), typeof(FetchTypeByItemName));
-            Container.RegisterType(typeof(IFetchSubtypes), typeof(FetchSubtypes));
-
         }
     }
 }

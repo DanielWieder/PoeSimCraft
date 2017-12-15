@@ -20,7 +20,7 @@ namespace WorkspacesModule.ItemBase
         private string[] _itemBaseOptions;
         private string _itemLevel;
         bool _isSelected;
-        ICommand _saveCommand;
+        DelegateCommand _saveCommand;
 
         public ItemBaseViewModel(IItemConfigRepository configRepository, EquipmentFetch equipmentFetch, ItemConfig config)
         {
@@ -62,6 +62,8 @@ namespace WorkspacesModule.ItemBase
 
                 _config.ItemLevel = val;
 
+                _saveCommand.RaiseCanExecuteChanged();
+
                 base.OnPropertyChanged("ItemLevel");
             }
         }
@@ -93,6 +95,8 @@ namespace WorkspacesModule.ItemBase
 
                 _itemBase = value;
                 _config.ItemBase = value;
+
+                _saveCommand.RaiseCanExecuteChanged();
 
                 base.OnPropertyChanged("ItemBase");
             }

@@ -20,6 +20,7 @@ using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
 using PoeCrafting.UI.Models;
 using System.Threading;
+using PoeCrafting.Domain.Condition;
 
 namespace PoeCrafting.UI.Controls
 {
@@ -169,9 +170,11 @@ namespace PoeCrafting.UI.Controls
 
                 bool added = false;
 
+                ConditionResolver resolver = new ConditionResolver();
+
                 foreach (var prototype in _itemPrototypes)
                 {
-                    if (prototype.Condition.IsValid(result))
+                    if (resolver.IsValid(prototype.Condition, result))
                     {
                         MatchingItems[prototype].Add(result);
                         added = true;

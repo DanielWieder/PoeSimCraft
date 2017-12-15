@@ -28,6 +28,7 @@ namespace PoeCrafting.UI.Controls
     /// </summary>
     public partial class CraftingTreeControl : UserControl, INotifyPropertyChanged, ISimulationControl
     {
+        private readonly CurrencyFactory _factory;
         public CraftingTree CraftingTree { get; set; }
         private ICraftingStep _selected;
         private ObservableCollection<Affix> _affixes;
@@ -39,6 +40,7 @@ namespace PoeCrafting.UI.Controls
 
         public CraftingTreeControl(CurrencyFactory factory)
         {
+            _factory = factory;
             CraftingTree = new CraftingTree(factory);
             Tree = new CraftingTreeViewModel(CraftingTree, _selected);
             InitializeComponent();
@@ -58,7 +60,7 @@ namespace PoeCrafting.UI.Controls
                 OnPropertyChanged(nameof(Condition));
                 OnPropertyChanged(nameof(Tree));
                 _baseInfo = baseInfo;
-                CraftingTree.SetLeague(baseInfo.League);
+                _factory.UpdateValues(baseInfo.League);
             }
         }
 

@@ -6,8 +6,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using PoeCrafting.Entities;
 using PoeCrafting.Infrastructure;
+using Prism.Commands;
 
 namespace WorkspacesModule.Condition
 {
@@ -26,6 +28,8 @@ namespace WorkspacesModule.Condition
         private SubconditionAffixesControlViewModel PrefixConditionsModel { get; set; }
         private SubconditionAffixesControlViewModel SuffixConditionsModel { get; set; }
         private SubconditionAffixesControlViewModel MetaConditionsModel { get; set; }
+
+        public ICommand DeleteCommand => new DelegateCommand(() => OnDeleteEvent?.Invoke(this, new OnDeleteEventArgs(this)));
 
         public CraftingSubcondition SubCondition;
 
@@ -146,11 +150,6 @@ namespace WorkspacesModule.Condition
             SubCondition.SuffixConditions = SuffixConditionsModel.Conditions;
             SubCondition.MetaConditions = MetaConditionsModel.Conditions;
             return SubCondition;
-        }
-
-        public void OnDeleteClick(object sender, RoutedEventArgs e)
-        {
-            OnDeleteEvent?.Invoke(this, new OnDeleteEventArgs(this));
         }
     }
 }

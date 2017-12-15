@@ -17,8 +17,8 @@ namespace PoeCrafting.Data
         {
             {"Standard", "standard"},
             {"Hardcore", "hardcore"},
-            {"Harbinger", "tmpstandard"},
-            {"HC Harbinger", "tmphardcore"},
+            {"Abyss", "tmpstandard"},
+            {"HC Abyss", "tmphardcore"},
         };
 
         public string url = @"http://poe.ninja/api/Data/GetCurrencyOverview?league=";

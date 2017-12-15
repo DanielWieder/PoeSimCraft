@@ -16,6 +16,7 @@ namespace PoeCrafting.UI.Pages
         public CurrencyFactory CurrencyFactory { get; set; }
         public List<string> BaseItemNames { get; set; }
         public List<string> ItemSubtypeNames { get; set; }
+        public int Category { get; set; }
 
         private readonly EquipmentFetch _equipmentFetch;
         private readonly EquipmentFactory _factory;
@@ -42,7 +43,7 @@ namespace PoeCrafting.UI.Pages
 
         public void CreateItem()
         {
-            _factory.Initialize(SelectedItemBase);
+            _factory.Initialize(SelectedItemBase, Category);
             Equipment = _factory.CreateEquipment();
             Status = new ItemStatus();
         }

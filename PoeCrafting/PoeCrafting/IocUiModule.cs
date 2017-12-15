@@ -1,28 +1,80 @@
-﻿using System;
-
-using Ninject.Modules;
+﻿using Microsoft.Practices.Unity;
+using PoeCrafting.Data;
+using PoeCrafting.Domain;
+using PoeCrafting.Domain.Currency;
+using PoeCrafting.Entities;
 using PoeCrafting.UI.Controls;
 using PoeCrafting.UI.Pages;
+using Unity;
+using Unity.Extension;
+using Unity.Lifetime;
 
 namespace PoeCrafting.UI
 {
-    public class IocUiModule : NinjectModule
+    public class IocUiModule : UnityContainerExtension
     {
-        public override void Load()
+        protected override void Initialize()
         {
-            Bind<CraftingResultsControl>().ToSelf().InTransientScope();
-            Bind<CraftingControl>().ToSelf().InTransientScope();
-            Bind<ItemListControl>().ToSelf().InTransientScope();
-            Bind<ConditionControl>().ToSelf().InTransientScope();
-            Bind<SubconditionControl>().ToSelf().InTransientScope();
-            Bind<SubconditionAffixesControl>().ToSelf().InTransientScope();
-            Bind<SubconditionAffixControl>().ToSelf().InTransientScope();
-            Bind<BaseSelectionControl>().ToSelf().InTransientScope();
-            Bind<CraftingTreeControl>().ToSelf().InTransientScope();
-            Bind<ConditionControl>().ToSelf().InTransientScope();
-            Bind<SimulationWindow>().ToSelf().InTransientScope();
-            Bind<TestbedWindow>().ToSelf().InTransientScope();
-            Bind<CraftingTestbedModel>().ToSelf().InTransientScope();
+            Container.RegisterType(typeof(CraftingResultsControl));
+            Container.RegisterType(typeof(CraftingControl));
+            Container.RegisterType(typeof(ItemListControl));
+            Container.RegisterType(typeof(ConditionControl));
+            Container.RegisterType(typeof(SubconditionControl));
+            Container.RegisterType(typeof(SubconditionAffixesControl));
+            Container.RegisterType(typeof(SubconditionAffixControl));
+            Container.RegisterType(typeof(BaseSelectionControl));
+            Container.RegisterType(typeof(CraftingTreeControl));
+            Container.RegisterType(typeof(ConditionControl));
+            Container.RegisterType(typeof(SimulationWindow));
+            Container.RegisterType(typeof(TestbedWindow));
+            Container.RegisterType(typeof(CraftingTestbedModel));
+        }
+    }
+
+    public class IocDataModule : UnityContainerExtension
+    {
+        protected override void Initialize()
+        {
+            Container.RegisterType(typeof(IRandom), typeof(PoeRandom), new ContainerControlledLifetimeManager());
+            Container.RegisterType(typeof(IFetchCurrencyValues), typeof(FetchCurrencyValues));
+            Container.RegisterType(typeof(IFetchAffixesByItemName), typeof(FetchAffixesByItemName));
+            Container.RegisterType(typeof(IFetchArmourByItemName), typeof(FetchArmourByItemName));
+            Container.RegisterType(typeof(IFetchAccessoriesByItemName), typeof(FetchAccessoriesByItemName));
+            Container.RegisterType(typeof(IFetchWeaponsByItemName), typeof(FetchWeaponsByItemName));
+            Container.RegisterType(typeof(IFetchItemNamesBySubtype), typeof(FetchItemNamesBySubtype));
+            Container.RegisterType(typeof(IFetchTypeByItemName), typeof(FetchTypeByItemName));
+            Container.RegisterType(typeof(IFetchSubtypes), typeof(FetchSubtypes));
+
+        }
+    }
+
+    public class IocDomainModule : UnityContainerExtension
+    {
+        protected override void Initialize()
+        {
+            Container.RegisterType(typeof(IItemConfigRepository), typeof(DataRepository), new ContainerControlledLifetimeManager());
+            Container.RegisterType(typeof(EquipmentFactory), new ContainerControlledLifetimeManager());
+
+            Container.RegisterType(typeof(CraftingCondition));
+            Container.RegisterType(typeof(CraftingSubcondition));
+            Container.RegisterType(typeof(EquipmentFetch));
+
+            Container.RegisterType(typeof(ICurrency), typeof(AlchemyOrb), "Alchemy");
+            Container.RegisterType(typeof(ICurrency), typeof(AlterationOrb), "Alteration");
+            Container.RegisterType(typeof(ICurrency), typeof(AugmentationOrb), "Augmentation");
+            Container.RegisterType(typeof(ICurrency), typeof(BlessedOrb), "Blessed");
+
+            Container.RegisterType(typeof(ICurrency), typeof(ChaosOrb), "Chaos");
+            Container.RegisterType(typeof(ICurrency), typeof(ChanceOrb), "Chance");
+            Container.RegisterType(typeof(ICurrency), typeof(DivineOrb), "Divine");
+            Container.RegisterType(typeof(ICurrency), typeof(ExaltedOrb), "Exalted");
+            Container.RegisterType(typeof(ICurrency), typeof(MasterCraft), "MasterCraft");
+
+            Container.RegisterType(typeof(ICurrency), typeof(RegalOrb), "Regal");
+            Container.RegisterType(typeof(ICurrency), typeof(ScouringOrb), "Scouring");
+            Container.RegisterType(typeof(ICurrency), typeof(TransmutationOrb), "Transmutation");
+            Container.RegisterType(typeof(ICurrency), typeof(VaalOrb), "Vaal");
+            Container.RegisterType(typeof(ICurrency), typeof(AnullmentOrb), "Anullment");
         }
     }
 }

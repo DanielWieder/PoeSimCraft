@@ -27,6 +27,7 @@ namespace PoeCrafting.Domain
         private int _suffixWeight;
         private int _prefixWeight;
         private int _totalWeight;
+        private string _baseItemName;
 
         public EquipmentFactory(
             IRandom random, 
@@ -42,9 +43,12 @@ namespace PoeCrafting.Domain
             _fetchWeaponsByName = fetchWeaponsByName;
         }
 
-        public void Initialize(string baseItemName, int itemLevel = 84)
+        public void Initialize(string baseItemName, int category, int itemLevel = 84)
         {
+            _baseItemName = baseItemName;
+
             if (string.IsNullOrEmpty(baseItemName)) return;
+            if (_itemLevel == itemLevel && baseItemName == _baseItemName) return;
 
             _fetchTypeByItemName.Name = baseItemName;
             var type = _fetchTypeByItemName.Execute();
@@ -93,6 +97,7 @@ namespace PoeCrafting.Domain
             }
 
             affixes = affixes.Where(x => x.ILvl <= itemLevel)
+                             .Where(x => x.Category == 0 || x.Category == category)
                              .Where(x => x.Type == TypeInfo.AffixTypeMeta || ((x.Type == TypeInfo.AffixTypePrefix || x.Type == TypeInfo.AffixTypeSuffix) && x.Weight > 0))
                              .ToList();
 
