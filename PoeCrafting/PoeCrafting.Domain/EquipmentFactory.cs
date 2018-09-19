@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using PoeCrafting.Currency;
 using PoeCrafting.Data;
 using PoeCrafting.Entities;
 using PoeCrafting.Entities.Constants;
@@ -28,6 +29,7 @@ namespace PoeCrafting.Domain
         private int _prefixWeight;
         private int _totalWeight;
         private string _baseItemName;
+        private int _category;
 
         public EquipmentFactory(
             IRandom random, 
@@ -45,10 +47,12 @@ namespace PoeCrafting.Domain
 
         public void Initialize(string baseItemName, int category, int itemLevel = 84)
         {
-            _baseItemName = baseItemName;
-
             if (string.IsNullOrEmpty(baseItemName)) return;
-            if (_itemLevel == itemLevel && baseItemName == _baseItemName) return;
+            if (_itemLevel == itemLevel && baseItemName == _baseItemName && category == _category) return;
+
+            _baseItemName = baseItemName;
+            _category = category;
+            _itemLevel = itemLevel;
 
             _fetchTypeByItemName.Name = baseItemName;
             var type = _fetchTypeByItemName.Execute();
@@ -72,7 +76,6 @@ namespace PoeCrafting.Domain
             {
                 throw new InvalidOperationException("The equipment type does not match the passed type");
             }
-            _itemLevel = itemLevel;
             _baseImplicit = null;
             _fetchAffixesByItemName.Name = baseItemName;
             var affixes = _fetchAffixesByItemName.Execute();
@@ -97,7 +100,7 @@ namespace PoeCrafting.Domain
             }
 
             affixes = affixes.Where(x => x.ILvl <= itemLevel)
-                             .Where(x => x.Category == 0 || x.Category == category)
+                             .Where(x => x.Faction == 0 || x.Faction == category)
                              .Where(x => x.Type == TypeInfo.AffixTypeMeta || ((x.Type == TypeInfo.AffixTypePrefix || x.Type == TypeInfo.AffixTypeSuffix) && x.Weight > 0))
                              .ToList();
 

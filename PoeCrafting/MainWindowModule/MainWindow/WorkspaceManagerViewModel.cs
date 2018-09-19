@@ -19,7 +19,6 @@ namespace MainWindowModule.MainWindow
         public WorkspaceManagerViewModel(IWorkspaceFactory workspaceFactory)
         {
             _workspaceFactory = workspaceFactory;
-            _workspaceFactory.ActivateWorkspace = ActivateWorkspace;
             base.DisplayName = "Main Window";
         }
 
@@ -62,29 +61,6 @@ namespace MainWindowModule.MainWindow
             WorkspaceViewModel workspace = sender as WorkspaceViewModel;
             workspace.Dispose();
             this.Workspaces.Remove(workspace);
-        }
-
-        void ActivateWorkspace<T>(T viewModel) where T : WorkspaceViewModel
-        {
-            T workspace =
-                this.Workspaces.FirstOrDefault(vm => vm is T)
-                    as T;
-
-            if (workspace == null)
-            {
-                workspace = viewModel;
-                this.Workspaces.Add(workspace);
-            }
-
-            this.SetActiveWorkspace(workspace);
-        }
-
-        void SetActiveWorkspace(WorkspaceViewModel workspace)
-        {
-            Debug.Assert(this.Workspaces.Contains(workspace));
-            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Workspaces);
-            if (collectionView != null)
-                collectionView.MoveCurrentTo(workspace);
         }
     }
 }

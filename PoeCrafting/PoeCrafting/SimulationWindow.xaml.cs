@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using PoeCrafting.Currency;
 using PoeCrafting.Domain;
-using PoeCrafting.Domain.Crafting;
 using PoeCrafting.UI.Annotations;
 using PoeCrafting.UI.Controls;
 
@@ -26,9 +17,9 @@ namespace PoeCrafting.UI
     public partial class SimulationWindow : Window, INotifyPropertyChanged
     {
         private readonly List<ISimulationControl> _controls;
-        private readonly EquipmentFactory _factory;
+        private readonly EquipmentFactory _equipmentFactory;
+        private readonly CurrencyFactory _currencyFactory;
 
-        private CraftingTreeControl CraftingTree { get; }
         private BaseSelectionControl BaseSelection { get; }
         private ItemListControl ItemList { get; }
         private CraftingControl Crafting { get; }
@@ -40,14 +31,13 @@ namespace PoeCrafting.UI
         public bool IsReady => _controls[_currentControlIndex].CanComplete();
 
         public SimulationWindow(
-            CraftingTreeControl craftingTree, 
             BaseSelectionControl baseSelection, 
             ItemListControl itemList, 
             CraftingControl crafting, 
             CraftingResultsControl results,
-            EquipmentFactory factory)
+            EquipmentFactory equipmentFactory,
+            CurrencyFactory currencyFactory)
         {
-            CraftingTree = craftingTree;
             BaseSelection = baseSelection;
             ItemList = itemList;
             Crafting = crafting;
@@ -56,7 +46,6 @@ namespace PoeCrafting.UI
             _controls = new List<ISimulationControl>
             {
                 BaseSelection,
-                CraftingTree,
                 ItemList,
                 Crafting,
                 Results
@@ -70,7 +59,8 @@ namespace PoeCrafting.UI
             InitializeComponent();
             DataContext = this;
 
-            _factory = factory;
+            _equipmentFactory = equipmentFactory;
+            _currencyFactory = currencyFactory;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -106,32 +96,24 @@ namespace PoeCrafting.UI
             SelectedStep = _controls[_currentControlIndex] as ContentControl;
             OnPropertyChanged(nameof(SelectedStep));
 
-            if (_controls[_currentControlIndex] == CraftingTree)
+
+            if (_controls[_currentControlIndex] == ItemList)
             {
                 var baseInfo = BaseSelection.BaseInformation;
-                _factory.Initialize(baseInfo.SelectedBase, baseInfo.Category, baseInfo.ItemLevel);
-                var affixes = _factory.GetPossibleAffixes();
-                var baseItem = _factory.GetBaseItem();
-                CraftingTree.Initialize(affixes, baseItem, baseInfo);
-            }
-            else if (_controls[_currentControlIndex] == ItemList)
-            {
-                var baseInfo = BaseSelection.BaseInformation;
-                var affixes = _factory.GetPossibleAffixes();
-                var baseItem = _factory.GetBaseItem();
+                var affixes = _equipmentFactory.GetPossibleAffixes();
+                var baseItem = _equipmentFactory.GetBaseItem();
 
                 ItemList.Initialize(affixes, baseItem, baseInfo);
             }
             else if (_controls[_currentControlIndex] == Crafting)
             {
-                var craftingTree = CraftingTree.CraftingTree;
                 var itemList = ItemList.ItemPrototypes.ToList();
 
-                Crafting.Initialize(craftingTree, _factory, itemList, BaseSelection.ItemCost);
+                Crafting.Initialize(null, _equipmentFactory, _currencyFactory, itemList, BaseSelection.ItemCost);
             }
             else if (_controls[_currentControlIndex] == Results)
             {
-                var currencySpent = CraftingTree.CraftingTree.GetCurrencySpent(Crafting.ScourCount, BaseSelection.ItemCost, Crafting.BaseItemCount);
+                var currencySpent = -1;
                 Results.Initialize(Crafting.MatchingItems, currencySpent);
             }
 

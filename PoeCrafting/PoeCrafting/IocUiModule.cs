@@ -1,7 +1,7 @@
-﻿using Microsoft.Practices.Unity;
+﻿using PoeCrafting.Currency;
+using PoeCrafting.Currency.Orbs;
 using PoeCrafting.Data;
 using PoeCrafting.Domain;
-using PoeCrafting.Domain.Currency;
 using PoeCrafting.Entities;
 using PoeCrafting.UI.Controls;
 using PoeCrafting.UI.Pages;
@@ -23,7 +23,6 @@ namespace PoeCrafting.UI
             Container.RegisterType(typeof(SubconditionAffixesControl));
             Container.RegisterType(typeof(SubconditionAffixControl));
             Container.RegisterType(typeof(BaseSelectionControl));
-            Container.RegisterType(typeof(CraftingTreeControl));
             Container.RegisterType(typeof(ConditionControl));
             Container.RegisterType(typeof(SimulationWindow));
             Container.RegisterType(typeof(TestbedWindow));

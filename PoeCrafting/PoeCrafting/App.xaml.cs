@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using Ninject;
-using Ninject.Modules;
-using PoeCrafting.Data;
-using PoeCrafting.Domain;
-using PoeCrafting.Domain.Currency;
-
-using PoeCrafting.UI;
+﻿using System.Windows;
 using Unity;
 
 namespace PoeCrafting.UI

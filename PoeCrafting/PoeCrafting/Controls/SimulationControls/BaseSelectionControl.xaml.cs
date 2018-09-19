@@ -4,18 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using PoeCrafting.Domain;
-using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
 
 namespace PoeCrafting.UI.Controls
@@ -78,6 +68,13 @@ namespace PoeCrafting.UI.Controls
 
         public List<string> Subtypes { get; }
         public List<string> Bases { get; set; }
+        public List<string> Categories { get; } = new List<string>
+        {
+            "Normal",
+            "Shaper",
+            "Elder"
+        };
+
         public string AffixDescriptions { get; set; }
 
         public bool HasSubtype => !string.IsNullOrEmpty(_selectedSubtype);
@@ -89,10 +86,27 @@ namespace PoeCrafting.UI.Controls
             {
                 _selectedSubtype = value;
                 Bases = _fetch.FetchBasesBySubtype(_selectedSubtype).OrderBy(x => x).ToList();
+                UpdateAffixDescriptions();
                 OnPropertyChanged(nameof(Bases));
                 OnPropertyChanged(nameof(HasSubtype));
             }
         }
+
+        public string SelectedCategory
+        {
+            get
+            {
+                return _selectedCategory;
+            }
+            set
+            {
+                _selectedCategory = value;
+                UpdateAffixDescriptions();
+            }
+        }
+
+        private static string _selectedCategory;
+
 
         public string SelectedBase
         {
@@ -109,12 +123,14 @@ namespace PoeCrafting.UI.Controls
         {
             if (SelectedBase == null)
             {
+                AffixDescriptions = string.Empty;
+                OnPropertyChanged(nameof(AffixDescriptions));
                 return;
             }
 
             StringBuilder builder = new StringBuilder();
 
-            _factory.Initialize(SelectedBase, 1, ItemLevel);
+            _factory.Initialize(SelectedBase, Categories.IndexOf(_selectedCategory), ItemLevel);
 
             var affixes = _factory.GetPossibleAffixes();
             var types = affixes.GroupBy(x => x.Type);
@@ -132,14 +148,40 @@ namespace PoeCrafting.UI.Controls
 
                 foreach (var group in groups)
                 {
+                    var items = group.ToList();
+
                     builder.AppendLine("\t" + group.Key);
 
-                    var items = group.ToList();
+                    if (items.Any(x => x.StatName2 != null && !x.StatName2.Contains("Dummy")))
+                    {
+                        builder.AppendLine("\tStat 1: " + items[0].StatName1);
+                        builder.AppendLine("\tStat 2: " + items[0].StatName2);
+                    }
+                    if (items.Any(x => x.StatName3 != null && !x.StatName3.Contains("Dummy")))
+                    {
+                        builder.AppendLine("\tStat 3: " + items[0].StatName3);
+                    }
+
 
                     foreach (var item in items)
                     {
                         var chance = item.Weight / (float)totalWeight * 100;
-                        builder.AppendLine("\t\tT" + item.Tier + "\t\t" + chance.ToString("0.###") + "%");
+                        if (item.StatName2 != null && !item.StatName2.Contains("Dummy"))
+                        {
+                            builder.AppendLine("\t\tilvl: " + item.ILvl + "\tT" + item.Tier + "\t" + chance.ToString("0.###") + "%\t");
+
+                            builder.AppendLine("\t\t\t\t\t" + item.StatMin1 + "-" + item.StatMax1);
+                            builder.AppendLine("\t\t\t\t\t" + item.StatMin2 + "-" + item.StatMax2);
+
+                            if (item.StatName3 != null && !item.StatName3.Contains("Dummy"))
+                            {
+                                builder.AppendLine("\t\t\t\t" + "ilvl: " + item.ILvl + "\t" + item.StatMin3 + " - " + item.StatMax3);
+                            }
+                        }
+                        else
+                        {
+                            builder.AppendLine("\t\tilvl: " + item.ILvl + "\tT" + item.Tier + "\t" + chance.ToString("0.###") + "%\t" + item.StatMin1 + "-" + item.StatMax1);
+                        }
                     }
 
                 }
@@ -176,7 +218,7 @@ namespace PoeCrafting.UI.Controls
             SelectedSubtype = SelectedSubtype,
             ItemCost = ItemCost,
             League = SelectedLeague,
-            Category = 1
+            Category = Categories.IndexOf(_selectedCategory)
         };
 
         public bool CanComplete()
@@ -195,7 +237,9 @@ namespace PoeCrafting.UI.Controls
             _factory = factory;
             Subtypes = fetch.FetchSubtypes().OrderBy(x => x).ToList();
             SelectedLeague = Leagues[0];
+            SelectedCategory = Categories[0];
             OnPropertyChanged(nameof(SelectedLeague));
+            OnPropertyChanged(nameof(SelectedCategory));
             InitializeComponent();
             DataContext = this;
         }

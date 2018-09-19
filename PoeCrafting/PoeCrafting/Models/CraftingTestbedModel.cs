@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
+using PoeCrafting.Currency;
 using PoeCrafting.Domain;
-using PoeCrafting.Domain.Crafting;
-using PoeCrafting.Domain.Currency;
 using PoeCrafting.Entities;
-using PoeCrafting.Domain.Currency;
+using ItemStatus = PoeCrafting.Entities.ItemStatus;
 
 namespace PoeCrafting.UI.Pages
 {

@@ -3,24 +3,18 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using PoeCrafting.Domain;
 using PoeCrafting.Domain.Crafting;
 using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
 using PoeCrafting.UI.Models;
 using System.Threading;
+using PoeCrafting.Currency;
 using PoeCrafting.Domain.Condition;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.UI.Controls
 {
@@ -31,9 +25,10 @@ namespace PoeCrafting.UI.Controls
     {
         // dependencies
         private CraftingTree _craftingTree;
-        private EquipmentFactory _factory;
+        private EquipmentFactory _equipmentFactory;
         private List<ItemPrototypeModel> _itemPrototypes;
 
+        private CurrencyFactory _currencyFactory;
         // generated
         public List<Equipment> EquipmentList = new List<Equipment>();
         public Dictionary<ItemPrototypeModel, List<Equipment>> MatchingItems = new Dictionary<ItemPrototypeModel, List<Equipment>>();
@@ -96,12 +91,13 @@ namespace PoeCrafting.UI.Controls
             DataContext = this;
         }
 
-        public void Initialize(CraftingTree craftingTree, EquipmentFactory factory, List<ItemPrototypeModel> itemPrototypes, double baseItemCost)
+        public void Initialize(CraftingTree craftingTree, EquipmentFactory equipmentFactory, CurrencyFactory currencyFactory, List<ItemPrototypeModel> itemPrototypes, double baseItemCost)
         {
             _craftingTree = craftingTree;
             _craftingTree.ClearCurrencySpent();
 
-            _factory = factory;
+            _currencyFactory = currencyFactory;
+            _equipmentFactory = equipmentFactory;
             _itemPrototypes = itemPrototypes.OrderByDescending(x => x.Value).ThenBy(x => x.ItemName).ToList();
             MatchingItems.Clear();
             EquipmentList.Clear();
@@ -150,7 +146,7 @@ namespace PoeCrafting.UI.Controls
 
         private void Run(CancellationToken ct)
         {
-            var scourCost = _craftingTree.GetScourCost();
+            var scourCost = _currencyFactory.Currency.First(x => x.Name == CurrencyNames.ScouringOrb).Value;
 
             for (var progress = 0d; progress < 100; progress = _craftingTree.GetCurrencySpent(ScourCount, BaseItemCount, BaseItemCost) / Currency* 100)
             {
@@ -159,7 +155,7 @@ namespace PoeCrafting.UI.Controls
                     ct.ThrowIfCancellationRequested();
                 }
 
-                var newItem = _factory.CreateEquipment();
+                var newItem = _equipmentFactory.CreateEquipment();
                 var result = _craftingTree.Craft(newItem, ct);
                 EquipmentList.Add(result);
 

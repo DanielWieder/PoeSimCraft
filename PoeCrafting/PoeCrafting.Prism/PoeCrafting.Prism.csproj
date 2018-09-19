@@ -169,10 +169,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MainWindowModule\MainWindowModule.csproj">
-      <Project>{13f652df-7bd8-4ee8-a6e1-085b36b4b5cd}</Project>
-      <Name>MainWindowModule</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PoeCrafting.Data\PoeCrafting.Data.csproj">
       <Project>{7e67e2a6-da5f-46a0-824c-a537db11b3ac}</Project>
       <Name>PoeCrafting.Data</Name>
@@ -188,10 +184,6 @@
     <ProjectReference Include="..\PoeCrafting.Infrastructure\PoeCrafting.Infrastructure.csproj">
       <Project>{d99f5a61-d937-45f7-a9a2-a8898729d0d3}</Project>
       <Name>PoeCrafting.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WorkspacesModule\WorkspacesModule.csproj">
-      <Project>{02a8d457-311e-48bb-9c55-ec4ab4f67034}</Project>
-      <Name>WorkspacesModule</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

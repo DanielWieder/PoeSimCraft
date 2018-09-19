@@ -1,0 +1,119 @@
+﻿using System;
+using System.Collections.Generic;
+using PoeCrafting.Data;
+using PoeCrafting.Entities;
+using PoeCrafting.Entities.Constants;
+
+
+namespace PoeCrafting.Currency
+{
+    public class MasterCraft : ICurrency
+    {
+        public Affix Affix { get; set; }
+
+        private IRandom Random { get; set; }
+
+        public string Name => "Master Run - ";
+        public double Value { get; set; }
+
+        public MasterCraft(IRandom random)
+        {
+            Random = random;
+        }
+
+        public bool Execute(Equipment item)
+        {
+            if (item.Corrupted || item.Rarity == EquipmentRarity.Normal)
+            {
+                return false;
+            }
+
+            if (Affix.Type == TypeInfo.AffixTypePrefix)
+            {
+                return AddAffix(item, Random, Affix, item.PossiblePrefixes, item.Prefixes);
+            }
+
+            if (Affix.Type == TypeInfo.AffixTypeSuffix)
+            {
+                return AddAffix(item, Random, Affix, item.PossiblePrefixes, item.Suffixes);
+            }
+
+            throw new InvalidOperationException("Implicit affixes cannot be crafted");
+        }
+
+        private static bool AddAffix(Equipment item, IRandom random, Affix affix, List<Affix> possibleAffixes, List<Stat> itemAffixes)
+        {
+            if (itemAffixes.Count >= 3)
+            {
+                return false;
+            }
+
+            if (!possibleAffixes.Contains(affix))
+            {
+                throw new InvalidOperationException("That crafted prefix is not in the list of available prefixes");
+            }
+
+            StatFactory.AddExplicit(random, item, new List<Affix> { affix });
+
+            return true;
+        }
+
+        public bool IsWarning(ItemStatus status)
+        {
+            if (Affix.Type.Contains(TypeInfo.AffixTypePrefix))
+            {
+                return status.Rarity == EquipmentRarity.Magic && status.MaxPrefixes == 1 ||
+                    status.Rarity == EquipmentRarity.Rare && status.MaxPrefixes == 3;
+            }
+            if (Affix.Type.Contains(TypeInfo.AffixTypeSuffix))
+            {
+                return status.Rarity == EquipmentRarity.Magic && status.MaxSuffixes == 1 ||
+                    status.Rarity == EquipmentRarity.Rare && status.MaxSuffixes == 3;
+            }
+
+            return false;
+        }
+
+        public bool IsError(ItemStatus status)
+        {
+            if (status.Rarity == EquipmentRarity.Normal || status.IsCorrupted)
+            {
+                return true;
+            }
+            if (Affix != null && Affix.Type.Contains(TypeInfo.AffixTypePrefix))
+            {
+                return status.Rarity == EquipmentRarity.Magic && status.MinPrefixes == 1 ||
+                    status.Rarity == EquipmentRarity.Rare && status.MinPrefixes == 3;
+            }
+            if (Affix != null && Affix.Type.Contains(TypeInfo.AffixTypeSuffix))
+            {
+                return status.Rarity == EquipmentRarity.Magic && status.MinSuffixes == 1 ||
+                    status.Rarity == EquipmentRarity.Rare && status.MinSuffixes == 3;
+            }
+
+            return false;
+        }
+
+        public ItemStatus GetNextStatus(ItemStatus status)
+        {
+            if (IsError(status))
+                return status;
+
+            if (Affix.Type.Contains(TypeInfo.AffixTypePrefix))
+            {
+                status.MinPrefixes = Math.Min(status.MinPrefixes + 1, 3);
+                status.MaxPrefixes = Math.Max(status.MinPrefixes, status.MaxPrefixes);
+            }
+            if (Affix.Type.Contains(TypeInfo.AffixTypeSuffix))
+            {
+                status.MinSuffixes = Math.Min(status.MinSuffixes + 1, 3);
+                status.MaxSuffixes = Math.Max(status.MinSuffixes, status.MaxSuffixes);
+            }
+
+            status.MinAffixes = Math.Min(status.MinAffixes + 1, 6);
+            status.MaxAffixes = Math.Max(status.MinAffixes, status.MaxAffixes);
+
+            return status;
+        }
+    }
+}

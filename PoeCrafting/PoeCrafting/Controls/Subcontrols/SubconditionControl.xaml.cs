@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using PoeCrafting.Domain.Condition;
 using PoeCrafting.Entities;
 using PoeCrafting.UI.Annotations;
 

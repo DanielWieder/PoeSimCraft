@@ -18,6 +18,8 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="10" />
             <RowDefinition Height="30" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -40,8 +42,11 @@
         <Label Grid.Column="0" Grid.Row="7" Content="Base Cost (C)"/>
         <TextBox Grid.Column="2" Grid.Row="7" Text="{Binding Path=ItemCost}"/>
 
-        <Label Grid.Column="0" Grid.Row="9" Content="League"/>
-        <ComboBox Grid.Column="2" Grid.Row="9" ItemsSource="{Binding Leagues}" SelectedItem="{Binding SelectedLeague}"/>
+        <Label Grid.Column="0" Grid.Row="9" Content="Faction"/>
+        <ComboBox Grid.Column="2" Grid.Row="9" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}"/>
+
+        <Label Grid.Column="0" Grid.Row="11" Content="League"/>
+        <ComboBox Grid.Column="2" Grid.Row="11" ItemsSource="{Binding Leagues}" SelectedItem="{Binding SelectedLeague}"/>
 
         <ScrollViewer Grid.Column="4" Grid.Row="0" Grid.RowSpan="11" >
             <TextBlock Text="{Binding AffixDescriptions}" />

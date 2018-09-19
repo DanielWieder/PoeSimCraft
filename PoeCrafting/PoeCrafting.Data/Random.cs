@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PoeCrafting.Entities;
 
 namespace PoeCrafting.Data
 {
@@ -28,13 +29,5 @@ namespace PoeCrafting.Data
         {
             return _random.NextDouble();
         }
-    }
-
-    public interface IRandom
-    {
-        int Next();
-        int Next(int max);
-        int Next(int min, int max);
-        double NextDouble();
     }
 }
