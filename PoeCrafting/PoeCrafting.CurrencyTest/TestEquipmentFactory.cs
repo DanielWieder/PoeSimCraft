@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Items;
 
 namespace PoeCrafting.CurrencyTest
 {
@@ -16,13 +17,7 @@ namespace PoeCrafting.CurrencyTest
 
             return new Equipment()
             {
-                PossiblePrefixes = prefixes,
-                PossibleSuffixes = suffixes,
-                PossibleAffixes = affixes,
                 ItemLevel = 1,
-                PrefixWeight = 4,
-                SuffixWeight = 4,
-                TotalWeight = 8,
                 ItemBase = getTestBase()
             };
         }
@@ -31,10 +26,11 @@ namespace PoeCrafting.CurrencyTest
         {
             return new ItemBase()
             {
-                Level = 0,
+                RequiredLevel = 0,
                 Name = "Test",
-                Subtype = "Test",
-                Type = "Test"
+                ItemClass = "Test",
+                Type = "Test",
+                Tags = new List<string>() { "default" }
             };
         }
 
@@ -42,10 +38,10 @@ namespace PoeCrafting.CurrencyTest
         {
             return new List<Affix>()
             {
-                getTestAffix(1, "Prefix"),
-                getTestAffix(2, "Prefix"),
-                getTestAffix(3, "Prefix"),
-                getTestAffix(4, "Prefix"),
+                getTestAffix(1, 1, "prefix"),
+                getTestAffix(2,2, "prefix"),
+                getTestAffix(3,3, "prefix"),
+                getTestAffix(4,4, "prefix"),
             };
         }
 
@@ -53,29 +49,23 @@ namespace PoeCrafting.CurrencyTest
         {
             return new List<Affix>()
             {
-                getTestAffix(1, "Suffix"),
-                getTestAffix(2, "Suffix"),
-                getTestAffix(3, "Suffix"),
-                getTestAffix(4, "Suffix"),
+                getTestAffix(1,1, "suffix"),
+                getTestAffix(2,2, "suffix"),
+                getTestAffix(3,3, "suffix"),
+                getTestAffix(4,4, "suffix"),
             };
         }
 
-        private Affix getTestAffix(int index, String type)
+        private Affix getTestAffix(int index, int group, String type)
         {
             return new Affix
             {
-                Faction = 1,
-                Group = "Test",
-                ILvl = 0,
-                ModName = "Test" + type + index,
-                ModType = "Test" + type + index,
-                ModTypeWeight = 1,
+                Group = "Test" + type + index,
+                RequiredLevel = 0,
+                FullName = "Test" + type + index,
                 Name = "Test",
-                Priority = 0,
-                SpawnTag = "Test",
                 Tier = 0,
-                Type = type,
-                Weight = 1,
+                GenerationType = type,
                 StatName1 = "Test",
                 StatMin1 = 0,
                 StatMax1 = 1

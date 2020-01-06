@@ -10,3 +10,10 @@ obj/
 *.user
 *.psess
 *.vspx
+*.suo
+*.lock
+*.testlog
+*.manifest
+*.ide
+*.ide-wal
+*.ide-shem

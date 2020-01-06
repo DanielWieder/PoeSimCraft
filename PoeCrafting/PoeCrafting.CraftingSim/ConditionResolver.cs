@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PoeCrafting.Entities;
+using PoeCrafting.Entities.Constants;
+using PoeCrafting.Entities.Crafting;
+using PoeCrafting.Entities.Items;
 
-namespace PoeCrafting.Domain.Condition
+namespace PoeCrafting.CraftingSim
 {
     public class ConditionResolver
     {
@@ -45,7 +47,7 @@ namespace PoeCrafting.Domain.Condition
             switch (subcondition.AggregateType)
             {
                 case SubconditionAggregateType.Count:
-                    return (subcondition.AggregateMin.HasValue || matched >= subcondition.AggregateMin) && (subcondition.AggregateMax.HasValue || matched <= subcondition.AggregateMax);
+                    return (!subcondition.AggregateMin.HasValue || matched >= subcondition.AggregateMin) && (!subcondition.AggregateMax.HasValue || matched <= subcondition.AggregateMax);
                 case SubconditionAggregateType.And:
                     return allResolutions.All(x => x.IsPresent && x.IsMatch);
                 case SubconditionAggregateType.If:
@@ -53,7 +55,7 @@ namespace PoeCrafting.Domain.Condition
                 case SubconditionAggregateType.Not:
                     return !allResolutions.Any(x => x.IsMatch);
                 case SubconditionAggregateType.Sum:
-                    return (subcondition.AggregateMin.HasValue || sum >= subcondition.AggregateMin) && (subcondition.AggregateMax.HasValue || sum <= subcondition.AggregateMax);
+                    return (!subcondition.AggregateMin.HasValue || sum >= subcondition.AggregateMin) && (!subcondition.AggregateMax.HasValue || sum <= subcondition.AggregateMax);
                 default:
                     throw new InvalidOperationException($"The subcondition aggregate type {Enum.GetName(typeof(SubconditionAggregateType), subcondition.AggregateType)} is not recognized");
             }

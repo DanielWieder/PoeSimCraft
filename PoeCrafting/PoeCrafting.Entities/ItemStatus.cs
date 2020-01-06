@@ -4,13 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Items;
 
 namespace PoeCrafting.Entities
 {
-    public class ItemStatus : ICloneable, ITreeNavigation
+    public class ItemStatus : ICloneable
     {
-        public bool Initialized = false;
-
         public int MinPrefixes = 0;
         public int MaxPrefixes = 0;
         public int MinSuffixes = 0;
@@ -26,17 +25,39 @@ namespace PoeCrafting.Entities
 
         public EquipmentRarity Rarity = EquipmentRarity.Normal;
 
+        public bool IsRarity(EquipmentRarity rarity)
+        {
+            return this.Rarity == rarity;
+        }
+
+        public bool MightBeRarity(EquipmentRarity rarity)
+        {
+            return (Rarity & rarity) != rarity;
+        }
+
         public bool Validate()
         {
-            return Initialized &&
-                   MinPrefixes <= MaxPrefixes &&
+            int affixCap = GetAffixCap();
+
+            return MinPrefixes <= MaxPrefixes &&
                    MinSuffixes <= MaxSuffixes &&
                    MinAffixes <= MaxAffixes &&
                    MinPrefixes <= MinAffixes &&
                    MinSuffixes <= MinAffixes &&
-                   MaxPrefixes <= 3 &&
-                   MaxSuffixes <= 3 &&
-                   MaxAffixes <= 6;
+                   MaxPrefixes <= affixCap &&
+                   MaxSuffixes <= affixCap &&
+                   MaxAffixes <= affixCap * 2;
+        }
+
+        public int GetAffixCap()
+        {
+            return GetAffixCap(Rarity);
+        }
+
+        public int GetAffixCap(EquipmentRarity rarity)
+        {
+            return MightBeRarity(EquipmentRarity.Rare) ? 3 :
+                MightBeRarity(EquipmentRarity.Magic) ? 1 : 0;
         }
 
         public object Clone()
@@ -44,7 +65,6 @@ namespace PoeCrafting.Entities
             return new ItemStatus
             {
                 Rarity = Rarity,
-                Initialized = Initialized,
                 HasImplicit = HasImplicit,
                 IsCorrupted = IsCorrupted,
                 MaxAffixes = MaxAffixes,
@@ -59,20 +79,16 @@ namespace PoeCrafting.Entities
 
         public static ItemStatus Combine(List<ItemStatus> status)
         {
-            if (status.Any(x => x.Completed))
+            if (status.All(x => x.Completed))
             {
-                throw new InvalidOperationException("Unable to combine completed item statuses. This should have already completed");
+                throw new InvalidOperationException("Unable to combine completed item statuses");
             }
 
-            if (status.Any(x => !x.Initialized))
-            {
-                throw new InvalidOperationException("Unable to combine invalid item statuses. This should not have been reached");
-            }
+            status = status.Where(x => !x.Completed).ToList();
 
             return new ItemStatus
             {
                 Completed = false,
-                Initialized = true,
                 Rarity = status.Select(x => x.Rarity).Aggregate((x, y) => x | y),
                 HasImplicit = status.Any(x => x.HasImplicit),
                 IsCorrupted = status.Any(x => x.IsCorrupted),
@@ -88,7 +104,6 @@ namespace PoeCrafting.Entities
         public bool AreEqual(ItemStatus other)
         {
             return
-                Initialized == other.Initialized &&
                 Completed == other.Completed &&
                 Rarity == other.Rarity && 
                 HasImplicit == other.HasImplicit &&

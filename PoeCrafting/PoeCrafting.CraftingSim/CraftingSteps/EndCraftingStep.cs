@@ -1,43 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using PoeCrafting.CraftingSim.CraftingSteps;
+﻿using System.Collections.Generic;
+using PoeCrafting.Currency;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Crafting;
+using PoeCrafting.Entities.Items;
 
-namespace PoeCrafting.Domain.Crafting
+namespace PoeCrafting.CraftingSim.CraftingSteps
 {
     public class EndCraftingStep : ICraftingStep
     {
-        public CraftingStepStatus Status => _initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
         public string Name => "End";
 
         public List<ICraftingStep> Children => null;
-        public List<string> Options => null;
+
+        public bool ShouldVisitChildren(Equipment equipment, int times) => false;
+
         public CraftingCondition Condition => null;
+        public Dictionary<string, int> GetCurrency => new Dictionary<string, int>();
 
-        private bool _initialized = false;
-
-        public void ClearStatus()
-        {
-            _initialized = false;
-        }
-
-        public ItemStatus UpdateStatus(ItemStatus status)
-        {
-            _initialized = true;
-            status.Completed = true;
-            return status;
-        }
-
-        public Equipment Craft(Equipment equipment, CancellationToken ct)
+        public bool Craft(Equipment equipment, AffixManager affixManager)
         {
             equipment.Completed = true;
-            return equipment;
+            return true;
+        }
+        public void UpdateStatus(ItemStatus metadataCurrentStatus)
+        {
+            metadataCurrentStatus.Completed = true;
         }
 
-        public T NavigateTree<T>(T item, List<ICraftingStep> queue, Func<ICraftingStep, T, T> action, CancellationToken ct) where T : ITreeNavigation
+        public bool ShouldVisitChildren(ItemStatus previousStatus, ItemStatus metadataCurrentStatus)
         {
-            return this.DefaultNavigateTree(item, queue, action, ct);
+            return false;
         }
     }
 }

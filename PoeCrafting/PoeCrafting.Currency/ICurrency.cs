@@ -1,4 +1,6 @@
-﻿using PoeCrafting.Entities;
+﻿using System.Collections.Generic;
+using PoeCrafting.Entities;
+using PoeCrafting.Entities.Items;
 
 
 namespace PoeCrafting.Currency
@@ -7,14 +9,13 @@ namespace PoeCrafting.Currency
     {
         string Name { get; }
 
-        bool Execute(Equipment equipment);
+        bool Execute(Equipment equipment, AffixManager affixManager);
 
         bool IsWarning(ItemStatus status);
 
         bool IsError(ItemStatus status);
 
         ItemStatus GetNextStatus(ItemStatus status);
-
-        double Value { get; set; }
+        Dictionary<string, int> GetCurrency();
     }
 }

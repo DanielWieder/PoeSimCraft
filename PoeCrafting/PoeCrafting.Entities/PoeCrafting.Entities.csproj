@@ -30,9 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,17 +43,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccessoryEntity.cs" />
-    <Compile Include="ConfigUpdatedEventArgs.cs" />
+    <Compile Include="Crafting\TierType.cs" />
+    <Compile Include="Items\AccessoryEntity.cs" />
     <Compile Include="Crafting\AffixRestriction.cs" />
     <Compile Include="Crafting\CraftingConfig.cs" />
     <Compile Include="IRandom.cs" />
     <Compile Include="ItemStatus.cs" />
+    <Compile Include="Items\Essence.cs" />
+    <Compile Include="Items\Fossil.cs" />
     <Compile Include="Items\ItemConfig.cs" />
     <Compile Include="Constants\AffixGroupings.cs" />
     <Compile Include="Constants\AffixNames.cs" />
-    <Compile Include="AffixType.cs" />
-    <Compile Include="ArmourEntity.cs" />
+    <Compile Include="Crafting\AffixType.cs" />
+    <Compile Include="Items\ArmourEntity.cs" />
     <Compile Include="Crafting\ConditionAffix.cs" />
     <Compile Include="ConditionContainer.cs" />
     <Compile Include="Crafting\ConditionResolution.cs" />
@@ -70,13 +71,12 @@
     <Compile Include="Items\ItemBase.cs" />
     <Compile Include="Affix.cs" />
     <Compile Include="Items\ItemProperty.cs" />
-    <Compile Include="Items\ItemPrototype.cs" />
-    <Compile Include="ITreeNavigation.cs" />
-    <Compile Include="Persistance\SimulationJson.cs" />
+    <Compile Include="Items\CraftingTarget.cs" />
+    <Compile Include="Items\MasterMod.cs" />
     <Compile Include="Items\Stat.cs" />
-    <Compile Include="SubconditionAggregateType.cs" />
-    <Compile Include="Items\StatValueType.cs" />
-    <Compile Include="WeaponEntity.cs" />
+    <Compile Include="Crafting\SubconditionAggregateType.cs" />
+    <Compile Include="Crafting\StatValueType.cs" />
+    <Compile Include="Items\WeaponEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

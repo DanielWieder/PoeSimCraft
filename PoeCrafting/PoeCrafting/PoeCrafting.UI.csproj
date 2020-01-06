@@ -137,6 +137,9 @@
     <Compile Include="Controls\SimulationControls\CraftingResultsControl.xaml.cs">
       <DependentUpon>CraftingResultsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SimulationControls\CraftingTreeControl.xaml.cs">
+      <DependentUpon>CraftingTreeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Subcontrols\ConditionControl.xaml.cs">
       <DependentUpon>ConditionControl.xaml</DependentUpon>
     </Compile>
@@ -170,6 +173,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SimulationControls\CraftingResultsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SimulationControls\CraftingTreeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

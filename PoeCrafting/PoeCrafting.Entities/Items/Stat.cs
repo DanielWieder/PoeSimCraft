@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PoeCrafting.Entities
+namespace PoeCrafting.Entities.Items
 {
     public class Stat
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using PoeCrafting.Currency.Orbs;
+using PoeCrafting.Currency.Currency;
 using PoeCrafting.Data;
 using PoeCrafting.Entities;
 
@@ -18,13 +18,13 @@ namespace PoeCrafting.Currency
             AlchemyOrb alchemy,
             ChaosOrb chaos,
             RegalOrb regal,
-        //    [Named("Blessed")] ICurrency blessed,
+            BlessedOrb blessed,
             ChanceOrb chance,
             DivineOrb divine,
             ExaltedOrb exalted,
-        //    [Named("MasterCraft")] ICurrency masterCraft,
+            MasterCraft masterCraft,
             ScouringOrb scouring,
-            VaalOrb vaal,
+         //   VaalOrb vaal,
             AnullmentOrb anull
         )
         {
@@ -36,35 +36,35 @@ namespace PoeCrafting.Currency
                 alchemy,
                 chaos,
                 regal,
-                // blessed,
+                 blessed,
                 chance,
                 divine,
                 exalted,
-                // masterCraft,
+                 masterCraft,
                 scouring,
-                vaal,
+             //   vaal,
                 anull
             };
 
             _currencyFetch = currencyValueFetch;
         }
 
-        public void UpdateValues(string leagueName)
+        public ICurrency GetCurrencyByName(string name)
         {
-            _currencyFetch.League = leagueName;
-            var data = _currencyFetch.Execute();
-            foreach (var currency in Currency)
-            {
-                if (data.ContainsKey(currency.Name))
-                {
-                    currency.Value = data[currency.Name];
-                }
-            }
-
-            Currency.First(x => x.Name == "Chaos Orb").Value = 1;
+            return Currency.First(x => x.Name == name);
         }
 
-        public ICurrency GetCurrencyByName(string name)
+        public ICurrency GetMasterCraftByName(string name)
+        {
+            return Currency.First(x => x.Name == name);
+        }
+
+        public ICurrency GetEssenceByName(string name)
+        {
+            return Currency.First(x => x.Name == name);
+        }
+
+        public ICurrency GetFossilByName(string name)
         {
             return Currency.First(x => x.Name == name);
         }

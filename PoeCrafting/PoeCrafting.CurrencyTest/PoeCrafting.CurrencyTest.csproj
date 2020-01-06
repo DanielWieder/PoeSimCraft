@@ -36,14 +36,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Moq, Version=4.7.10.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.7.10\lib\net45\Moq.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Moq, Version=4.13.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.13.1\lib\net45\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.1\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -58,24 +63,28 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="VaalTest.cs" />
-    <Compile Include="ScouringTest.cs" />
-    <Compile Include="RegalTest.cs" />
-    <Compile Include="ChanceTest.cs" />
-    <Compile Include="AlchemyTest.cs" />
-    <Compile Include="AnullmentTest.cs" />
-    <Compile Include="AugmentationTest.cs" />
-    <Compile Include="ChaosTest.cs" />
-    <Compile Include="ExaltedTest.cs" />
+    <Compile Include="Currency\ScouringTest.cs" />
+    <Compile Include="Currency\RegalTest.cs" />
+    <Compile Include="Currency\ChanceTest.cs" />
+    <Compile Include="Currency\AlchemyTest.cs" />
+    <Compile Include="Currency\AnullmentTest.cs" />
+    <Compile Include="Currency\AugmentationTest.cs" />
+    <Compile Include="Currency\ChaosTest.cs" />
+    <Compile Include="Currency\ExaltedTest.cs" />
+    <Compile Include="Currency\VaalTest.cs" />
     <Compile Include="TestEquipmentFactory.cs" />
-    <Compile Include="CurrencyTest.cs" />
+    <Compile Include="Currency\CurrencyTestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TransmutationTest.cs" />
+    <Compile Include="Currency\TransmutationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PoeCrafting.Currency\PoeCrafting.Currency.csproj">
       <Project>{56788108-8dbd-4b47-b629-66bc3b0b928f}</Project>
       <Name>PoeCrafting.Currency</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PoeCrafting.Data\PoeCrafting.Data.csproj">
+      <Project>{7e67e2a6-da5f-46a0-824c-a537db11b3ac}</Project>
+      <Name>PoeCrafting.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\PoeCrafting.Entities\PoeCrafting.Entities.csproj">
       <Project>{2f3e944e-78e3-40c6-85b2-197cf43429aa}</Project>
@@ -85,6 +94,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

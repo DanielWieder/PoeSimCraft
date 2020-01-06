@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using PoeCrafting.Entities.Constants;
 
-namespace PoeCrafting.Entities
+namespace PoeCrafting.Entities.Items
 {
     public class ItemProperty
     {
-        public string ModType;
+        public string Group;
         public AffixType Type;
         public List<int> Values;
     }

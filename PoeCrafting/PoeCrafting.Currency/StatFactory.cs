@@ -4,139 +4,126 @@ using System.Linq;
 using PoeCrafting.Entities;
 using PoeCrafting.Entities.Constants;
 using PoeCrafting.Entities.Crafting;
+using PoeCrafting.Entities.Items;
 
 namespace PoeCrafting.Currency
 {
     public static class StatFactory
     {
-        public static void AddExplicit(IRandom random, Equipment item)
+        private static String PrefixesCannotBeChanged = "ItemGenerationCannotChangePrefixes";
+        private static String SuffixesCannotBeChanged = "ItemGenerationCannotChangeSuffixes";
+ 
+        public static void RemoveExplicit(IRandom random, Equipment item)
         {
-            AddExplicit(random, item, item.PossibleAffixes);
+            bool cannotChangePrefixes = ItemHasGroup(item, PrefixesCannotBeChanged);
+            bool cannotChangeSuffixes = ItemHasGroup(item, SuffixesCannotBeChanged);
+
+            List<Stat> statPool = new List<Stat>();
+
+            if (!cannotChangePrefixes)
+            {
+                statPool.AddRange(item.Prefixes);
+            }
+
+            if (!cannotChangeSuffixes)
+            {
+                statPool.AddRange(item.Suffixes);
+            }
+
+            var index = random.Next(statPool.Count);
+
+            item.Stats.Remove(statPool[index]);
         }
 
-        public static void AddExplicit(IRandom random, Equipment item, List<Affix> possibleAffixes )
+        public static void RemoveAllExplicits(Equipment item)
         {
-            int maxAffixCount;
-            
-            switch (item.Rarity)
+            bool canChangePrefixes = !ItemHasGroup(item, PrefixesCannotBeChanged);
+            bool canChangeSuffixes = !ItemHasGroup(item, SuffixesCannotBeChanged);
+
+            if (canChangePrefixes)
             {
-                case EquipmentRarity.Magic:
-                    maxAffixCount = 2;
-                    break;
-                case EquipmentRarity.Rare:
-                    maxAffixCount = 6;
-                    break;
-                default:
-                    maxAffixCount = 0;
-                    break;
+                item.Stats = item.Stats.Where(x => x.Affix.GenerationType != "prefix").ToList();
             }
 
-            if (item.Stats.Count >= maxAffixCount)
+            if (canChangeSuffixes)
             {
-                return;
+                item.Stats = item.Stats.Where(x => x.Affix.GenerationType != "suffix").ToList();
             }
+        }
 
-            var totalWeight = generateTotalWeight(item, maxAffixCount, item.TotalWeight, new List<AffixRestriction>());
-            var pool = GenerateAffixPool(item.Prefixes, item.Suffixes, possibleAffixes, maxAffixCount);
+        private static bool ItemHasGroup(List<Affix> affixes, string affix)
+        {
+            return affixes.Any(x => x.Group == affix);
+        }
 
-            if (pool.Count == 0)
-            {
-                return;
-            }
+        private static bool ItemHasGroup(Equipment item, string affix)
+        {
+            return ItemHasGroup(item.Stats.Select(x => x.Affix).ToList(), affix);
+        }
 
-            var affix = SelectAffixFromPool(random, item.Stats, pool, totalWeight);
-            var stat = AffixToStat(random, affix);
+        private static bool ItemHasGroup(List<Stat> stats, string affix)
+        {
+            return ItemHasGroup(stats.Select(x => x.Affix).ToList(), affix);
+        }
+
+        public static bool AddExplicit(IRandom random, Equipment item, AffixManager affixManager, List<Fossil> fossils = null)
+        {
+            var affix = affixManager.GetAffix(item.Stats.Select(x => x.Affix).ToList(), item.Rarity, random);
+
+            if (affix == null) return false;
+
+            var stat = AffixToStat(random, item, affix);
 
             item.Stats.Add(stat);
+
+            return true;
         }
 
-        private static int generateTotalWeight(Equipment item, int maxAffixCount, int totalWeight, List<AffixRestriction> restrictions)
+        public static bool AddExplicit(IRandom random, Equipment item, Affix affix)
         {
-            // If there are no restrictions on what affixes can spawn then we can subtract the current mods from the total weight as a shortcut
-            // Otherwise we need to calculate it from scratch
-            if (!restrictions.Any())
-            {
-                if (item.Suffixes.Count < maxAffixCount / 2)
-                {
-                    totalWeight -= item.Suffixes.Sum(x => x.Affix.ModTypeWeight);
-                }
-                else
-                {
-                    totalWeight -= item.SuffixWeight;
-                }
+            if (IsFull(item, affix)) return false;
 
-                if (item.Prefixes.Count < maxAffixCount / 2)
-                {
-                    totalWeight -= item.Prefixes.Sum(x => x.Affix.ModTypeWeight);
-                }
-                else
-                {
-                    totalWeight -= item.PrefixWeight;
-                }
-            }
+            var stat = AffixToStat(random, item, affix);
+            item.Stats.Add(stat);
 
-            return totalWeight;
+            return true;
         }
 
-        private static List<Affix> GenerateAffixPool(
-            List<Stat> prefixes,
-            List<Stat> suffixes,
-            List<Affix> possibleAffixes, 
-            int maxAffixCount)
+        private static bool IsFull(Equipment item, Affix affix)
         {
-            List<Affix> pool = new List<Affix>();
-            if (suffixes.Count < maxAffixCount / 2)
-            {
-                pool.AddRange(possibleAffixes.Where(x => x.Type == TypeInfo.AffixTypeSuffix));
-            }
-            if (prefixes.Count < maxAffixCount / 2)
-            {
-                pool.AddRange(possibleAffixes.Where(x => x.Type == TypeInfo.AffixTypePrefix));
-            }
-            return pool;
+            int affixesCount = item.Rarity == EquipmentRarity.Normal ? 0 :
+                item.Rarity == EquipmentRarity.Magic ? 1 :
+                item.Rarity == EquipmentRarity.Rare ? 3 : 0;
+
+            var canAddPrefix = affix.GenerationType == "prefix" && item.Prefixes.Count < affixesCount;
+            var canAddSuffix = affix.GenerationType == "suffix" && item.Suffixes.Count < affixesCount;
+            return !canAddPrefix && !canAddSuffix;
         }
 
         public static void SetImplicit(IRandom random, Equipment item)
         {
-            var pool = item.PossibleAffixes.Where(x => x.Type == TypeInfo.AffixTypeCorrupted).ToList();
-            var affix = SelectAffixFromPool(random, new List<Stat>(), pool, item.TotalWeight);
-            var stat = AffixToStat(random, affix);
+            // TODO: Update implicit handling
+        //    var pool = item.PossibleAffixes.Where(x => x.GenerationType == "corrupted").ToList();
+        //    var affix = SelectAffixFromPool(random, new List<Stat>(), pool, item.TotalWeight);
+       //     var stat = AffixToStat(random, item, affix);
 
-            item.Implicit = stat;
+       //    item.Implicit = stat;
         }
 
-        private static Affix SelectAffixFromPool(IRandom random, List<Stat> current, List<Affix> pool, int totalWeight)
-        {
-
-            var currentModTypes = current.Select(x => x.Affix.ModType).ToArray();
-            var filtered = new List<Affix>(pool);
-            for (int i = filtered.Count - 1; i >= 0; i--)
-            {
-                if (currentModTypes.Contains(filtered[i].ModType))
-                {
-                    filtered.RemoveAt(i);
-                }
-            }
-
-            var roll = random.NextDouble()* totalWeight;
-
-            double accumulator = 0;
-            foreach (var modifier in filtered)
-            {
-                accumulator += modifier.Weight;
-
-                if (roll <= accumulator)
-                {
-                    return modifier;
-                }
-            }
-            return null;
-        }
-
-        public static void Reroll(IRandom random, Stat stat)
+        public static void Reroll(IRandom random, Equipment item, Stat stat)
         {
             if (stat?.Affix == null)
                 return;
+
+            if (stat.Affix.GenerationType == "prefix" && ItemHasGroup(item, PrefixesCannotBeChanged))
+            {
+                return;
+            }
+
+            if (stat.Affix.GenerationType == "suffix" && ItemHasGroup(item, SuffixesCannotBeChanged))
+            {
+                return;
+            }
 
             var mod = stat.Affix;
 
@@ -148,11 +135,11 @@ namespace PoeCrafting.Currency
                 stat.Value3 = random.Next(mod.StatMin3, mod.StatMax3);
         }
 
-        public static Stat AffixToStat(IRandom random, Affix affix)
+        public static Stat AffixToStat(IRandom random, Equipment equipment, Affix affix)
         {
             Stat stat = new Stat();
             stat.Affix = affix;
-            Reroll(random, stat);
+            Reroll(random, equipment, stat);
             return stat;
         }
     }

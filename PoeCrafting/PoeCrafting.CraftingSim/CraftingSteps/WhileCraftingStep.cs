@@ -1,111 +1,34 @@
-﻿using PoeCrafting.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using PoeCrafting.CraftingSim.CraftingSteps;
-using PoeCrafting.Domain.Condition;
+﻿using System.Collections.Generic;
+using PoeCrafting.Currency;
+using PoeCrafting.Entities;
+using PoeCrafting.Entities.Crafting;
+using PoeCrafting.Entities.Items;
 
-namespace PoeCrafting.Domain.Crafting
+namespace PoeCrafting.CraftingSim.CraftingSteps
 {
     public class WhileCraftingStep : ICraftingStep
     {
-        private bool _initialized = false;
+        private readonly ConditionResolver _conditionResolution = new ConditionResolver();
 
-        public CraftingStepStatus Status => _initialized ? CraftingStepStatus.Ok : CraftingStepStatus.Unreachable;
         public string Name => "While";
 
+        public Dictionary<string, int> GetCurrency => new Dictionary<string, int>();
         public List<ICraftingStep> Children { get; } = new List<ICraftingStep>();
-        public CraftingCondition Condition { get; } = new CraftingCondition();
-        public List<string> Options => null;
+        public CraftingCondition Condition { set; get; } = new CraftingCondition();
+        public bool Craft(Equipment equipment, AffixManager affixManager) => false;
 
-        ConditionResolver _conditionResolution = new ConditionResolver();
-
-        public void ClearStatus()
+        public bool ShouldVisitChildren(Equipment equipment, int times)
         {
-            _initialized = false;
+            return Children.Count > 0 && _conditionResolution.IsValid(Condition, equipment);
         }
 
-        public ItemStatus UpdateStatus(ItemStatus status)
+        public void UpdateStatus(ItemStatus metadataCurrentStatus)
         {
-            if (status.Completed) return status;
-
-            _initialized = true;
-
-            if (Children.Count > 0)
-            {
-                var first = Children.First();
-
-                ItemStatus endStatus = (ItemStatus) status.Clone();
-                bool isStatusEquilibrium = false;
-
-                // We do not know how many times this loop will run for 
-                // so we combine the status of each iteration until it reaches equilibrium
-                // Combining status always take the widest value within the max/min so it should always converge.
-                while (!isStatusEquilibrium)
-                {
-                    var nextSteps = Children.ToList();
-                    nextSteps.RemoveAt(0);
-
-                    var lastStatus = first.NavigateTree((ItemStatus) endStatus.Clone(), nextSteps,
-                        (step, nextStatus) => step.UpdateStatus(nextStatus));
-
-                    if (lastStatus.Completed)
-                    {
-                        isStatusEquilibrium = true;
-                    }
-                    else
-                    {
-
-                        var combinedStatus = ItemStatus.Combine(new List<ItemStatus> {endStatus, lastStatus });
-                        if (endStatus.AreEqual(combinedStatus))
-                        {
-                            isStatusEquilibrium = true;
-                        }
-                        else
-                        {
-                            endStatus = combinedStatus;
-                        }
-                    }
-                }
-                return endStatus;
-            }
-            else
-            {
-                return status;
-            }
         }
 
-        public Equipment Craft(Equipment equipment, CancellationToken ct)
+        public bool ShouldVisitChildren(ItemStatus previousStatus, ItemStatus metadataCurrentStatus)
         {
-            if (equipment.Completed) return equipment;
-
-            if (Children.Count > 0)
-            {
-                var first = Children.First();
-                while (_conditionResolution.IsValid(Condition, equipment))
-                {
-                    if (ct.IsCancellationRequested)
-                    {
-                        ct.ThrowIfCancellationRequested();
-                    }
-
-                    if (equipment.Completed)
-                    {
-                        return equipment;
-                    }
-
-                    var nextSteps = Children.ToList();
-                    nextSteps.RemoveAt(0);
-                    first.NavigateTree(equipment, nextSteps, (step, item) => step.Craft(item, ct), ct);
-                }
-            }
-            return equipment;
-        }
-
-        public T NavigateTree<T>(T item, List<ICraftingStep> queue, Func<ICraftingStep, T, T> action, CancellationToken ct) where T : ITreeNavigation
-        {
-            return this.DefaultNavigateTree(item, queue, action, ct);
+            return previousStatus == null || !previousStatus.AreEqual(metadataCurrentStatus);
         }
     }
 }

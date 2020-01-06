@@ -40,23 +40,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Orbs\AlchemyOrb.cs" />
-    <Compile Include="Orbs\AlterationOrb.cs" />
-    <Compile Include="Orbs\AnullmentOrb.cs" />
-    <Compile Include="Orbs\AugmentationOrb.cs" />
-    <Compile Include="Orbs\BlessedOrb.cs" />
-    <Compile Include="Orbs\ChanceOrb.cs" />
-    <Compile Include="Orbs\ChaosOrb.cs" />
+    <Compile Include="AffixManager.cs" />
+    <Compile Include="Currency\AlchemyOrb.cs" />
+    <Compile Include="Currency\AlterationOrb.cs" />
+    <Compile Include="Currency\AnullmentOrb.cs" />
+    <Compile Include="Currency\AugmentationOrb.cs" />
+    <Compile Include="Currency\BlessedOrb.cs" />
+    <Compile Include="Currency\ChanceOrb.cs" />
+    <Compile Include="Currency\ChaosOrb.cs" />
     <Compile Include="CurrencyFactory.cs" />
-    <Compile Include="Orbs\DivineOrb.cs" />
-    <Compile Include="Orbs\ExaltedOrb.cs" />
+    <Compile Include="Currency\DivineOrb.cs" />
+    <Compile Include="Currency\EssenceCraft.cs" />
+    <Compile Include="Currency\ExaltedOrb.cs" />
+    <Compile Include="Currency\FossilCraft.cs" />
+    <Compile Include="Currency\MasterCraft.cs" />
+    <Compile Include="Currency\RemoveMasterCraft.cs" />
+    <Compile Include="Currency\VaalOrb.cs" />
     <Compile Include="ICurrency.cs" />
-    <Compile Include="MasterCraft.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Orbs\RegalOrb.cs" />
-    <Compile Include="Orbs\ScouringOrb.cs" />
-    <Compile Include="Orbs\TransmutationOrb.cs" />
-    <Compile Include="Orbs\VaalOrb.cs" />
+    <Compile Include="Currency\RegalOrb.cs" />
+    <Compile Include="Currency\ScouringOrb.cs" />
+    <Compile Include="Currency\TransmutationOrb.cs" />
     <Compile Include="StatFactory.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using PoeCrafting.Entities;
 using PoeCrafting.Entities.Constants;
+using PoeCrafting.Entities.Items;
 
-namespace PoeCrafting.Domain.Condition
+namespace PoeCrafting.CraftingSim
 {
     public class MetaAffixValueCalculator
     {
@@ -68,15 +69,11 @@ namespace PoeCrafting.Domain.Condition
             }
             if (modType == AffixNames.TotalElementalDps)
             {
-                double baseDamage;
-                GetPhysicalDamage(a, out baseDamage);
-                return GetDps(GetEleDamage(a) + baseDamage, a);
+                return GetDps(GetEleDamage(a), a);
             }
             if (modType == AffixNames.TotalPhysicalDps)
             {
-                double baseDamage;
-                var physicalDamage = GetPhysicalDamage(a, out baseDamage);
-                return GetDps(physicalDamage, a);
+                return GetDps(GetPhysicalDamage(a), a);
             }
 
             throw new NotImplementedException($"The meta affix {modType} is not recognized");
@@ -96,25 +93,26 @@ namespace PoeCrafting.Domain.Condition
 
         private int GetTotalDamage(ConditionContainer a)
         {
-            double baseDamage;
-            var totalPhysDamage = GetPhysicalDamage(a, out baseDamage);
-
+            var physicalDamage = GetPhysicalDamage(a);
             var eleDamage = GetEleDamage(a);
 
-            // Calculating the best 3 out of the 6 damage affixes can be kind of tricky so I'm basically cheating
-            // When we are analyzing a single item it doesn't matter, and when we are looking at the min/max possiblities
-            // I expect that either full physical or full elemental will be superior
-            if (a.Affixes.Count > 6)
-            {
-                return (int)Math.Max(eleDamage + baseDamage, totalPhysDamage);
-            }
-            else
-            {
-                return (int)(totalPhysDamage + eleDamage);
-            }
+            // Calculating the best 3 out of all the possible affixes could be tricky so I cheat a little
+            // When analyzing all possible affixes, I expect that either full phys or full elemental will be better
+
+            return IsGeneratedItem(a.Affixes.Count)
+                ? (int) (physicalDamage + eleDamage)
+                : (int) Math.Max(eleDamage, physicalDamage);
         }
 
-        private double GetPhysicalDamage(ConditionContainer a, out double baseDamage)
+        // This is close enough to bring correct
+        // There might be some exceptions with very low level items and fossils blocking affixes
+        // But that is so niche that I'm not going to take it into consideration
+        private static bool IsGeneratedItem(int affixCount)
+        {
+            return affixCount <= 6;
+        }
+
+        private double GetPhysicalDamage(ConditionContainer a)
         {
             var prefixes = a.Affixes.Where(x => x.Type == AffixType.Prefix).ToList();
 
@@ -123,7 +121,7 @@ namespace PoeCrafting.Domain.Condition
             var physical = (GetMaxPropertyValue(prefixes, AffixGroupings.FlatPhysicalDamage) +
                              GetMaxPropertyValue(prefixes, AffixGroupings.FlatPhysicalDamage, 1)) / 2;
 
-            baseDamage = BaseDamage(a);
+            double baseDamage = BaseDamage(a);
 
             return (baseDamage + physical) * (120 + percentDamage) / 100;
         }
@@ -132,8 +130,7 @@ namespace PoeCrafting.Domain.Condition
         {
             var minPhysDamage = a.ItemBase.Properties.ContainsKey(ItemProperties.MinDamage) ? a.ItemBase.Properties[ItemProperties.MinDamage] : 0;
             var maxPhysDamage = a.ItemBase.Properties.ContainsKey(ItemProperties.MaxDamage) ? a.ItemBase.Properties[ItemProperties.MaxDamage] : 0;
-            var baseDamage = (minPhysDamage + maxPhysDamage) / 2;
-            return baseDamage;
+            return (minPhysDamage + maxPhysDamage) / 2;
         }
 
         private double GetEleDamage(ConditionContainer a)
@@ -177,13 +174,13 @@ namespace PoeCrafting.Domain.Condition
 
         private int GetMaxPropertyValue(List<ItemProperty> items, List<string> propertyNames, int index = 0)
         {
-            var properties = items.Where(x => propertyNames.Contains(x.ModType)).ToList();
+            var properties = items.Where(x => propertyNames.Contains(x.Group)).ToList();
             return GetMaxPropertyValue(properties, index);
         }
 
         private int GetMaxPropertyValue(List<ItemProperty> items, string property, int index = 0)
         {
-            var properties = items.Where(x => x.ModType == property).ToList();
+            var properties = items.Where(x => x.Group == property).ToList();
             return GetMaxPropertyValue(properties, index);
         }
 

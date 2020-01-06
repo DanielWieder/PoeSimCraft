@@ -1,34 +1,60 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using PoeCrafting.Entities.Constants;
 
 namespace PoeCrafting.Entities
 {
+    public enum Influence
+    {
+        Elder,
+        Shaper,
+        Crusader,
+        Redeemer,
+        Warlord,
+        Hunter
+    }
+
     public class Affix
     {
+        /// <summary>
+        /// The name of the affix  This is what get added to the name of magic items.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The name of the mod. This identifier is present in all mods and unique to each mod.
+        /// </summary>
+        public string FullName { get; set; }
+
+        /// <summary>
+        /// Where the goes. (Prefix, Suffix, Corruption)
+        /// </summary>
+        public string GenerationType { get; set; }
+
+        /// <summary>
+        /// Mods of the same group do similar things and are exclusive among each other
+        /// </summary>
+        public string Group { get; set; }
+
+        /// <summary>
+        /// Mods of the same type do the same things at different strengths and are exclusive among each other. The type is a subset of the group.
+        /// </summary>
+        public string Type { get; set; }
+
         /// <summary>
         /// The strength of the mod compared to others of the same type
         /// </summary>
         public int Tier { get; set; }
 
         /// <summary>
-        /// The name of the affix. This is what get added to the name of magic items.
+        /// The type of affix tier
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// The name of the mod.
-        /// </summary>
-        public string ModName { get; set; }
-
-        /// <summary>
-        /// Mods of the same type do the same thing and are exclusive among each other
-        /// </summary>
-        public string ModType { get; set; }
+        public TierType TierType { get; set; }
 
         /// <summary>
         /// The minimum item level for the affix to spawn
         /// </summary>
-        public int ILvl { get; set; }
+        public int RequiredLevel { get; set; }
 
         /// <summary>
         /// The frequency that the affix occurs
@@ -36,17 +62,16 @@ namespace PoeCrafting.Entities
         [JsonIgnore]
         public int Weight { get; set; }
 
-        /// <summary>
-        /// The total weight of all mods of that type
-        /// </summary>
-        [JsonIgnore]
-        public int ModTypeWeight { get; set; }
+        public Dictionary<string, int> SpawnWeights { get; set; }
 
-        /// <summary>
-        /// Where the goes. (Prefix, Suffix, Corruption)
-        /// </summary>
-        public string Type { get; set; }
-        public string Group { get; set; }
+        public Dictionary<string, int> GenerationWeights { get; set; }
+
+
+        // Adds these tags to the item
+        public List<string> AddsTags { get; set; }
+
+        // The tags associated with the mod
+        public HashSet<string> Tags { get; set; }
 
         public string StatName1 { get; set; }
         public int StatMin1 { get; set; }
@@ -59,17 +84,6 @@ namespace PoeCrafting.Entities
         public string StatName3 { get; set; }
         public int StatMin3 { get; set; }
         public int StatMax3 { get; set; }
-
-        /// <summary>
-        /// If the affix belongs to a faction then the item must belong to the faction in order to spawn it (Elder/Shaper)
-        /// </summary>
-        public int Faction { get; set; }
-
-        [JsonIgnore]
-        public string SpawnTag { get; set; }
-
-        [JsonIgnore]
-        public int Priority { get; set; }
 
         [JsonIgnore]
         public List<int> MaxStats

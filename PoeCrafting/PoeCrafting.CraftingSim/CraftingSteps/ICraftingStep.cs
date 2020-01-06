@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using PoeCrafting.Currency;
 using PoeCrafting.Entities;
+using PoeCrafting.Entities.Crafting;
+using PoeCrafting.Entities.Items;
 
-namespace PoeCrafting.Domain.Crafting
+namespace PoeCrafting.CraftingSim.CraftingSteps
 {
     public interface ICraftingStep
     {
-        [JsonIgnore]
-        CraftingStepStatus Status { get; }
         string Name { get; }
 
         List<ICraftingStep> Children { get; }
         CraftingCondition Condition { get; }
+        Dictionary<string, int> GetCurrency { get; }
 
-        [JsonIgnore]
-        List<string> Options { get; }
+        bool Craft(Equipment equipment, AffixManager affixManager);
 
-        void ClearStatus();
-        ItemStatus UpdateStatus(ItemStatus current);
-        Equipment Craft(Equipment equipment, CancellationToken ct);
-        T NavigateTree<T>(T item, List<ICraftingStep> queue, Func<ICraftingStep, T, T> action, CancellationToken ct = default(CancellationToken)) where T : ITreeNavigation;
+        bool ShouldVisitChildren(Equipment equipment, int times);
+        void UpdateStatus(ItemStatus metadataCurrentStatus);
+        bool ShouldVisitChildren(ItemStatus previousStatus, ItemStatus metadataCurrentStatus);
     }
 }
